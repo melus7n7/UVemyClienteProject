@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message EnviarVideoPeticion{
+	string datos = 1;
+}
+
+message RespuestaEnvioVideo{
+	string respuesta = 1;
+}
+
+service VideoService{
+	rpc enviarVideoDesdeCliente(EnviarVideoPeticion) returns (RespuestaEnvioVideo);
+}
