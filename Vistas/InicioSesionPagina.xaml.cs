@@ -62,6 +62,10 @@ namespace UVemyCliente.Vistas
                 UsuarioDTO? usuarioVerificado = JsonSerializer.Deserialize<UsuarioDTO>(jsonString);
                 if (usuarioVerificado != null)
                 {
+                    SingletonUsuario.IdUsuario = usuarioVerificado.Id;
+                    SingletonUsuario.Nombres = usuarioVerificado.Nombres;
+                    SingletonUsuario.Apellidos = usuarioVerificado.Apellidos;
+                    SingletonUsuario.CorreoElectronico = usuarioVerificado.CorreoElectronico;
                     SingletonUsuario.JWT = usuarioVerificado.Token;
 
                     ExitoMensaje exitoMensaje = new ExitoMensaje();
@@ -76,9 +80,6 @@ namespace UVemyCliente.Vistas
                 string[] detalles = errorJson?.Detalles.ToArray() ?? ["Error desconocido"];
                 string detallesConcatenados = string.Join(", ", detalles);
                 txtBlockMensajeError.Text = detallesConcatenados;
-
-                ErrorMensaje error = new ErrorMensaje();
-                error.Show();
             }
         }
 
