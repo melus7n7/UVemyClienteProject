@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -56,7 +57,7 @@ namespace UVemyCliente.Vistas
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestSinAutenticacionAsync(HttpMethod.Post, "autenticacion", contenido);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
 
-            if (codigoRespuesta == 200)
+            if (codigoRespuesta == (int) HttpStatusCode.OK)
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
                 UsuarioDTO? usuarioVerificado = JsonSerializer.Deserialize<UsuarioDTO>(jsonString);
