@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <None Remove="Recursos\delete.png" />
+    <None Remove="Recursos\pause.png" />
+    <None Remove="Recursos\play.png" />
     <None Remove="Recursos\previous.png" />
     <None Remove="Recursos\success.png" />
   </ItemGroup>
@@ -29,6 +31,12 @@
 
 	<ItemGroup>
 	  <Resource Include="Recursos\delete.png" />
+	  <Resource Include="Recursos\pause.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Recursos\play.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="Recursos\previous.png" />
 	  <Resource Include="Recursos\success.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>

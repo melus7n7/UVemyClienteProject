@@ -1,4 +1,4 @@
-﻿<Page x:Class="UVemyCliente.Vistas.FormularioClasePagina"
+﻿<Page x:Class="UVemyCliente.Vistas.FormularioClase"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -18,6 +18,7 @@
         <Style x:Key="estiloTxtBoxFormularioClaseCampo" TargetType="TextBox">
             <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
             <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Background" Value="#D9E1E4"/>
             <Setter Property="Foreground" Value="#000000"/>
             <Setter Property="FontWeight" Value="Regular"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -26,7 +27,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Border BorderBrush="#5D737E" CornerRadius="20" BorderThickness="3" Background="#D9E1E4">
+                        <Border BorderBrush="#5D737E" CornerRadius="20" BorderThickness="3" Background="{TemplateBinding Background}">
                             <ScrollViewer Margin="15 10" x:Name="PART_ContentHost"/>
                         </Border>
                     </ControlTemplate>
@@ -55,11 +56,12 @@
         </Style>
 
         <Style x:Key="estiloLstBoxDocumentos" TargetType="ListBox">
+            <Setter Property="Background" Value="#D9E1E4"/>
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBox}">
-                        <Border BorderBrush="#5D737E" BorderThickness="3" CornerRadius="30" Background="#D9E1E4">
+                        <Border BorderBrush="#5D737E" BorderThickness="3" CornerRadius="30" Background="{TemplateBinding Background}">
                             <ScrollViewer Margin="10" Focusable="false">
                                 <StackPanel Margin="2" IsItemsHost="True" />
                             </ScrollViewer>
@@ -96,8 +98,8 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <ContentPresenter VerticalAlignment="Center" Margin="20 0"/>
-                                <Button Grid.Column="1" Style="{StaticResource estiloBtnX}" HorizontalAlignment="Right" Margin="0 0 30 0"></Button>
+                                <TextBlock VerticalAlignment="Center" Margin="20 0" Text="{Binding Nombre}"/>
+                                <Button Grid.Column="1" Style="{StaticResource estiloBtnX}" HorizontalAlignment="Right" Margin="0 0 30 0" Click="ClicEliminarDocumento"></Button>
                             </Grid>
                         </Border>
                     </ControlTemplate>
@@ -135,6 +137,36 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="estiloBtnPlay" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Image Source="/Recursos/play.png" Height="150" Width="150"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="estiloBtnPause" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Image Source="/Recursos/pause.png" Height="50" Width="50" Margin="20 0 0 15"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </Page.Resources>
 
     <Grid Background="#FFFFFF">
@@ -156,25 +188,29 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Margin="30 20" VerticalAlignment="Center">
                     <TextBlock Style="{StaticResource estiloTxtBlockFormularioClaseInfo}">Nombre de la clase</TextBlock>
-                    <TextBox Height="100" TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxFormularioClaseCampo}"></TextBox>
+                    <TextBox Height="100" TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxFormularioClaseCampo}" Name="txtBlockNombreClase" ></TextBox>
 
                     <TextBlock Style="{StaticResource estiloTxtBlockFormularioClaseInfo}">Descripción</TextBlock>
-                    <TextBox Height="380" TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxFormularioClaseCampo}"></TextBox>
+                    <TextBox Height="380" TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxFormularioClaseCampo}" Name="txtBlockDescripcion"></TextBox>
 
                     <Button Click="ClicGuardarClase" Style="{StaticResource estiloBtnGuardarClase}">Guardar clase</Button>
 
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10 20 30 20" >
                     <TextBlock Style="{StaticResource estiloTxtBlockFormularioClaseInfo}">Documentos</TextBlock>
-                    <ListBox Height="140" Style="{StaticResource estiloLstBoxDocumentos}" ItemContainerStyle="{StaticResource estiloLstBoxItemDocumentos}">
-                        <ListBoxItem>Hola</ListBoxItem>
-                        <ListBoxItem>Hola</ListBoxItem>
+                    <ListBox Height="140" Style="{StaticResource estiloLstBoxDocumentos}" ItemContainerStyle="{StaticResource estiloLstBoxItemDocumentos}" Name="lstBoxDocumentos">
                     </ListBox>
-                    <Button Style="{StaticResource estiloBtnAgregarDocumento}" Width="280" Margin="0 10" HorizontalAlignment="Right">Agregar documento</Button>
+                    <Button Style="{StaticResource estiloBtnAgregarDocumento}" Width="280" Margin="0 10" HorizontalAlignment="Right" Click="ClicAgregarDocumento">Agregar documento</Button>
 
                     <TextBlock Style="{StaticResource estiloTxtBlockFormularioClaseInfo}">Video de la clase</TextBlock>
-                    <Border Background="#D9E1E4" BorderBrush="#5D737E" BorderThickness="3" CornerRadius="30" Height="300">
-                        <MediaElement Margin="10"/>
+                    <Border Background="#D9E1E4" BorderBrush="#5D737E" BorderThickness="3" CornerRadius="30" Height="300" Name="brdVideo">
+                        <Grid>
+                            <Border Background="#000000" Margin="20 15" Name="brdVideoBackground" Visibility="Collapsed"/>
+                            <MediaElement Margin="10" Name="mdElementVideo"/>
+                            <Button Click="ClicReproducir" Name="btnReproducir" Visibility="Collapsed" Style="{StaticResource estiloBtnPlay}"></Button>
+                            <Button Click="ClicPausar" Name="btnPausar" Visibility="Collapsed" Style="{StaticResource estiloBtnPause}" VerticalAlignment="Bottom" HorizontalAlignment="Left"></Button>
+
+                        </Grid>
                     </Border>
 
                     <Grid Margin="0 30 0 0">
@@ -182,8 +218,8 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button Style="{StaticResource estiloBtnAgregarDocumento}" Width="260">Agregar video</Button>
-                        <Button Grid.Column="1" IsEnabled="False" Style="{StaticResource estiloBtnAgregarDocumento}" Width="260">Eliminar video</Button>
+                        <Button Style="{StaticResource estiloBtnAgregarDocumento}" Width="260" Click="ClicAgregarVideo" Name="btnAgregarVideo">Agregar video</Button>
+                        <Button Grid.Column="1" IsEnabled="False" Style="{StaticResource estiloBtnAgregarDocumento}" Width="260" Click="ClicEliminarVideo" Name="btnEliminarVideo">Eliminar video</Button>
                     </Grid>
                 </StackPanel>
             </Grid>
