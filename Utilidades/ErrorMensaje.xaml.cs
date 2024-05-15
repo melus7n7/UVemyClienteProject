@@ -23,5 +23,11 @@ namespace UVemyCliente.Utilidades
         {
             InitializeComponent();
         }
+
+        public ErrorMensaje(string mensaje)
+        {
+            InitializeComponent();
+            txtBlocMensajeError.Text = mensaje;
+        }
     }
 }

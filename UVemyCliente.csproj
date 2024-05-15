@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\Nunito-Italic-VariableFont_wght.ttf" />
+    <None Remove="Fonts\Nunito-VariableFont_wght.ttf" />
     <None Remove="Recursos\delete.png" />
     <None Remove="Recursos\pause.png" />
     <None Remove="Recursos\play.png" />
@@ -30,6 +32,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Resource Include="Fonts\Nunito-Italic-VariableFont_wght.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Fonts\Nunito-VariableFont_wght.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="Recursos\delete.png" />
 	  <Resource Include="Recursos\pause.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

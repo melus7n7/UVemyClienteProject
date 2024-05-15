@@ -56,17 +56,22 @@ namespace UVemyCliente.Vistas
         {
             ResetearCampos();
             bool esValido = true;
+            string razones = "";
             BrushConverter brush = new BrushConverter();
-            if (string.IsNullOrWhiteSpace(txtBlockNombreClase.Text))
+            if (string.IsNullOrWhiteSpace(txtBlockNombreClase.Text) || txtBlockNombreClase.Text.Length > 150)
             {
                 esValido = false;
                 txtBlockNombreClase.Background = (SolidColorBrush) brush.ConvertFrom("#f19090");
+                razones += "El nombre es obligatorio y debe ser menor a 150 caracteres";
             }
 
-            if (string.IsNullOrWhiteSpace(txtBlockDescripcion.Text))
+            if (string.IsNullOrWhiteSpace(txtBlockDescripcion.Text) || txtBlockDescripcion.Text.Length > 660)
             {
                 esValido = false;
                 txtBlockDescripcion.Background = (SolidColorBrush)brush.ConvertFrom("#f19090");
+                string problema = "La descripción es obligatoria debe ser menor a 660 caracteres";
+                razones = (razones.Length > 0 ) ? razones + "; " + problema : problema;
+
             }
 
             if (_documentosClase.Count == 0)
@@ -83,12 +88,13 @@ namespace UVemyCliente.Vistas
 
             if (!esValido)
             {
-                ErrorMensaje error = new ErrorMensaje();
+                ErrorMensaje error = new ErrorMensaje("Campos no válidos: " + razones);
                 error.Show();
             }
 
             return esValido;
         }
+        
 
         private void ResetearCampos()
         {
@@ -103,6 +109,9 @@ namespace UVemyCliente.Vistas
 
         private async Task GuardarClaseAsync()
         {
+            grdPrincipal.IsEnabled = false;
+            ClicPausar(null, null);
+
             ClaseDTO clase = new ClaseDTO
             {
                 Nombre = txtBlockNombreClase.Text,
@@ -118,7 +127,7 @@ namespace UVemyCliente.Vistas
 
             if (codigoRespuesta >= 400)
             {
-                ErrorMensaje error = new ErrorMensaje();
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar la clase, inténtelo más tarde");
                 error.Show();
             }
             else
@@ -129,7 +138,9 @@ namespace UVemyCliente.Vistas
                 {
                     await GuardarVideoAsync(claseNueva.Id);
                 }
-            }            
+            }
+
+            grdPrincipal.IsEnabled = true;
         }
 
         private async Task GuardarVideoAsync(int idClase)
@@ -144,7 +155,7 @@ namespace UVemyCliente.Vistas
 
             if (respuesta >= 400)
             {
-                ErrorMensaje error = new ErrorMensaje();
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar el video de la clase, revise la clase en la lista");
                 error.Show();
             }
             else
@@ -178,28 +189,54 @@ namespace UVemyCliente.Vistas
                 }
                 catch (IOException ex)
                 {
-                    Console.WriteLine(ex);
+                    Debug.WriteLine(ex);
                     MostrarMensajeErrorArchivo();
                 }
 
                 if (archivo != null)
                 {
-                    DocumentoDTO documento = new DocumentoDTO 
-                    { 
-                        Archivo = archivo, Nombre = ventanaArchivo.SafeFileName
-                    };
+                    if (!ArchivoSuperaTamanio(archivo, 1000))
+                    {
+                        DocumentoDTO documento = new DocumentoDTO
+                        {
+                            Archivo = archivo,
+                            Nombre = ventanaArchivo.SafeFileName
+                        };
 
-                    _documentosClase.Add(documento);
-                    lstBoxDocumentos.Items.Add(documento);
-                    lstBoxDocumentos.Items.Refresh();
+                        _documentosClase.Add(documento);
+                        lstBoxDocumentos.Items.Add(documento);
+                        lstBoxDocumentos.Items.Refresh();
+                    }
+                    
                 }
 
             }
         }
+        private bool ArchivoSuperaTamanio(byte[] archivo, float limiteMB)
+        {
+            bool documentoExcedeTamanio = true;
+            if (archivo != null)
+            {
+                float tamanioArchivo = (archivo.Length / 1024.0F);
+                if (tamanioArchivo < limiteMB)
+                {
+                    documentoExcedeTamanio = false;
+                }
+            }
+
+            if (documentoExcedeTamanio)
+            {
+                float mb = limiteMB / 1000;
+                ErrorMensaje error = new ErrorMensaje("El tamaño del archivo supera el límite de "+ mb + "MB");
+                error.Show();
+            }
+
+            return documentoExcedeTamanio;
+        }
 
         private void MostrarMensajeErrorArchivo()
         {
-            ErrorMensaje error = new ErrorMensaje();
+            ErrorMensaje error = new ErrorMensaje("Ocurrió un error al adjuntar el archivo, verifique el archivo");
             error.Show();
         }
 
@@ -239,17 +276,21 @@ namespace UVemyCliente.Vistas
                 }
                 catch (IOException ex)
                 {
-                    Console.WriteLine(ex);
+                    Debug.WriteLine(ex);
                     MostrarMensajeErrorArchivo();
                 }
 
                 if (videoArchivo != null)
                 {
-                    _= MostrarVideoAsync(videoArchivo, ventanaArchivo.SafeFileName);
+                    if (!ArchivoSuperaTamanio(videoArchivo, 10000))
+                    {
+                        _ = MostrarVideoAsync(videoArchivo, ventanaArchivo.SafeFileName);
+                    }
                 }
 
             }
         }
+
 
         private async Task MostrarVideoAsync(byte[] videoBytes, string nombreVideo)
         {
@@ -275,7 +316,7 @@ namespace UVemyCliente.Vistas
             catch (IOException ex)
             {
                 Debug.WriteLine(ex);
-                ErrorMensaje error = new ErrorMensaje();
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error al mostrar el video, inténtelo de nuevo");
                 error.Show();
             }
         }

@@ -169,7 +169,7 @@
 
     </Page.Resources>
 
-    <Grid Background="#FFFFFF">
+    <Grid Background="#FFFFFF" Name="grdPrincipal">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>

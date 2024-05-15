@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:UVemyCliente.Utilidades"
         mc:Ignorable="d" Height="200" Width="260">
     <Grid>
-        <Image Source="/Recursos/delete.png" Height="60"></Image>
-        <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0">Error</TextBlock>
+        <Image Source="/Recursos/delete.png" Height="60" VerticalAlignment="Top" Margin="30"></Image>
+        <TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Error</TextBlock>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 30 0 0" Name="txtBlocMensajeError" TextWrapping="Wrap"></TextBlock>
+
     </Grid>
 </Window>
