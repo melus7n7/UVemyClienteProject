@@ -71,24 +71,36 @@ namespace UVemyCliente.Vistas
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "clases", content);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
+            
 
-            if (codigoRespuesta >= 500)
+            if (codigoRespuesta >= 400)
             {
                 ErrorMensaje error = new ErrorMensaje();
                 error.Show();
             }
             else
             {
-                await GuardarVideoAsync();
+                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+                ClaseDTO? claseNueva = JsonSerializer.Deserialize<ClaseDTO>(jsonString);
+                if (claseNueva != null)
+                {
+                    await GuardarVideoAsync(claseNueva.Id);
+                }
             }            
         }
 
-        private async Task GuardarVideoAsync()
+        private async Task GuardarVideoAsync(int idClase)
         {
-            int respuesta = await VideoGrpc.EnviarVideoDeClaseAsync(new DocumentoDTO());
+            byte[] video =File.ReadAllBytes(@"C:\Users\sulem\Downloads\VideoIntroKirbyDreamLand3.mp4");
+            DocumentoDTO videoNuevo = new DocumentoDTO
+            {
+                Archivo = video,
+                Nombre = "nombreNuevo.mp4",
+                IdClase = idClase
+            };
+            int respuesta = await VideoGrpc.EnviarVideoDeClaseAsync(videoNuevo);
 
-
-            if (respuesta >= 500)
+            if (respuesta >= 400)
             {
                 ErrorMensaje error = new ErrorMensaje();
                 error.Show();

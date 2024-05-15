@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 message EnvioVideoRespuesta {
-    string respuesta = 1;
+    int32 respuesta = 1;
 }
 
 message VideoPartesEnvio{
@@ -13,8 +13,7 @@ message VideoPartesEnvio{
 
 message DocumentoVideo{
     string nombre = 1;
-    int32 idTipoArchivo = 2;
-    int32 idClase = 3;
+    int32 idClase = 2;
 }
 
 

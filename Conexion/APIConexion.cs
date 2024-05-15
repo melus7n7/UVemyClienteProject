@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using UVemyCliente.Utilidades;
+using System.Diagnostics;
 
 namespace UVemyCliente.Conexion
 {
@@ -23,7 +24,7 @@ namespace UVemyCliente.Conexion
             }
 
             //To-DO
-            SingletonUsuario.JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZ2l2ZW5uYW1lIjoicyIsImlzcyI6IlVWZW15U2Vydmlkb3JKV1QiLCJhdWQiOiJVc3Vhcmlvc1VWZW15SldUIiwiaWF0IjoxNzE1NjY0NDAwLCJleHAiOjE3MTU2NjU2MDB9.jU_km6ouz1uTJMUUPEIoLSk4iINWmIXe95_iYSJp7l8";
+            SingletonUsuario.JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlzaWQiOjEsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InN1bGVtNDc3QGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6InMiLCJpc3MiOiJVVmVteVNlcnZpZG9ySldUIiwiYXVkIjoiVXN1YXJpb3NVVmVteUpXVCIsImlhdCI6MTcxNTc1ODA5NiwiZXhwIjoxNzE1NzU5Mjk2fQ.284woWG7v4k6ol6U22bk_qmMY_RwuwGHU_VnW7IekE4";
             _cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SingletonUsuario.JWT);
 
             return _cliente;
@@ -56,7 +57,7 @@ namespace UVemyCliente.Conexion
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine(ex);
+                Debug.WriteLine(ex);
                 respuesta.StatusCode = System.Net.HttpStatusCode.InternalServerError;
             }
             //si la respuesta tiene un jwt token nuevo que se le asigne y que si es un 401 , que ponga el mensaje, error debe volver a iniciar sesión

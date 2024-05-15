@@ -32,11 +32,10 @@ namespace UVemyCliente.Servicios
 
             try
             {
-                //Esa no
-                await using var videoStream = File.OpenRead(@"C:\Users\sulem\Downloads\VideoIntroKirbyDreamLand3.mp4");
-
                 var buffer = new byte[_tamanioChunks];
-                DocumentoVideo documento = new DocumentoVideo { IdClase = 1, Nombre = "video.mp4", IdTipoArchivo = 1 };
+                byte[] videoBytes = documentoDTO.Archivo;
+
+                DocumentoVideo documento = new DocumentoVideo { IdClase = documentoDTO.IdClase, Nombre = documentoDTO.Nombre};
                 VideoPartesEnvio envioInicial = new VideoPartesEnvio { DatosVideo = documento };
 
                 VideoService.VideoServiceClient stub = ObtenerStub();
@@ -45,18 +44,24 @@ namespace UVemyCliente.Servicios
                 await respuestaEnviando.RequestStream.WriteAsync(envioInicial);
 
                 int numBytesLeidos = 0;
-                while ((numBytesLeidos = await videoStream.ReadAsync(buffer)) > 0)
+                while (numBytesLeidos < videoBytes.Length)
                 {
+                    int count = Math.Min(_tamanioChunks, videoBytes.Length - numBytesLeidos);
+                    byte[] chunk = new byte[count];
+                    Buffer.BlockCopy(videoBytes, numBytesLeidos, chunk, 0, count);
+
                     await respuestaEnviando.RequestStream.WriteAsync(new VideoPartesEnvio
                     {
-                        Chunks = UnsafeByteOperations.UnsafeWrap(buffer.AsMemory(0, numBytesLeidos))
+                        Chunks = UnsafeByteOperations.UnsafeWrap(chunk.AsMemory())
                     });
+
+                    numBytesLeidos += count;
                 }
 
                 await respuestaEnviando.RequestStream.CompleteAsync();
 
                 EnvioVideoRespuesta respuestaFinal = await respuestaEnviando;
-                respuesta = 200;
+                respuesta = respuestaFinal.Respuesta;
             }
             catch (Exception ex)
             {
