@@ -53,7 +53,7 @@ namespace UVemyCliente.Vistas
 
             var json = JsonSerializer.Serialize(credenciales);
             var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "autenticacion", contenido);
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestSinAutenticacionAsync(HttpMethod.Post, "autenticacion", contenido);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
 
             if (codigoRespuesta == 200)
