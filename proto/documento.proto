@@ -1,13 +1,23 @@
 syntax = "proto3";
 
-message EnviarVideoPeticion{
-	string datos = 1;
+message EnvioVideoRespuesta {
+    string respuesta = 1;
 }
 
-message RespuestaEnvioVideo{
-	string respuesta = 1;
+message VideoPartesEnvio{
+    oneof envio {
+        bytes chunks = 1;
+        DocumentoVideo datosVideo = 2;
+    }
 }
 
-service VideoService{
-	rpc enviarVideoDesdeCliente(EnviarVideoPeticion) returns (RespuestaEnvioVideo);
+message DocumentoVideo{
+    string nombre = 1;
+    int32 idTipoArchivo = 2;
+    int32 idClase = 3;
+}
+
+
+service VideoService {
+    rpc EnviarVideoClase (stream VideoPartesEnvio) returns (EnvioVideoRespuesta);
 }

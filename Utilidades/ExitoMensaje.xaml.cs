@@ -23,5 +23,10 @@ namespace UVemyCliente.Utilidades
         {
             InitializeComponent();
         }
+
+        private void ClicAceptar(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

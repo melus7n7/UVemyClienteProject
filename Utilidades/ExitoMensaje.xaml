@@ -4,9 +4,61 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UVemyCliente.Utilidades"
-        mc:Ignorable="d"
-        Title="ExitoMensaje" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None"
+        mc:Ignorable="d" Height="200" Width="260" Background="Transparent" AllowsTransparency="True" >
+    <Window.Resources>
+        <Style x:Key="estiloBtnAceptar" TargetType="Button">
+            <Setter Property="Background" Value="#115E47"/>
+            <Setter Property="Foreground" Value="#ffffff"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="FontFamily" Value="{StaticResource NunitoItalicFont}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 5">
+                                <ContentPresenter.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center" Margin="0"/>
+                                    </DataTemplate>
+                                </ContentPresenter.ContentTemplate>
+                            </ContentPresenter>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Background" Value="#479E85"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="30" Background="#FFFFFF" BorderThickness="3" BorderBrush="#115E47">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Border Background="#115E47" CornerRadius="30 30 0 0" >
+                <StackPanel Margin="10">
+                    <Image Height="60" Width="60" Source="/Recursos/success.png"/>
+                    <TextBlock Margin="0 5 0 0"
+                     HorizontalAlignment="Center" FontSize="14" FontFamily="{StaticResource NunitoFont}" FontWeight="Bold" Foreground="#ffffff">Éxito</TextBlock>
+                </StackPanel>
+            </Border>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock  HorizontalAlignment="Center" FontSize="12" FontFamily="{StaticResource NunitoFont}" Margin="20 0 20 0" TextAlignment="Center"
+                    VerticalAlignment="Center" TextWrapping="Wrap">Se ha realizado exitosamente la operación</TextBlock>
+                <Button Grid.Row="1" Style="{StaticResource estiloBtnAceptar}" Margin="0 5 0 10" Click="ClicAceptar">Aceptar</Button>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

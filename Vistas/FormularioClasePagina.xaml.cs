@@ -1,7 +1,9 @@
-﻿using Grpc.Net.Client;
+﻿using Google.Protobuf;
+using Grpc.Net.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -18,6 +20,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UVemyCliente.Conexion;
 using UVemyCliente.DTO;
+using UVemyCliente.Servicios;
 using UVemyCliente.Utilidades;
 
 namespace UVemyCliente.Vistas
@@ -76,31 +79,26 @@ namespace UVemyCliente.Vistas
             }
             else
             {
+                await GuardarVideoAsync();
+            }            
+        }
+
+        private async Task GuardarVideoAsync()
+        {
+            int respuesta = await VideoGrpc.EnviarVideoDeClaseAsync(new DocumentoDTO());
+
+
+            if (respuesta >= 500)
+            {
+                ErrorMensaje error = new ErrorMensaje();
+                error.Show();
+            }
+            else
+            {
                 ExitoMensaje exito = new ExitoMensaje();
                 exito.Show();
             }
-            //grpc
-            try
-            {
-                using var channel = GrpcChannel.ForAddress("http://localhost:3001");
-                VideoService.VideoServiceClient stub = new VideoService.VideoServiceClient(channel);
-                EnviarVideoPeticion peticion = new EnviarVideoPeticion { Datos = "" };
-                var respuesta = stub.enviarVideoDesdeCliente(peticion);
-                Debug.WriteLine("");
-                Debug.WriteLine(respuesta.Respuesta);
-                Debug.WriteLine("");
-                ExitoMensaje exito = new ExitoMensaje();
-                exito.Show();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("");
-
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-                Debug.WriteLine("");
-
-            }
+            
         }
     }
 }

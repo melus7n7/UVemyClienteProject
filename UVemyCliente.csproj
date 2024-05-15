@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Recursos\delete.png" />
+    <None Remove="Recursos\previous.png" />
+    <None Remove="Recursos\success.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.26.1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.62.0" />
     <PackageReference Include="Grpc.Tools" Version="2.63.0">
@@ -19,6 +25,14 @@
 
 	<ItemGroup>
 		<Protobuf Include="proto\documento.proto" GrpcServices="Client" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Recursos\delete.png" />
+	  <Resource Include="Recursos\previous.png" />
+	  <Resource Include="Recursos\success.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
 	</ItemGroup>
 
 </Project>
