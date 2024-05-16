@@ -22,6 +22,7 @@ using UVemyCliente.Conexion;
 using UVemyCliente.DTO;
 using UVemyCliente.Servicios;
 using UVemyCliente.Utilidades;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UVemyCliente.Vistas
 {
@@ -41,6 +42,7 @@ namespace UVemyCliente.Vistas
             mdElementVideo.LoadedBehavior = MediaState.Manual;
             mdElementVideo.UnloadedBehavior = MediaState.Manual;
             mdElementVideo.Stretch = Stretch.Uniform;
+
         }
         private void ClicGuardarClase(object sender, RoutedEventArgs e)
         {
@@ -127,6 +129,7 @@ namespace UVemyCliente.Vistas
 
             if (codigoRespuesta >= 400)
             {
+                Debug.WriteLine(codigoRespuesta);
                 ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar la clase, inténtelo más tarde");
                 error.Show();
             }
@@ -136,11 +139,39 @@ namespace UVemyCliente.Vistas
                 ClaseDTO? claseNueva = JsonSerializer.Deserialize<ClaseDTO>(jsonString);
                 if (claseNueva != null)
                 {
+                    await GuardarDocumentosAsync(claseNueva.Id);
                     await GuardarVideoAsync(claseNueva.Id);
                 }
             }
 
             grdPrincipal.IsEnabled = true;
+        }
+
+        private async Task GuardarDocumentosAsync(int idClase)
+        {
+            foreach (DocumentoDTO documento in _documentosClase)
+            {
+                var contenido = new MultipartFormDataContent
+                {
+                    { new StringContent(documento.Nombre), "nombre" },
+                    { new StringContent(idClase.ToString()), "idClase" }
+                };
+
+                var contenidoDocumento = new ByteArrayContent(documento.Archivo);
+                contenidoDocumento.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
+                contenido.Add(contenidoDocumento, "file", documento.Nombre + ".pdf");
+
+                HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "documentos", contenido);
+                int codigoRespuesta = (int)respuestaHttp.StatusCode;    
+
+                if (codigoRespuesta >= 400)
+                {
+                    Debug.WriteLine(codigoRespuesta);
+                    ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar el documento, revise la clase en la lista");
+                    error.Show();
+                    break;
+                }
+            }
         }
 
         private async Task GuardarVideoAsync(int idClase)
@@ -183,6 +214,8 @@ namespace UVemyCliente.Vistas
             if (respuesta)
             {
                 byte[] archivo = null;
+                string nombre = Path.GetFileNameWithoutExtension(ventanaArchivo.FileName);
+
                 try
                 {
                     archivo = File.ReadAllBytes(ventanaArchivo.FileName);
@@ -195,26 +228,27 @@ namespace UVemyCliente.Vistas
 
                 if (archivo != null)
                 {
-                    if (!ArchivoSuperaTamanio(archivo, 1000))
+                    if (ArchivoNoSuperaTamanio(archivo, 1000, nombre))
                     {
                         DocumentoDTO documento = new DocumentoDTO
                         {
                             Archivo = archivo,
-                            Nombre = ventanaArchivo.SafeFileName
+                            Nombre = nombre
                         };
 
                         _documentosClase.Add(documento);
                         lstBoxDocumentos.Items.Add(documento);
                         lstBoxDocumentos.Items.Refresh();
                     }
-                    
+
                 }
 
             }
         }
-        private bool ArchivoSuperaTamanio(byte[] archivo, float limiteMB)
+        private bool ArchivoNoSuperaTamanio(byte[] archivo, float limiteMB, string nombre)
         {
             bool documentoExcedeTamanio = true;
+            bool nombreExcedeTamano = true;
             if (archivo != null)
             {
                 float tamanioArchivo = (archivo.Length / 1024.0F);
@@ -222,16 +256,25 @@ namespace UVemyCliente.Vistas
                 {
                     documentoExcedeTamanio = false;
                 }
+                else
+                {
+                    float mb = limiteMB / 1000;
+                    ErrorMensaje error = new ErrorMensaje("El tamaño del archivo supera el límite de " + mb + "MB");
+                    error.Show();
+                }
             }
 
-            if (documentoExcedeTamanio)
+            if (nombre.Length > 35)
             {
-                float mb = limiteMB / 1000;
-                ErrorMensaje error = new ErrorMensaje("El tamaño del archivo supera el límite de "+ mb + "MB");
+                ErrorMensaje error = new ErrorMensaje("El nombre supera el límite de 35 caracteres");
                 error.Show();
             }
+            else
+            {
+                nombreExcedeTamano = false;
+            }
 
-            return documentoExcedeTamanio;
+            return !documentoExcedeTamanio && !nombreExcedeTamano;
         }
 
         private void MostrarMensajeErrorArchivo()
@@ -270,6 +313,7 @@ namespace UVemyCliente.Vistas
             if (respuesta)
             {
                 byte[] videoArchivo = null;
+                string nombre = Path.GetFileNameWithoutExtension(ventanaArchivo.FileName);
                 try
                 {
                     videoArchivo = File.ReadAllBytes(ventanaArchivo.FileName);
@@ -282,9 +326,9 @@ namespace UVemyCliente.Vistas
 
                 if (videoArchivo != null)
                 {
-                    if (!ArchivoSuperaTamanio(videoArchivo, 10000))
+                    if (ArchivoNoSuperaTamanio(videoArchivo, 10000, nombre))
                     {
-                        _ = MostrarVideoAsync(videoArchivo, ventanaArchivo.SafeFileName);
+                        _ = MostrarVideoAsync(videoArchivo, nombre);
                     }
                 }
 
