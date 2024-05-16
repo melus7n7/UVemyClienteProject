@@ -1,0 +1,228 @@
+﻿<Page x:Class="UVemyCliente.Vistas.DetallesCursoPagina"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:UVemyCliente.Vistas"
+      mc:Ignorable="d" d:DesignHeight="1536" d:DesignWidth="1336">
+
+    <Page.Resources>
+        <Style x:Key="estiloTxtBoxCampos" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource NunitoItalicFont}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#ffffff"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="estiloTxtBlockInfo" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource NunitoItalicFont}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#000000"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="estiloBtnBackground" TargetType="Button">
+            <Setter Property="Background" Value="#000000"/>
+            <Setter Property="Foreground" Value="#ffffff"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="30">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 15">
+                                <ContentPresenter.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center"/>
+                                    </DataTemplate>
+                                </ContentPresenter.ContentTemplate>
+                            </ContentPresenter>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#939393"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="estiloTxtBoxInfo" TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="Foreground" Value="#000000"/>
+            <Setter Property="FontWeight" Value="Regular"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+            <Setter Property="Margin" Value="0 0 0 20"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border BorderBrush="#000000" CornerRadius="20" BorderThickness="3" Background="{TemplateBinding Background}">
+                            <ScrollViewer Margin="15 10" x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="estiloLstBoxClase" TargetType="ListBoxItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border BorderBrush="#000000" BorderThickness="0 0 0 3">
+                            <Grid Margin="15 5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}">1</TextBlock>
+                                <TextBlock Grid.Column="1" Style="{StaticResource estiloTxtBlockInfo}">Aplicaciones que se pueden crear con el lenguaje de programacion de C#</TextBlock>
+                                <Button Grid.Column="2" Style="{StaticResource estiloBtnBackground}" FontSize="15" Width="100">Ver más</Button>
+
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#ffffff">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Background="#000000" Orientation="Horizontal">
+            <Button Style="{StaticResource estiloBtnRegresar}"></Button>
+            <Border Background="#ffffff" CornerRadius="20" Width="200" Margin="15">
+                <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Curso</TextBlock>
+            </Border>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1">
+            <Grid Margin="35 10 35 10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Background="#000000" CornerRadius="20" Margin="0 15 0 25" Height="120">
+                    <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="24" TextWrapping="Wrap" Margin="20 15">Curso de C# .NET desde cero hasta lo mas avanzado full stack lo mas avanzado full stac</TextBlock>
+                </Border>
+                <StackPanel Grid.Column="1">
+                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 5">Modificar curso</Button>
+                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 5 0 10">Ver estadísticas del curso</Button>
+                </StackPanel>
+
+                <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Height="320" Margin="30 0 0 0" BorderThickness="3" BorderBrush="#000000" CornerRadius="30">
+                    <Image Source="/Recursos/success.png"></Image>
+                </Border>
+
+                <Border Grid.Row="3" Grid.Column="1" Background="Black" CornerRadius="30" Width="350" Margin="0 10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Calificación:</TextBlock>
+                        <Border Grid.Column="1" Background="#ffffff" Margin="5" CornerRadius="0 30 30 0">
+                            <TextBlock Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center">10</TextBlock>
+                        </Border>
+                    </Grid>
+                </Border>
+                
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
+                        <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Profesor</TextBlock>
+                    </Border>
+                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="80">du shuifhsr usfh es Juan Manuel Casas Ramírez Juan Manuel Casas Ramírez Juan Manuel Casas Ramírez</TextBox>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
+                        <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Objetivos</TextBlock>
+                    </Border>
+                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="220">Aprender desde 0 hasta lo más avanzado con C#
+                        Aprender a programar en C# con POO
+                        Crear aplicaciones con lo aprendido en el transcurso del curso
+                        Realizar conexiones de datos a servidores MySQL y SQL Server
+                        Aprender conocimientos básicos sobre el lenguaje de programacion de C# para desarrollar tu aplicaciones</TextBox>
+                </Grid>
+
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
+                        <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Etiquetas</TextBlock>
+                    </Border>
+                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="50">Programación, POO</TextBox>
+                </Grid>
+
+                <Grid Grid.Row="4" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
+                        <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Descripción</TextBlock>
+                    </Border>
+                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="140">Te invito a que seas parte de este curso donde aprenderemos sobre el lenguaje de programación de .net core con C# , lenguaje que nos permitirá crear diversas aplicaciones multiplataforma ,como aplicaciones de escritorio, aplicaciones web, y aplicaciones móviles y muchas mas aplicaciones , y te garantizo que al final de este curso tendrás los conocimientos básicos para crear tus aplicaciones usando este grandioso lenguaje de programación de C# , y espero que este curso sea de su agrado, y gracias por ser parte de este gran curso donde aprenderemos sobre el leng parte de este gran curso y también que Dios derrame muchas bendiciones en tu vidab usifh yuik</TextBox>
+                </Grid>
+
+                <Grid Grid.Row="5" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
+                        <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Requisitos</TextBlock>
+                    </Border>
+                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="90"></TextBox>
+                </Grid>
+                <Button Grid.Row="6" Grid.Column="1" Width="250" Style="{StaticResource estiloBtnBackground}">Agregar clase</Button>
+                <Grid Grid.Row="7" Grid.ColumnSpan="2" Margin="0 15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border Background="#000000" CornerRadius="20 20 0 0">
+                        <TextBlock Margin="20 5" Foreground="#ffffff" FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Left">Clases</TextBlock>
+                    </Border>
+                    <ListBox Grid.Row="1" Height="400" ItemContainerStyle="{StaticResource estiloLstBoxClase}" BorderBrush="#000000" BorderThickness="3">
+                        <ListBoxItem>Hola</ListBoxItem>
+                    </ListBox>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>
