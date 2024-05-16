@@ -24,6 +24,12 @@ namespace UVemyCliente.Utilidades
             InitializeComponent();
         }
 
+        public ExitoMensaje(string mensaje)
+        {
+            InitializeComponent();
+            txtBlockMensaje.Text = mensaje;
+        }
+
         private void ClicAceptar(object sender, RoutedEventArgs e)
         {
             Close();

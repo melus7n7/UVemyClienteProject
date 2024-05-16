@@ -14,6 +14,7 @@ message VideoPartesEnvio{
 message DocumentoVideo{
     string nombre = 1;
     int32 idClase = 2;
+    string jwt = 3;
 }
 
 

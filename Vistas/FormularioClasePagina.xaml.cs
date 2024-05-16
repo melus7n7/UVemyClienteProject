@@ -33,7 +33,6 @@ namespace UVemyCliente.Vistas
     {
         private List<DocumentoDTO> _documentosClase;
         private DocumentoDTO _videoDocumento;
-        //private byte[] _videoClase;
         public FormularioClase()
         {
             InitializeComponent();
@@ -161,13 +160,13 @@ namespace UVemyCliente.Vistas
                 contenidoDocumento.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
                 contenido.Add(contenidoDocumento, "file", documento.Nombre + ".pdf");
 
-                HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "documentos", contenido);
+                HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "documentos/clase", contenido);
                 int codigoRespuesta = (int)respuestaHttp.StatusCode;    
 
                 if (codigoRespuesta >= 400)
                 {
                     Debug.WriteLine(codigoRespuesta);
-                    ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar el documento, revise la clase en la lista");
+                    ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar el documento, revise la clase en la lista de clases");
                     error.Show();
                     break;
                 }
@@ -191,7 +190,7 @@ namespace UVemyCliente.Vistas
             }
             else
             {
-                ExitoMensaje exito = new ExitoMensaje();
+                ExitoMensaje exito = new ExitoMensaje("Se ha guardado la clase y el video correctamente");
                 exito.Show();
             }
             
@@ -228,7 +227,7 @@ namespace UVemyCliente.Vistas
 
                 if (archivo != null)
                 {
-                    if (ArchivoNoSuperaTamanio(archivo, 1000, nombre))
+                    if (ArchivoNoSuperaTamanio(archivo, TamanioDocumentos.TAMANIO_MAXIMO_DOCUMENTOS_KB, nombre))
                     {
                         DocumentoDTO documento = new DocumentoDTO
                         {
@@ -326,7 +325,7 @@ namespace UVemyCliente.Vistas
 
                 if (videoArchivo != null)
                 {
-                    if (ArchivoNoSuperaTamanio(videoArchivo, 10000, nombre))
+                    if (ArchivoNoSuperaTamanio(videoArchivo, TamanioDocumentos.TAMANIO_MAXIMO_VIDEOS_KB, nombre))
                     {
                         _ = MostrarVideoAsync(videoArchivo, nombre);
                     }
