@@ -24,5 +24,17 @@ namespace UVemyCliente.Vistas
         {
             InitializeComponent();
         }
+
+        private void ClicMostrarComentario(object sender, RoutedEventArgs e)
+        {
+            brdComentarioNuevo.Visibility = Visibility.Visible;
+            btnResponder.Visibility = Visibility.Collapsed;
+        }
+
+        private void ClicEnviarComentario(object sender, RoutedEventArgs e)
+        {
+            brdComentarioNuevo.Visibility = Visibility.Collapsed;
+            btnResponder.Visibility = Visibility.Visible;
+        }
     }
 }

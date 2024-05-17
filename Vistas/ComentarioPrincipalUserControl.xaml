@@ -88,15 +88,16 @@
                 <ListBoxItem></ListBoxItem>
                 <ListBoxItem></ListBoxItem>
             </ListBox>
-            <Button Visibility="Visible" Grid.Row="4" Background="#000000" Foreground="#ffffff" Margin="0 5 0 0" FontFamily="{StaticResource NunitoFont}" FontSize="14">Responder</Button>
-            <Border Visibility="Collapsed" Grid.Row="4" Background="#ffffff" CornerRadius="0 0 30 30" Margin="10">
+            <Button Visibility="Visible" Grid.Row="4" Background="#000000" Foreground="#ffffff" Margin="0 5 0 0" FontFamily="{StaticResource NunitoFont}" FontSize="14"
+                    Click="ClicMostrarComentario" Name="btnResponder">Responder</Button>
+            <Border Visibility="Collapsed" Grid.Row="4" Background="#ffffff" CornerRadius="0 0 30 30" Margin="10" Name="brdComentarioNuevo" Width="660">
                 <Grid Height="110">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Height="90" Margin="10" Style="{StaticResource estiloTxtBoxComentario}">modificador de acceso y sus métodos modificador de acceso y sus métodosmodificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acce f d8</TextBox>
-                    <Button Grid.Column="1" Style="{StaticResource estiloBtnEnviarB}" VerticalAlignment="Bottom"></Button>
+                    <Button Grid.Column="1" Style="{StaticResource estiloBtnEnviarB}" VerticalAlignment="Bottom" Click="ClicEnviarComentario"></Button>
                 </Grid>
             </Border>
         </Grid>

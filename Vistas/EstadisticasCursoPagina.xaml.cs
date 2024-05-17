@@ -16,18 +16,13 @@ using System.Windows.Shapes;
 namespace UVemyCliente.Vistas
 {
     /// <summary>
-    /// Lógica de interacción para DetallesClasePagina.xaml
+    /// Lógica de interacción para EstadisticasCursoPagina.xaml
     /// </summary>
-    public partial class DetallesClase : Page
+    public partial class EstadisticasCurso : Page
     {
-        public DetallesClase()
+        public EstadisticasCurso()
         {
             InitializeComponent();
-        }
-
-        private void ClicRegresar(object sender, RoutedEventArgs e)
-        {
-            NavigationService.GoBack();
         }
     }
 }

@@ -36,5 +36,11 @@ namespace UVemyCliente.Vistas
             DetallesClase detalles = new DetallesClase();
             NavigationService.Navigate(detalles);
         }
+
+        private void ClicVerEstadisticasCurso(object sender, RoutedEventArgs e)
+        {
+            EstadisticasCurso estadisticas = new EstadisticasCurso();
+            NavigationService.Navigate(estadisticas);
+        }
     }
 }

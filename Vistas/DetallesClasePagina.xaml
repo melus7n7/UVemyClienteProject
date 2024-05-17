@@ -196,7 +196,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Background="#000000" Orientation="Horizontal">
-            <Button Style="{StaticResource estiloBtnRegresar}"></Button>
+            <Button Style="{StaticResource estiloBtnRegresar}" Click="ClicRegresar"></Button>
             <Border Background="#ffffff" CornerRadius="20" Width="200" Margin="15">
                 <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Clase</TextBlock>
             </Border>
@@ -269,7 +269,7 @@
                 </Border>
 
                 <Border Grid.Row="3" Grid.Column="1" BorderBrush="#000000" BorderThickness="3" Height="500" Margin="30 0 0 20" CornerRadius="30">
-                    <ListBox ItemContainerStyle="{StaticResource estiloLstBoxDocumento}" Margin="10">
+                    <ListBox ItemContainerStyle="{StaticResource estiloLstBoxDocumento}" Margin="10" Background="Transparent" BorderThickness="0">
                         <ListBoxItem></ListBoxItem>
                         <ListBoxItem></ListBoxItem>
                     </ListBox>
