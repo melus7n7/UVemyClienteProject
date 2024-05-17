@@ -395,5 +395,9 @@ namespace UVemyCliente.Vistas
             btnPausar.Visibility = Visibility.Collapsed;
         }
 
+        private void ClicRegresar(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
     }
 }

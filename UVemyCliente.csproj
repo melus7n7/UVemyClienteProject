@@ -12,9 +12,12 @@
     <None Remove="Fonts\Nunito-Italic-VariableFont_wght.ttf" />
     <None Remove="Fonts\Nunito-VariableFont_wght.ttf" />
     <None Remove="Recursos\delete.png" />
+    <None Remove="Recursos\downloads.png" />
     <None Remove="Recursos\pause.png" />
     <None Remove="Recursos\play.png" />
     <None Remove="Recursos\previous.png" />
+    <None Remove="Recursos\sendB.png" />
+    <None Remove="Recursos\sendW.png" />
     <None Remove="Recursos\success.png" />
   </ItemGroup>
 
@@ -39,6 +42,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
 	  <Resource Include="Recursos\delete.png" />
+	  <Resource Include="Recursos\downloads.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="Recursos\pause.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
@@ -46,6 +52,12 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
 	  <Resource Include="Recursos\previous.png" />
+	  <Resource Include="Recursos\sendB.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Recursos\sendW.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="Recursos\success.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>

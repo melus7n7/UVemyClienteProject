@@ -18,11 +18,23 @@ namespace UVemyCliente.Vistas
     /// <summary>
     /// Lógica de interacción para DetallesCursoPagina.xaml
     /// </summary>
-    public partial class DetallesCursoPagina : Page
+    public partial class DetallesCurso : Page
     {
-        public DetallesCursoPagina()
+        public DetallesCurso()
         {
             InitializeComponent();
+        }
+
+        private void ClicAgregarClase(object sender, RoutedEventArgs e)
+        {
+            FormularioClase formulario = new FormularioClase();
+            NavigationService.Navigate(formulario);
+        }
+
+        private void ClicVerClase(object sender, RoutedEventArgs e)
+        {
+            DetallesClase detalles = new DetallesClase();
+            NavigationService.Navigate(detalles);
         }
     }
 }

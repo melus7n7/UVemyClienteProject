@@ -1,4 +1,4 @@
-﻿<Page x:Class="UVemyCliente.Vistas.DetallesCursoPagina"
+﻿<Page x:Class="UVemyCliente.Vistas.DetallesCurso"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -89,7 +89,7 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Style="{StaticResource estiloTxtBlockInfo}">1</TextBlock>
                                 <TextBlock Grid.Column="1" Style="{StaticResource estiloTxtBlockInfo}">Aplicaciones que se pueden crear con el lenguaje de programacion de C#</TextBlock>
-                                <Button Grid.Column="2" Style="{StaticResource estiloBtnBackground}" FontSize="15" Width="100">Ver más</Button>
+                                <Button Grid.Column="2" Style="{StaticResource estiloBtnBackground}" FontSize="15" Width="100" Click="ClicVerClase">Ver más</Button>
 
                             </Grid>
                         </Border>
@@ -209,7 +209,7 @@
                     </Border>
                     <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="90"></TextBox>
                 </Grid>
-                <Button Grid.Row="6" Grid.Column="1" Width="250" Style="{StaticResource estiloBtnBackground}">Agregar clase</Button>
+                <Button Grid.Row="6" Grid.Column="1" Width="250" Style="{StaticResource estiloBtnBackground}" Click="ClicAgregarClase">Agregar clase</Button>
                 <Grid Grid.Row="7" Grid.ColumnSpan="2" Margin="0 15">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
