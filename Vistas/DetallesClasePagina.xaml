@@ -188,65 +188,6 @@
             </Setter>
         </Style>
 
-        <Style x:Key="estiloLstBoxComentarioSecundario" TargetType="ListBoxItem">
-            <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="#000000"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Grid Margin="5 5 5 0" Width="660">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Pedro González López</TextBlock>
-                            <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Medium">modificador de acceso y sus métodos f d8</TextBlock>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="estiloLstBoxComentarioPrincipal" TargetType="ListBoxItem">
-            <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="#000000"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border Background="#A6A4A4" Margin="5 10 5 5" CornerRadius="20">
-                            <Grid Margin="15 10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock FontSize="16" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Pedro González López</TextBlock>
-                                <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Width="680"
-                                           FontWeight="Medium">modificador de acceso y sus métododificador de acceso y sus métodos modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acce f d8</TextBlock>
-                                <TextBlock Grid.Row="2" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Margin="0 5 0 0"
-                                           HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Respuestas</TextBlock>
-                                <ListBox Grid.Row="3" Height="100" ItemContainerStyle="{StaticResource estiloLstBoxComentarioSecundario}">
-                                    <ListBoxItem></ListBoxItem>
-                                    <ListBoxItem></ListBoxItem>
-                                </ListBox>
-                                <Button Grid.Row="4" Background="#000000" Foreground="#ffffff" Margin="0 5 0 0">Responder</Button>
-                            </Grid>
-                        </Border>
-
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="estiloBtnComentarioRespuesta" TargetType="Button">
-            
-        </Style>
-
- 
     </Page.Resources>
 
     <Grid Background="#ffffff">
@@ -321,9 +262,9 @@
                                 <Button Grid.Column="1" Style="{StaticResource estiloBtnEnviarW}"></Button>
                             </Grid>
                         </Border>
-                        <ListBox Grid.Row="1" Margin="10 0 10 10" BorderThickness="0" ItemContainerStyle="{StaticResource estiloLstBoxComentarioPrincipal}">
-                            <ListBoxItem></ListBoxItem>
-                        </ListBox>
+                        <ListView Grid.Row="1" Margin="10 0 10 10" BorderThickness="0">
+                            <local:ComentarioPrincipalUserControl/>
+                        </ListView>
                     </Grid>
                 </Border>
 
