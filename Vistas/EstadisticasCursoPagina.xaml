@@ -83,15 +83,15 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
                         <Border BorderBrush="#000000" BorderThickness="0 0 0 3">
-                            <Grid Margin="15 5">
+                            <Grid Margin="5 5">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="55"/>
                                     <ColumnDefinition Width="480"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" FontWeight="Bold">1</TextBlock>
-                                <TextBlock Grid.Column="1" TextWrapping="Wrap" Margin="15 0 0 0">Aplicaciones que se pueden crear con el lenguaje de programacion de C#</TextBlock>
-                                <TextBlock Grid.Column="2" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" FontWeight="Bold">1</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0 10 0 10" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding NumeroClase}"></TextBlock>
+                                <TextBlock Grid.Column="1" TextWrapping="Wrap" Margin="15 0 0 0" Text="{Binding Nombre}"></TextBlock>
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding CantidadComentarios}"></TextBlock>
                             </Grid>
                         </Border>
                     </ControlTemplate>
@@ -107,7 +107,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
                         <Border BorderBrush="#000000" BorderThickness="0 0 0 3">
-                            <TextBlock TextWrapping="Wrap" Margin="15 10" Width="500">ASulem mstintez#</TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="15 10" Width="500" Text="{Binding}"></TextBlock>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -121,7 +121,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Background="#000000" Orientation="Horizontal">
-            <Button Style="{StaticResource estiloBtnRegresar}"></Button>
+            <Button Style="{StaticResource estiloBtnRegresar}" Click="ClicRegresar"></Button>
             <Border Background="#ffffff" CornerRadius="20" Width="380" Margin="15">
                 <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Estadísticas del curso</TextBlock>
             </Border>
@@ -140,7 +140,7 @@
                         <ColumnDefinition Width=".3*"/>
                     </Grid.ColumnDefinitions>
                     <Border Background="#000000" CornerRadius="20" Margin="0 15 50 15" Height="120">
-                        <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="23" TextWrapping="Wrap" Margin="20 15">Modificador public y métodos que retorna un tipo de dato</TextBlock>
+                        <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="23" TextWrapping="Wrap" Margin="20 15" Name="txtBlockNombreCurso"></TextBlock>
                     </Border>
                     <Button Grid.Column="1" Style="{StaticResource estiloBtnBackground}" Margin="20 10" Height="100">Generar un documento con las estadísticas</Button>
                 </Grid>
@@ -159,7 +159,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Style="{StaticResource estiloTxtBoxCampos}" Margin="10">Calificación del curso:</TextBlock>
                             <Border Grid.Row="1" Background="#ffffff" Margin="5" CornerRadius="0 0 30 30">
-                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center" Margin="10 5">10</TextBlock>
+                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center" Margin="10 5" Name="txtBlockCalificacionTotal">-</TextBlock>
                             </Border>
                         </Grid>
                     </Border>
@@ -172,7 +172,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Style="{StaticResource estiloTxtBoxCampos}" Margin="10">Promedio de comentarios por clase:</TextBlock>
                             <Border Grid.Row="1" Background="#ffffff" Margin="5" CornerRadius="0 0 30 30">
-                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center" Margin="10 5">10</TextBlock>
+                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center" Margin="10 5" Name="txtBlockPromedioComentarios">-</TextBlock>
                             </Border>
                         </Grid>
                     </Border>
@@ -185,7 +185,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Style="{StaticResource estiloTxtBoxCampos}" Margin="10">Estudiantes inscritos en el curso:</TextBlock>
                             <Border Grid.Row="1" Background="#ffffff" Margin="5" CornerRadius="0 0 30 30">
-                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center" Margin="10 5">10</TextBlock>
+                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center" Margin="10 5" Name="txtBlockEstudiantesTotales">-</TextBlock>
                             </Border>
                         </Grid>
                     </Border>
@@ -198,7 +198,7 @@
                     <Border Background="#000000" CornerRadius="20" Width="200" Margin="0 10 10 5" >
                         <TextBlock TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxCampos}" Margin="10" TextAlignment="Center">Etiquetas que coinciden:</TextBlock>
                     </Border>
-                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="55">Programación, POO</TextBox>
+                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="55" Name="txtBlockEtiquetas"></TextBox>
                 </Grid>
 
                 <Grid Grid.Row="3" Margin="0 15 0 0">
@@ -223,8 +223,7 @@
                             </Grid>
                             
                         </Border>
-                        <ListBox Grid.Row="1" Height="500" ItemContainerStyle="{StaticResource estiloLstBoxClase}" BorderBrush="#000000" BorderThickness="3">
-                            <ListBoxItem>Hola</ListBoxItem>
+                        <ListBox Grid.Row="1" Height="500" ItemContainerStyle="{StaticResource estiloLstBoxClase}" BorderBrush="#000000" BorderThickness="3" Name="lstBoxClases">
                         </ListBox>
                     </Grid>
                     <Grid Margin="15 0 0 20" Grid.Column="1">
@@ -235,8 +234,7 @@
                         <Border Background="#000000" CornerRadius="20 20 0 0">
                             <TextBlock Margin="20 5" Foreground="#ffffff" FontFamily="{StaticResource NunitoItalicFont}" FontSize="26" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Left">Estudiantes</TextBlock>
                         </Border>
-                        <ListBox Grid.Row="1" Height="500" ItemContainerStyle="{StaticResource estiloLstBoxEstudiante}" BorderBrush="#000000" BorderThickness="3">
-                            <ListBoxItem>Hola</ListBoxItem>
+                        <ListBox Grid.Row="1" Height="500" ItemContainerStyle="{StaticResource estiloLstBoxEstudiante}" BorderBrush="#000000" BorderThickness="3" Name="lstBoxEstudiantes">
                         </ListBox>
                     </Grid>
                 </Grid>
