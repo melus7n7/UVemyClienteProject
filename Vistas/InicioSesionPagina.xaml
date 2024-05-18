@@ -86,10 +86,10 @@
 
         <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" >
             <TextBlock Style="{StaticResource estiloTxtBlockFormularioInicioSesion}" TextAlignment="Center" Margin="0,50,0,5">Correo electrónico</TextBlock>
-            <TextBox Name="txtBoxCorreoElectronico" Style="{StaticResource estiloTxtBoxFormularioInicioSesion}" VerticalScrollBarVisibility="Disabled" Margin="0,0,0,20"/>
+            <TextBox Name="txtBoxCorreoElectronico" Style="{StaticResource estiloTxtBoxFormularioInicioSesion}" VerticalScrollBarVisibility="Disabled" Margin="0,0,0,20" MaxLength="600" Width="300" Height="50.55"/>
 
             <TextBlock Style="{StaticResource estiloTxtBlockFormularioInicioSesion}" TextAlignment="Center">Contraseña</TextBlock>
-            <PasswordBox Name="pwdBoxContrasena" Style="{StaticResource estiloPwdBoxFormularioInicioSesion}"/>
+            <PasswordBox Name="pwdBoxContrasena" Style="{StaticResource estiloPwdBoxFormularioInicioSesion}" MaxLength="18"/>
             <TextBlock Name="txtBlockMensajeError" Style="{StaticResource estiloTxtBlockFormularioInicioSesion}" TextAlignment="Left" FontWeight="Medium" Foreground="Red" Margin="0 0 0 20" TextWrapping="Wrap" HorizontalAlignment="Center" Width="300"/>
 
             <Button Style="{StaticResource estiloBtnInicioSesion}" Content="Iniciar sesión" Click="ClicIniciarSesion" Margin="0 50 0 0"/>

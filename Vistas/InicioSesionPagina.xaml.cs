@@ -27,8 +27,8 @@ namespace UVemyCliente.Vistas
     /// </summary>
     public partial class InicioSesionPagina : Page
     {
-        private string _correoElectronico;
-        private string _contrasena;
+        private string _correoElectronico = string.Empty;
+        private string _contrasena = string.Empty;
 
         public InicioSesionPagina()
         {
@@ -37,11 +37,38 @@ namespace UVemyCliente.Vistas
 
         private void ClicIniciarSesion(object sender, RoutedEventArgs e)
         {
-            txtBlockMensajeError.Text = string.Empty;
-            _correoElectronico = txtBoxCorreoElectronico.Text.Length == 0 ? string.Empty : txtBoxCorreoElectronico.Text;
-            _contrasena = pwdBoxContrasena.Password.Length == 0 ? string.Empty : pwdBoxContrasena.Password;
+            _correoElectronico = txtBoxCorreoElectronico.Text.Trim();
+            _contrasena = pwdBoxContrasena.Password.Trim();
 
-            _ = IniciarSesionAsync();
+            if (ValidarCampos())
+            {
+                _ = IniciarSesionAsync();
+            }
+        }
+
+        private bool ValidarCampos()
+        {
+            bool sonValidos = true;
+            txtBlockMensajeError.Text = string.Empty;
+
+            if (string.IsNullOrEmpty(_correoElectronico))
+            {
+                txtBlockMensajeError.Text = "Correo electrónico requerido";
+                sonValidos = false;
+            }
+            else if (!CredencialesValidador.EsCorreoValido(_correoElectronico))
+            {
+                txtBlockMensajeError.Text = "Correo electrónico inválido";
+                sonValidos = false;
+            }
+
+            if (string.IsNullOrEmpty(_contrasena))
+            {
+                txtBlockMensajeError.Text += string.IsNullOrEmpty(txtBlockMensajeError.Text) ? "Contraseña requerida" : "\nContraseña requerida";
+                sonValidos = false;
+            }
+
+            return sonValidos;
         }
 
         private async Task IniciarSesionAsync()
@@ -69,7 +96,7 @@ namespace UVemyCliente.Vistas
                     SingletonUsuario.CorreoElectronico = usuarioVerificado.CorreoElectronico;
                     SingletonUsuario.JWT = usuarioVerificado.Token;
 
-                    ExitoMensaje exitoMensaje = new ExitoMensaje();
+                    ExitoMensaje exitoMensaje = new();
                     exitoMensaje.Show();
                 }
             }
@@ -86,7 +113,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicRegistrate(object sender, RoutedEventArgs e)
         {
-
+            NavigationService?.Navigate(new FormularioUsuarioPagina());
         }
     }
 }
