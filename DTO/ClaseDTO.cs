@@ -17,5 +17,7 @@ namespace UVemyCliente.DTO
         public string Descripcion { get; set; }
         [JsonPropertyName("idCurso")]
         public int IdCurso { get; set; }
+        [JsonPropertyName("documentos")]
+        public List<DocumentoDTO> Documentos { get; set; }
     }
 }
