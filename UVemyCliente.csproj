@@ -11,11 +11,13 @@
   <ItemGroup>
     <None Remove="Fonts\Nunito-Italic-VariableFont_wght.ttf" />
     <None Remove="Fonts\Nunito-VariableFont_wght.ttf" />
+    <None Remove="Recursos\default_profile_image.png" />
     <None Remove="Recursos\delete.png" />
     <None Remove="Recursos\pause.png" />
     <None Remove="Recursos\play.png" />
     <None Remove="Recursos\previous.png" />
     <None Remove="Recursos\success.png" />
+    <None Remove="Recursos\trash.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +40,9 @@
 	  <Resource Include="Fonts\Nunito-VariableFont_wght.ttf">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
+	  <Resource Include="Recursos\default_profile_image.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="Recursos\delete.png" />
 	  <Resource Include="Recursos\pause.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -47,6 +52,9 @@
 	  </Resource>
 	  <Resource Include="Recursos\previous.png" />
 	  <Resource Include="Recursos\success.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Recursos\trash.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
 	</ItemGroup>
