@@ -63,7 +63,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Background="#0A122A" Orientation="Horizontal">
-            <Button Style="{StaticResource estiloBtnRegresar}"></Button>
+            <Button Style="{StaticResource estiloBtnRegresar}" Click="ClicRegresar"></Button>
             <Border Background="#ffffff" CornerRadius="20" Width="300" Margin="15">
                 <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Registro</TextBlock>
             </Border>
@@ -73,6 +73,8 @@
             <TextBlock Text="Confirma tu correo electrónico" Style="{StaticResource estiloTxtBlockCodigoVerificacion}" Margin="0,0,0,50" TextAlignment="Center" TextWrapping="WrapWithOverflow"/>
             <TextBlock Text="Ingresa el código enviado al correo ingresado" Style="{StaticResource estiloTxtBlockCodigoVerificacion}" Margin="0,0,0,50" TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
             <TextBox x:Name="txtCodigoVerificacion" Style="{StaticResource estiloTxtBoxCodigoVerificacion}" Margin="0,0,0,50" TextAlignment="Center" PreviewTextInput="VerificarEntradaNumérica"/>
+            <TextBlock x:Name="txtBlockMensajeError" Style="{StaticResource estiloTxtBlockCodigoVerificacion}" TextAlignment="Left" FontWeight="Medium" Foreground="Red" TextWrapping="Wrap" Width="700" />
+
         </StackPanel>
 
         <Button Grid.Row="2" Margin="20" Content="Confirmar" Style="{StaticResource estiloBtnConfirmarCorreo}" Click="ClicConfirmar"/>

@@ -114,7 +114,7 @@ namespace UVemyCliente.Vistas
         private void ClicRegistrate(object sender, RoutedEventArgs e)
         {
             FormularioUsuarioPagina formularioUsuarioPagina = new();
-            NavigationService.Navigate(formularioUsuarioPagina);
+            this.NavigationService.Navigate(formularioUsuarioPagina);
         }
 
         private void CargarPagina(object sender, RoutedEventArgs e)

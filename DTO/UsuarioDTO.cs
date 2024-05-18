@@ -21,8 +21,8 @@ namespace UVemyCliente.DTO
         public string? Contrasena { get; set; }
         [JsonPropertyName("imagen")]
         public byte[]? Imagen { get; set; }
-        [JsonPropertyName("idEtiquetas")]
-        public List<int>? IdEtiquetas { get; set; }
+        [JsonPropertyName("idsEtiqueta")]
+        public List<int>? IdsEtiqueta { get; set; }
         [JsonPropertyName("codigoVerificacion")]
         public string? CodigoVerificacion { get; set; }
         [JsonPropertyName("jwt")]

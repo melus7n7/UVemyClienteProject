@@ -50,8 +50,8 @@ namespace UVemyCliente.Vistas
         {
             if (sender is ToggleButton toggleButton && toggleButton.DataContext is EtiquetaDTO etiqueta)
             {
-                _usuario.IdEtiquetas ??= [];
-                _usuario.IdEtiquetas.Add(etiqueta.IdEtiqueta);
+                _usuario.IdsEtiqueta ??= [];
+                _usuario.IdsEtiqueta.Add(etiqueta.IdEtiqueta);
             }
         }
 
@@ -59,15 +59,15 @@ namespace UVemyCliente.Vistas
         {
             if (sender is ToggleButton toggleButton && toggleButton.DataContext is EtiquetaDTO etiqueta)
             {
-                _usuario.IdEtiquetas?.Remove(etiqueta.IdEtiqueta);
+                _usuario.IdsEtiqueta?.Remove(etiqueta.IdEtiqueta);
             }
         }
 
         private void ClicConfirmar(object sender, RoutedEventArgs e)
         {
-            if (_usuario.IdEtiquetas?.Count > 0)
+            if (_usuario.IdsEtiqueta?.Count > 0)
             {
-                SolicitarCodigoVerificacion();
+                _ = SolicitarCodigoVerificacion();
             }
             else
             {
@@ -86,9 +86,9 @@ namespace UVemyCliente.Vistas
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
                 if (JsonSerializer.Deserialize<UsuarioDTO>(jsonString) != null)
                 {
-                    _usuario.Token = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Token;
+                    SingletonUsuario.JWT = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Token;
                     CodigoVerificacionPagina codigoVerificacionPagina = new(_usuario);
-                    NavigationService.Navigate(codigoVerificacionPagina);
+                    this.NavigationService.Navigate(codigoVerificacionPagina);
                 }
             }
             else
@@ -105,7 +105,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            this.NavigationService.GoBack();
         }
     }
 }

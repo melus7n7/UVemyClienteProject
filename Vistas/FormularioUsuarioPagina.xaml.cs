@@ -121,7 +121,7 @@ namespace UVemyCliente.Vistas
             };
 
             SeleccionEtiquetasPagina seleccionEtiquetasPagina = new(usuario);
-            NavigationService.Navigate(seleccionEtiquetasPagina);
+            this.NavigationService.Navigate(seleccionEtiquetasPagina);
         }
 
         private void ClicActualizar(object sender, RoutedEventArgs e)
@@ -196,7 +196,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            this.NavigationService.GoBack();
         }
     }
 }
