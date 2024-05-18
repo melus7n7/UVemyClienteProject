@@ -35,7 +35,8 @@ namespace UVemyCliente.Servicios
                 var buffer = new byte[_tamanioChunks];
                 byte[] videoBytes = documentoDTO.Archivo;
 
-                DocumentoVideo documento = new DocumentoVideo { IdClase = documentoDTO.IdClase, Nombre = documentoDTO.Nombre};
+                DocumentoVideo documento = new DocumentoVideo { IdClase = documentoDTO.IdClase, Nombre = documentoDTO.Nombre, 
+                    Jwt = "Bearer " +  SingletonUsuario.JWT};
                 VideoPartesEnvio envioInicial = new VideoPartesEnvio { DatosVideo = documento };
 
                 VideoService.VideoServiceClient stub = ObtenerStub();

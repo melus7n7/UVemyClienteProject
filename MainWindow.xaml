@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:UVemyCliente"
         mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="1336">
     <Grid>
-        <Frame Source="Vistas/InicioSesionPagina.xaml"/>
+
+        <Frame NavigationUIVisibility="Hidden" Source="Vistas/DetallesCursoPagina.xaml"/>
     </Grid>
 </Window>

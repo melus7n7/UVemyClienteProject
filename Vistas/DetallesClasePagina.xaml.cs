@@ -10,29 +10,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace UVemyCliente.Utilidades
+namespace UVemyCliente.Vistas
 {
     /// <summary>
-    /// Lógica de interacción para ExitoMensaje.xaml
+    /// Lógica de interacción para DetallesClasePagina.xaml
     /// </summary>
-    public partial class ExitoMensaje : Window
+    public partial class DetallesClase : Page
     {
-        public ExitoMensaje()
+        public DetallesClase()
         {
             InitializeComponent();
         }
 
-        public ExitoMensaje(string mensaje)
+        private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            txtBlockMensaje.Text = mensaje;
-        }
-
-        private void ClicAceptar(object sender, RoutedEventArgs e)
-        {
-            Close();
+            NavigationService.GoBack();
         }
     }
 }

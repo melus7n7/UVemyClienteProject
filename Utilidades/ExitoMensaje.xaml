@@ -55,8 +55,8 @@
                     <RowDefinition />
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock  HorizontalAlignment="Center" FontSize="12" FontFamily="{StaticResource NunitoFont}" Margin="20 0 20 0" TextAlignment="Center"
-                    VerticalAlignment="Center" TextWrapping="Wrap">Se ha realizado exitosamente la operación</TextBlock>
+                <TextBlock  HorizontalAlignment="Center" FontSize="12" FontFamily="{StaticResource NunitoFont}" Margin="5 0 5 0" TextAlignment="Center"
+                    VerticalAlignment="Center" TextWrapping="Wrap" Name="txtBlockMensaje">Se ha realizado la operación correctamente</TextBlock>
                 <Button Grid.Row="1" Style="{StaticResource estiloBtnAceptar}" Margin="0 5 0 10" Click="ClicAceptar">Aceptar</Button>
             </Grid>
         </Grid>
