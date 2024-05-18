@@ -71,9 +71,10 @@ namespace UVemyCliente.Vistas
             return sonValidos;
         }
 
+
         private async Task IniciarSesionAsync()
         {
-            UsuarioDTO credenciales = new UsuarioDTO
+            UsuarioDTO credenciales = new()
             {
                 CorreoElectronico = _correoElectronico,
                 Contrasena = _contrasena
@@ -87,14 +88,13 @@ namespace UVemyCliente.Vistas
             if (codigoRespuesta == (int) HttpStatusCode.OK)
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
-                UsuarioDTO? usuarioVerificado = JsonSerializer.Deserialize<UsuarioDTO>(jsonString);
-                if (usuarioVerificado != null)
+                if (JsonSerializer.Deserialize<UsuarioDTO>(jsonString) != null)
                 {
-                    SingletonUsuario.IdUsuario = usuarioVerificado.Id;
-                    SingletonUsuario.Nombres = usuarioVerificado.Nombres;
-                    SingletonUsuario.Apellidos = usuarioVerificado.Apellidos;
-                    SingletonUsuario.CorreoElectronico = usuarioVerificado.CorreoElectronico;
-                    SingletonUsuario.JWT = usuarioVerificado.Token;
+                    SingletonUsuario.IdUsuario = (int)JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Id;
+                    SingletonUsuario.Nombres = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Nombres;
+                    SingletonUsuario.Apellidos = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Apellidos;
+                    SingletonUsuario.CorreoElectronico = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).CorreoElectronico;
+                    SingletonUsuario.JWT = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Token;
 
                     ExitoMensaje exitoMensaje = new();
                     exitoMensaje.Show();
@@ -113,7 +113,14 @@ namespace UVemyCliente.Vistas
 
         private void ClicRegistrate(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new FormularioUsuarioPagina());
+            FormularioUsuarioPagina formularioUsuarioPagina = new();
+            NavigationService.Navigate(formularioUsuarioPagina);
+        }
+
+        private void CargarPagina(object sender, RoutedEventArgs e)
+        {
+            txtBoxCorreoElectronico.Text = string.Empty;
+            pwdBoxContrasena.Password = string.Empty;
         }
     }
 }

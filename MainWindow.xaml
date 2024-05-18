@@ -6,6 +6,6 @@
         xmlns:local="clr-namespace:UVemyCliente"
         mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="1336">
     <Grid>
-        <Frame Source="Vistas/FormularioClasePagina.xaml"/>
+        <Frame Source="Vistas/InicioSesionPagina.xaml"/>
     </Grid>
 </Window>

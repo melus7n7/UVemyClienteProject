@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:UVemyCliente.Vistas"
       mc:Ignorable="d" 
       d:DesignHeight="768" d:DesignWidth="1366"
-      Title="InicioSesionPagina">
+      Title="InicioSesionPagina" Loaded="CargarPagina">
 
     <Page.Resources>
         <Style x:Key="estiloTxtBlockFormularioInicioSesion" TargetType="TextBlock">
