@@ -105,13 +105,13 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Background="#000000" Orientation="Horizontal">
-            <Button Style="{StaticResource estiloBtnRegresar}"></Button>
+            <Button Style="{StaticResource estiloBtnRegresar}" Name="btnRegresar"></Button>
             <Border Background="#ffffff" CornerRadius="20" Width="200" Margin="15">
                 <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Curso</TextBlock>
             </Border>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
-            <Grid Margin="35 10 35 10">
+            <Grid Margin="35 10 35 10" Name="grdBackground">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -129,10 +129,17 @@
                 <Border Background="#000000" CornerRadius="20" Margin="0 15 0 25" Height="120">
                     <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="24" TextWrapping="Wrap" Margin="20 15">Curso de C# .NET desde cero hasta lo mas avanzado full stack lo mas avanzado full stac</TextBlock>
                 </Border>
-                <StackPanel Grid.Column="1">
-                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 5">Modificar curso</Button>
-                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 5 0 10" Click="ClicVerEstadisticasCurso">Ver estadísticas del curso</Button>
-                </StackPanel>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 5" Name="btnModificarCurso" Visibility="Collapsed">Modificar curso</Button>
+                    <Button Grid.Row="1" Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 5 0 10" Click="ClicVerEstadisticasCurso" Name="btnVerEstadisticas" Visibility="Collapsed">Ver estadísticas del curso</Button>
+                    <Button Grid.RowSpan="2" Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 5 0 10" Click="ClicInscribirseAlCurso" Name="btnInscribirse" Height="80" Visibility="Collapsed">Inscribirse al curso</Button>
+                    <Button Grid.RowSpan="2" Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 5 0 10" Click="ClicCalificarCurso" Name="btnCalificarCurso" Height="80" Visibility="Visible">Calificar curso</Button>
+
+                </Grid>
 
                 <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Height="320" Margin="30 0 0 0" BorderThickness="3" BorderBrush="#000000" CornerRadius="30">
                     <Image Source="/Recursos/success.png"></Image>
