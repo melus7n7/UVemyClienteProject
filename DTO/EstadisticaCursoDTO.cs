@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,12 @@ namespace UVemyCliente.DTO
     {
         [JsonPropertyName("nombre")]
         public string NombreCurso { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         [JsonPropertyName("calificacionCurso")]
-        public double Calificacion { get; set; }
+        public double? Calificacion { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         [JsonPropertyName("promedioComentarios")]
-        public double PromedioComentarios { get; set; }
+        public double? PromedioComentarios { get; set; }
         [JsonPropertyName("estudiantesInscritos")]
         public int EstudiantesInscritos { get; set; }
         [JsonPropertyName("etiquetasCoinciden")]

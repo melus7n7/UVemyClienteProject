@@ -20,6 +20,7 @@ namespace UVemyCliente.Conexion
                 _cliente = new HttpClient();
                 _cliente.DefaultRequestHeaders.Accept.Clear();
                 _cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                _cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/pdf"));
                 _cliente.BaseAddress = new Uri("http://localhost:3000/api/");
             }
 

@@ -39,7 +39,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicVerEstadisticasCurso(object sender, RoutedEventArgs e)
         {
-            EstadisticasCurso estadisticas = new EstadisticasCurso();
+            EstadisticasCurso estadisticas = new EstadisticasCurso(1);
             NavigationService.Navigate(estadisticas);
         }
     }
