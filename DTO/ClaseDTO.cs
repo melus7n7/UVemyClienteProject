@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +20,12 @@ namespace UVemyCliente.DTO
         public int IdCurso { get; set; }
         [JsonPropertyName("documentos")]
         public List<DocumentoDTO> Documentos { get; set; }
+        [JsonPropertyName("documentosId")]
+        public List<int> DocumentosId { get; set; }
+        [JsonPropertyName("videoId")]
+        public int VideoId { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DocumentoDTO Video { get; set; }
+
     }
 }

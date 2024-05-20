@@ -31,20 +31,60 @@ namespace UVemyCliente.Vistas
     /// </summary>
     public partial class FormularioClase : Page
     {
+        private ClaseDTO _claseActual;
         private List<DocumentoDTO> _documentosClase;
         private DocumentoDTO _videoDocumento;
         public FormularioClase()
         {
             InitializeComponent();
+            PrepararMediaElement();
             _documentosClase = new List<DocumentoDTO>();
             _videoDocumento = null;
+
+        }
+        public FormularioClase(ClaseDTO clase)
+        {
+            InitializeComponent();
+            PrepararMediaElement();
+            MostrarClaseActual(clase);
+        }
+
+        private void MostrarClaseActual(ClaseDTO clase)
+        {
+            _claseActual = clase;
+            _documentosClase = clase.Documentos;
+            _videoDocumento = clase.Video;
+            txtBlockNombreClase.Text = clase.Nombre;
+            txtBlockDescripcion.Text = clase.Descripcion;
+
+            if (_documentosClase == null)
+            {
+                _documentosClase = new List<DocumentoDTO>();
+                ErrorMensaje error = new ErrorMensaje("No se pudieron recuperar los documentos de la clase");
+                error.Show();
+            }
+
+            if (_videoDocumento == null)
+            {
+                ErrorMensaje error = new ErrorMensaje("No se pudo recuperar el video de la clase");
+                error.Show();
+            }
+
+            btnEliminarClase.Visibility = Visibility.Visible;
+            btnGuardar.Click -= ClicGuardarClase;
+            btnGuardar.Click += ClicActualizarClase;
+        }
+
+        private void PrepararMediaElement()
+        {
             mdElementVideo.LoadedBehavior = MediaState.Manual;
             mdElementVideo.UnloadedBehavior = MediaState.Manual;
             mdElementVideo.Stretch = Stretch.Uniform;
-
         }
+
         private void ClicGuardarClase(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("Como");
             bool esValido = ValidarInformacion();
 
             if (esValido)
@@ -398,6 +438,98 @@ namespace UVemyCliente.Vistas
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
+        }
+
+        private void ClicEliminarClase(object sender, RoutedEventArgs e)
+        {
+            string message = "¿Desea eliminar la clase?";
+            string title = "ELiminación de clase";
+            MessageBoxButton buttons = MessageBoxButton.YesNo;
+            MessageBoxResult result = MessageBox.Show(message, title, buttons);
+            if (result == MessageBoxResult.Yes)
+            {
+                _ = EliminarClaseAsync();
+            }
+        }
+
+        private async Task EliminarClaseAsync()
+        {
+            grdPrincipal.IsEnabled = false;
+
+            string url = "clases/" + _claseActual.Id;
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Delete, url);
+            int codigoRespuesta = (int)respuestaHttp.StatusCode;
+
+            if (codigoRespuesta >= 400)
+            {
+                Debug.WriteLine(codigoRespuesta);
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo eliminar la clase, inténtelo más tarde");
+                error.Show();
+            }
+            else
+            {
+                ExitoMensaje mensaje = new ExitoMensaje("Se ha eliminado la clase exitosamente");
+                mensaje.Show();
+
+                DetallesCurso curso = new DetallesCurso();
+                NavigationService.Navigate(curso);
+            }
+
+            grdPrincipal.IsEnabled = true;
+        }
+
+        private void ClicActualizarClase(object sender, RoutedEventArgs e)
+        {
+            bool esValido = ValidarInformacion();
+
+            if (esValido)
+            {
+                _ = ActualizarClaseAsync();
+            }
+        }
+
+        private async Task ActualizarClaseAsync()
+        {
+            grdPrincipal.IsEnabled = false;
+            ClicPausar(null, null);
+
+            ClaseDTO claseActualizada = new ClaseDTO
+            {
+                Id = _claseActual.Id,
+                Nombre = txtBlockNombreClase.Text,
+                Descripcion = txtBlockDescripcion.Text,
+                IdCurso = 1 //To-Do
+            };
+
+            string url = "clases/" + _claseActual.Id;
+            var json = JsonSerializer.Serialize(claseActualizada);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Put, url, content);
+            int codigoRespuesta = (int)respuestaHttp.StatusCode;
+
+
+            if (codigoRespuesta >= 400)
+            {
+                Debug.WriteLine(codigoRespuesta);
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo actualizar la clase, inténtelo más tarde");
+                error.Show();
+            }
+            else
+            {
+                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+                ClaseDTO? claseNueva = JsonSerializer.Deserialize<ClaseDTO>(jsonString);
+                if (claseNueva != null)
+                {
+                    //Actualizar documentos y video
+
+                    ExitoMensaje exito = new ExitoMensaje("Se ha actualizado la clase correctamente");
+                    exito.Show();
+                    DetallesClase clase = new DetallesClase(_claseActual.Id);
+                    NavigationService.Navigate(clase);
+                }
+            }
+
+            grdPrincipal.IsEnabled = true;
         }
     }
 }

@@ -39,10 +39,12 @@
             <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontFamily" Value="{StaticResource NunitoItalicFont}"/>
+            <Setter Property="Background" Value="#479E85"/>
+            <Setter Property="Margin" Value="10 0 10 0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="#479E85" CornerRadius="30" Width="300">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="30">
                             <ContentPresenter Margin="20 10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -186,16 +188,30 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="1.2*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Margin="30 20" VerticalAlignment="Center">
+                <Grid Margin="30 20" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
                     <TextBlock Style="{StaticResource estiloTxtBlockFormularioClaseInfo}">Nombre de la clase</TextBlock>
-                    <TextBox Height="100" TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxFormularioClaseCampo}" Name="txtBlockNombreClase" ></TextBox>
+                    <TextBox Grid.Row="1" Height="100" TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxFormularioClaseCampo}" Name="txtBlockNombreClase" ></TextBox>
 
-                    <TextBlock Style="{StaticResource estiloTxtBlockFormularioClaseInfo}">Descripción</TextBlock>
-                    <TextBox Height="380" TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxFormularioClaseCampo}" Name="txtBlockDescripcion"></TextBox>
+                    <TextBlock Grid.Row="2" Style="{StaticResource estiloTxtBlockFormularioClaseInfo}">Descripción</TextBlock>
+                    <TextBox Grid.Row="3" Height="380" TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxFormularioClaseCampo}" Name="txtBlockDescripcion"></TextBox>
 
-                    <Button Click="ClicGuardarClase" Style="{StaticResource estiloBtnGuardarClase}">Guardar clase</Button>
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Click="ClicGuardarClase" Style="{StaticResource estiloBtnGuardarClase}" Name="btnGuardar">Guardar clase</Button>
+                        <Button Grid.Column="1" Click="ClicEliminarClase" Style="{StaticResource estiloBtnGuardarClase}" Name="btnEliminarClase" Background="#ad3d3d" Visibility="Collapsed">Eliminar clase</Button>
+                    </Grid>
 
-                </StackPanel>
+                </Grid>
                 <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10 20 30 20" >
                     <TextBlock Style="{StaticResource estiloTxtBlockFormularioClaseInfo}">Documentos</TextBlock>
                     <ListBox Height="140" Style="{StaticResource estiloLstBoxDocumentos}" ItemContainerStyle="{StaticResource estiloLstBoxItemDocumentos}" Name="lstBoxDocumentos">

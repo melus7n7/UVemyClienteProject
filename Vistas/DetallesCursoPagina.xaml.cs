@@ -40,7 +40,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicVerClase(object sender, RoutedEventArgs e)
         {
-            DetallesClase detalles = new DetallesClase();
+            DetallesClase detalles = new DetallesClase(56);
             NavigationService.Navigate(detalles);
         }
 

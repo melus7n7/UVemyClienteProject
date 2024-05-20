@@ -176,9 +176,9 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="25 0" Width="250">modificador de acceso y sus métodos</TextBlock>
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="25 0" Width="250" Text="{Binding Nombre}"></TextBlock>
                                 <Border Grid.Column="1" Background="#ffffff" Margin="20 10 20 10" CornerRadius="30" Width="60">
-                                    <Button Style="{StaticResource estiloBtnDescargar}" Width="35" Height="35" Margin="10"></Button>
+                                    <Button Style="{StaticResource estiloBtnDescargar}" Width="35" Height="35" Margin="10" DataContext="{Binding}" Click="ClicDescargarDocumento"></Button>
                                 </Border>
                             </Grid>
                         </Border>
@@ -190,7 +190,7 @@
 
     </Page.Resources>
 
-    <Grid Background="#ffffff">
+    <Grid Background="#ffffff" Name="grdBackground">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -202,7 +202,7 @@
             </Border>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
-            <Grid Margin="35 10 35 10">
+            <Grid Margin="35 10 35 10" Name="grdPrincipal">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.5*"/>
                     <ColumnDefinition/>
@@ -214,14 +214,14 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Border Background="#000000" CornerRadius="20" Margin="0 15 0 25" Height="120">
-                    <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="23" TextWrapping="Wrap" Margin="20 15">Modificador public y métodos que retorna un tipo de dato</TextBlock>
+                    <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="23" TextWrapping="Wrap" Margin="20 15" Name="txtBlockNombreClase"></TextBlock>
                 </Border>
                 <Grid Grid.Column="1" Margin="0 0 0 20">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 0">Modificar clase</Button>
+                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 0" Click="ClicModificarClase">Modificar clase</Button>
                     <Border Grid.Row="1" Background="#000000" CornerRadius="20" Height="45" Width="180" VerticalAlignment="Bottom">
                         <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Descripción</TextBlock>
                     </Border>
@@ -236,7 +236,7 @@
 
                     </Grid>
                 </Border>
-                <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource estiloTxtBoxInfo}" Height="400"></TextBox>
+                <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource estiloTxtBoxInfo}" Height="400" Name="txtBlockDescripcionClase"></TextBox>
 
                 <Border Grid.Row="2" Background="#000000" CornerRadius="20" Height="45" Width="180" HorizontalAlignment="Left" Margin=" 40 10 0 20">
                     <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Comentarios</TextBlock>
@@ -269,9 +269,7 @@
                 </Border>
 
                 <Border Grid.Row="3" Grid.Column="1" BorderBrush="#000000" BorderThickness="3" Height="500" Margin="30 0 0 20" CornerRadius="30">
-                    <ListBox ItemContainerStyle="{StaticResource estiloLstBoxDocumento}" Margin="10" Background="Transparent" BorderThickness="0">
-                        <ListBoxItem></ListBoxItem>
-                        <ListBoxItem></ListBoxItem>
+                    <ListBox ItemContainerStyle="{StaticResource estiloLstBoxDocumento}" Margin="10" Background="Transparent" BorderThickness="0" Name="lstBoxDocumentos">
                     </ListBox>
                 </Border>
             </Grid>
