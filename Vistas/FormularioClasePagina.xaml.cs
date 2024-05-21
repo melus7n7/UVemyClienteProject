@@ -73,6 +73,10 @@ namespace UVemyCliente.Vistas
                 ErrorMensaje error = new ErrorMensaje("No se pudo recuperar el video de la clase");
                 error.Show();
             }
+            else
+            {
+                //Mostrar el video guardado
+            }
 
             btnEliminarClase.Visibility = Visibility.Visible;
             btnGuardar.Click -= ClicGuardarClase;
@@ -396,8 +400,6 @@ namespace UVemyCliente.Vistas
                 string tempFilePath = Path.Combine(tempDirectory, "tempVideoUVemy.mp4");
                 await File.WriteAllBytesAsync(tempFilePath, videoBytes);
 
-                
-
                 mdElementVideo.Source = new Uri(tempFilePath);
 
                 btnReproducir.Visibility = Visibility.Visible;
@@ -405,11 +407,21 @@ namespace UVemyCliente.Vistas
                 btnAgregarVideo.IsEnabled = false;
                 btnEliminarVideo.IsEnabled = true;
 
-                _videoDocumento = new DocumentoDTO
+                if (_videoDocumento == null)
                 {
-                    Archivo = videoBytes,
-                    Nombre = nombreVideo
-                };
+                    _videoDocumento = new DocumentoDTO
+                    {
+                        Archivo = videoBytes,
+                        Nombre = nombreVideo
+                    };
+                }
+                else
+                {
+                    _videoDocumento.Archivo = videoBytes;
+                    _videoDocumento.Nombre = nombreVideo;
+                }
+
+                
             }
             catch (IOException ex)
             {
@@ -542,14 +554,7 @@ namespace UVemyCliente.Vistas
                 ClaseDTO? claseNueva = JsonSerializer.Deserialize<ClaseDTO>(jsonString);
                 if (claseNueva != null)
                 {
-                    //Actualizar documentos y video
                     await ActualizarDocumentosAsync();
-                    ExitoMensaje exito = new ExitoMensaje("Se ha actualizado los datos de la clase correctamente");
-                    exito.Show();
-                    DetallesClase clase = new DetallesClase(_claseActual.Id);
-                    NavigationService.Navigate(clase);
-                    EliminarVideo();
-
                 }
             }
 
@@ -587,6 +592,7 @@ namespace UVemyCliente.Vistas
 
                         ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo actualizar los documentos, revise la clase en la lista de clases");
                         error.Show();
+                        RedirigirDetallesClase();
                         return;
                     }
                 }
@@ -607,10 +613,45 @@ namespace UVemyCliente.Vistas
                     Debug.WriteLine(codigoRespuesta);
                     ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo actualizar los documentos, revise la clase en la lista de clases");
                     error.Show();
-                    break;
+                    RedirigirDetallesClase();
+                    return;
                 }
             }
 
+            await ActualizarVideoAsync();
+
+        }
+
+        private async Task ActualizarVideoAsync()
+        {
+            DocumentoDTO videoNuevo = new DocumentoDTO
+            {
+                IdDocumento = _videoDocumento.IdDocumento,
+                Archivo = _videoDocumento.Archivo,
+                Nombre = _videoDocumento.Nombre,
+                IdClase = _claseActual.Id
+            };
+            int respuesta = await VideoGrpc.EnviarVideoDeClaseAsync(videoNuevo);
+
+            if (respuesta >= 400)
+            {
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo actualizar el video de la clase, revise la clase en la lista");
+                error.Show();
+            }
+            else
+            {
+                ExitoMensaje exito = new ExitoMensaje("Se ha actualizado la clase y el video correctamente");
+                exito.Show();
+            }
+
+            RedirigirDetallesClase();
+        }
+
+        private void RedirigirDetallesClase()
+        {
+            DetallesClase clase = new DetallesClase(_claseActual.Id);
+            NavigationService.Navigate(clase);
+            EliminarVideo();
         }
     }
 }

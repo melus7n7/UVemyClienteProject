@@ -85,7 +85,7 @@ namespace UVemyCliente.Vistas
                     txtBlockDescripcionClase.Text = _clase.Descripcion;
                     await RecuperarDocumentosAsync();
                     
-                    //Recuperar video, comentarios
+                    //Recuperar video, asignar como DocumentoDTO a _clase.Video para formulario, comentarios
                 }
             }
             grdBackground.IsEnabled = true;

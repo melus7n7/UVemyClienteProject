@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf;
+using Grpc.Core;
 using Grpc.Net.Client;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,17 @@ namespace UVemyCliente.Servicios
                 VideoPartesEnvio envioInicial = new VideoPartesEnvio { DatosVideo = documento };
 
                 VideoService.VideoServiceClient stub = ObtenerStub();
-                var respuestaEnviando = stub.EnviarVideoClase();
+
+                AsyncClientStreamingCall<VideoPartesEnvio, EnvioVideoRespuesta> respuestaEnviando;
+                if (documento.IdVideo == 0)
+                {
+                    respuestaEnviando = stub.EnviarVideoClase();
+                }
+                else
+                {
+                    respuestaEnviando = stub.ActualizarVideoClase();
+
+                }
 
                 await respuestaEnviando.RequestStream.WriteAsync(envioInicial);
 
