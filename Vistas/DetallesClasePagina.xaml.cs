@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -29,15 +30,25 @@ namespace UVemyCliente.Vistas
     public partial class DetallesClase : Page
     {
         private ClaseDTO _clase;
+        private DetallesCurso _paginaDetallesCurso;
+
         public DetallesClase(int idClase)
         {
             InitializeComponent();
             _ = RecuperarDatosClaseAsync(idClase);
+            _paginaDetallesCurso = new DetallesCurso();
+        }
+
+        public DetallesClase(int idClase, DetallesCurso paginaDetallesCurso)
+        {
+            InitializeComponent();
+            _ = RecuperarDatosClaseAsync(idClase);
+            _paginaDetallesCurso = paginaDetallesCurso;
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService.Navigate(_paginaDetallesCurso);
         }
 
         private async Task RecuperarDatosClaseAsync(int idClase)
@@ -123,7 +134,7 @@ namespace UVemyCliente.Vistas
                     {
                         documento.IdDocumento = listaId[i];
                         documento.Archivo = archivo;
-                        documento.Nombre = respuestaHttp.Content.Headers.ContentDisposition.FileName;
+                        documento.Nombre = ObtenerNombreDesdeHeader(respuestaHttp.Content.Headers);
                         documentosRecuperados.Add(documento);
                     }
                 }
@@ -133,6 +144,30 @@ namespace UVemyCliente.Vistas
             _clase.Documentos = documentosRecuperados;
             lstBoxDocumentos.ItemsSource = documentosRecuperados;
             
+        }
+
+        private string ObtenerNombreDesdeHeader(HttpContentHeaders headersHttp)
+        {
+            if (headersHttp.ContentDisposition != null && headersHttp.ContentDisposition.FileName != null)
+            {
+                return System.IO.Path.GetFileNameWithoutExtension(headersHttp.ContentDisposition.FileName);
+            }
+            string header = headersHttp.ToString();
+
+            string nombre = "Documento";
+            if (header != null && header.Contains("filename="))
+            {
+                int posicionNombre = header.IndexOf("=");
+                nombre = header.Substring(posicionNombre + 1);
+                int fin = nombre.IndexOf("\n");
+
+                if (fin < nombre.Length)
+                {
+                    nombre = nombre.Substring(0, fin);
+                    nombre = System.IO.Path.GetFileNameWithoutExtension(nombre);
+                }
+            }
+            return nombre;
         }
 
         private void ClicModificarClase(object sender, RoutedEventArgs e)
@@ -156,11 +191,10 @@ namespace UVemyCliente.Vistas
             OpenFolderDialog dialog = new OpenFolderDialog();
             if (dialog.ShowDialog() == true)
             {
-                string ruta = dialog.FolderName + "/" + documento.Nombre;
+                string ruta = dialog.FolderName + "/" + documento.Nombre + ".pdf";
 
                 try
                 {
-
                     File.WriteAllBytes(ruta, documento.Archivo);
 
                     ExitoMensaje mensaje = new ExitoMensaje("Se ha descargado el documento exitosamente");
@@ -169,7 +203,7 @@ namespace UVemyCliente.Vistas
                 catch (IOException ex)
                 {
                     Debug.WriteLine(ex.Message);
-                    ErrorMensaje error = new ErrorMensaje("Ocurrió un error al guardar el reporte");
+                    ErrorMensaje error = new ErrorMensaje("Ocurrió un error al guardar el documento");
                     error.Show();
                 }
             }

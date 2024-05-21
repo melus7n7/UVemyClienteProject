@@ -63,6 +63,10 @@ namespace UVemyCliente.Vistas
                 ErrorMensaje error = new ErrorMensaje("No se pudieron recuperar los documentos de la clase");
                 error.Show();
             }
+            else
+            {
+                _documentosClase.ForEach(documento => lstBoxDocumentos.Items.Add(documento));
+            }
 
             if (_videoDocumento == null)
             {
@@ -84,7 +88,6 @@ namespace UVemyCliente.Vistas
 
         private void ClicGuardarClase(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Como");
             bool esValido = ValidarInformacion();
 
             if (esValido)
@@ -144,7 +147,6 @@ namespace UVemyCliente.Vistas
             txtBlockDescripcion.Background = (SolidColorBrush)brush.ConvertFrom("#D9E1E4");
             lstBoxDocumentos.Background = (SolidColorBrush)brush.ConvertFrom("#D9E1E4");
             brdVideo.Background = (SolidColorBrush)brush.ConvertFrom("#D9E1E4");
-
         }
 
 
@@ -179,7 +181,6 @@ namespace UVemyCliente.Vistas
                 if (claseNueva != null)
                 {
                     await GuardarDocumentosAsync(claseNueva.Id);
-                    await GuardarVideoAsync(claseNueva.Id);
                 }
             }
 
@@ -208,15 +209,19 @@ namespace UVemyCliente.Vistas
                     Debug.WriteLine(codigoRespuesta);
                     ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar el documento, revise la clase en la lista de clases");
                     error.Show();
-                    break;
+                    RedirigirListaClases();
+                    return;
                 }
             }
+
+            await GuardarVideoAsync(idClase);
         }
 
         private async Task GuardarVideoAsync(int idClase)
         {
             DocumentoDTO videoNuevo = new DocumentoDTO
             {
+                IdDocumento = 0,
                 Archivo = _videoDocumento.Archivo,
                 Nombre = _videoDocumento.Nombre,
                 IdClase = idClase
@@ -233,7 +238,15 @@ namespace UVemyCliente.Vistas
                 ExitoMensaje exito = new ExitoMensaje("Se ha guardado la clase y el video correctamente");
                 exito.Show();
             }
+
+            RedirigirListaClases();
             
+        }
+
+        private void RedirigirListaClases()
+        {
+            DetallesCurso curso = new DetallesCurso();
+            NavigationService.Navigate(curso);
         }
 
         private void ClicAgregarDocumento(object sender, RoutedEventArgs e)
@@ -383,6 +396,8 @@ namespace UVemyCliente.Vistas
                 string tempFilePath = Path.Combine(tempDirectory, "tempVideoUVemy.mp4");
                 await File.WriteAllBytesAsync(tempFilePath, videoBytes);
 
+                
+
                 mdElementVideo.Source = new Uri(tempFilePath);
 
                 btnReproducir.Visibility = Visibility.Visible;
@@ -406,6 +421,11 @@ namespace UVemyCliente.Vistas
 
         private void ClicEliminarVideo(object sender, RoutedEventArgs e)
         {
+            EliminarVideo();          
+        }
+
+        private void EliminarVideo()
+        {
             _videoDocumento = null;
             mdElementVideo.Stop();
             mdElementVideo.Source = null;
@@ -419,7 +439,7 @@ namespace UVemyCliente.Vistas
             btnEliminarVideo.IsEnabled = false;
             btnReproducir.Visibility = Visibility.Collapsed;
             btnPausar.Visibility = Visibility.Collapsed;
-            brdVideoBackground.Visibility = Visibility.Collapsed;            
+            brdVideoBackground.Visibility = Visibility.Collapsed;
         }
 
         private void ClicReproducir(object sender, RoutedEventArgs e)
@@ -438,6 +458,7 @@ namespace UVemyCliente.Vistas
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
+            EliminarVideo();
         }
 
         private void ClicEliminarClase(object sender, RoutedEventArgs e)
@@ -473,6 +494,7 @@ namespace UVemyCliente.Vistas
 
                 DetallesCurso curso = new DetallesCurso();
                 NavigationService.Navigate(curso);
+                EliminarVideo();
             }
 
             grdPrincipal.IsEnabled = true;
@@ -521,15 +543,74 @@ namespace UVemyCliente.Vistas
                 if (claseNueva != null)
                 {
                     //Actualizar documentos y video
-
-                    ExitoMensaje exito = new ExitoMensaje("Se ha actualizado la clase correctamente");
+                    await ActualizarDocumentosAsync();
+                    ExitoMensaje exito = new ExitoMensaje("Se ha actualizado los datos de la clase correctamente");
                     exito.Show();
                     DetallesClase clase = new DetallesClase(_claseActual.Id);
                     NavigationService.Navigate(clase);
+                    EliminarVideo();
+
                 }
             }
 
             grdPrincipal.IsEnabled = true;
+        }
+
+        private async Task ActualizarDocumentosAsync()
+        {
+            string url = "documentos/clase";
+
+            List<int> documentosEliminados = _claseActual.DocumentosId;
+
+            for (int i = 0; i < _documentosClase.Count; i++)
+            {
+                if (_documentosClase[i].IdDocumento == 0)
+                {
+                    HttpResponseMessage respuestaHttp;
+                    MultipartFormDataContent contenido = new MultipartFormDataContent
+                    {
+                        { new StringContent(_documentosClase[i].Nombre), "nombre" }
+                    };
+
+                    var contenidoDocumento = new ByteArrayContent(_documentosClase[i].Archivo);
+                    contenidoDocumento.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
+                    contenido.Add(contenidoDocumento, "file", _documentosClase[i].Nombre + ".pdf");
+                    contenido.Add(new StringContent(_claseActual.Id.ToString()), "idClase");
+                    respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, url, contenido);
+
+                    int codigoRespuesta = (int)respuestaHttp.StatusCode;
+
+                    if (codigoRespuesta >= 400)
+                    {
+                        Debug.WriteLine(respuestaHttp.RequestMessage);
+                        Debug.WriteLine(codigoRespuesta);
+
+                        ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo actualizar los documentos, revise la clase en la lista de clases");
+                        error.Show();
+                        return;
+                    }
+                }
+                else
+                {
+                    documentosEliminados.Remove(_documentosClase[i].IdDocumento);
+                }
+            }
+
+            for (int i = 0; i < documentosEliminados.Count; i++)
+            {
+                HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Delete, url + "/" + documentosEliminados[i]);
+
+                int codigoRespuesta = (int)respuestaHttp.StatusCode;
+
+                if (codigoRespuesta >= 400)
+                {
+                    Debug.WriteLine(codigoRespuesta);
+                    ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo actualizar los documentos, revise la clase en la lista de clases");
+                    error.Show();
+                    break;
+                }
+            }
+
         }
     }
 }

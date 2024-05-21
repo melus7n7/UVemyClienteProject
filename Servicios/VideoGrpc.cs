@@ -36,7 +36,7 @@ namespace UVemyCliente.Servicios
                 byte[] videoBytes = documentoDTO.Archivo;
 
                 DocumentoVideo documento = new DocumentoVideo { IdClase = documentoDTO.IdClase, Nombre = documentoDTO.Nombre, 
-                    Jwt = "Bearer " +  SingletonUsuario.JWT};
+                    Jwt = "Bearer " +  SingletonUsuario.JWT, IdVideo = documentoDTO.IdDocumento};
                 VideoPartesEnvio envioInicial = new VideoPartesEnvio { DatosVideo = documento };
 
                 VideoService.VideoServiceClient stub = ObtenerStub();

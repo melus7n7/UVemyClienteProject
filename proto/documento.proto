@@ -15,9 +15,12 @@ message DocumentoVideo{
     string nombre = 1;
     int32 idClase = 2;
     string jwt = 3;
+    int32 idVideo = 4;
 }
 
 
 service VideoService {
     rpc EnviarVideoClase (stream VideoPartesEnvio) returns (EnvioVideoRespuesta);
+    rpc ActualizarVideoClase (stream VideoPartesEnvio) returns (EnvioVideoRespuesta);
+
 }
