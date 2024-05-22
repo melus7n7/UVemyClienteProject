@@ -130,14 +130,14 @@
                     <TextBox Name="txtBoxApellidos" Style="{StaticResource estiloTxtBoxFormularioUsuario}" MaxLength="660" TextWrapping="Wrap" Width="710" Height="50.5533333333333"/>
                     <TextBlock  Style="{StaticResource estiloTxtBlockFormularioUsuario}">Correo electrónico</TextBlock>
                     <TextBox Name="txtBoxCorreoElectronico" Style="{StaticResource estiloTxtBoxFormularioUsuario}" MaxLength="600" TextWrapping="Wrap" Width="710" Height="50.5533333333333"/>
-                    <Grid>
+                    <Grid Name="grdContrasenas">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Style="{StaticResource estiloTxtBlockFormularioUsuario}">Contraseña</TextBlock>
+                            <TextBlock x:Name="txtBlockContrasena" Style="{StaticResource estiloTxtBlockFormularioUsuario}">Contraseña</TextBlock>
                             <PasswordBox Name="pwdBoxContrasena" Style="{StaticResource estiloPwdBoxFormularioInicioSesion}" MaxLength="18"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Column="1">
@@ -145,11 +145,12 @@
                             <PasswordBox Name="pwdBoxContrasenaRepetida" Style="{StaticResource estiloPwdBoxFormularioInicioSesion}" MaxLength="18"/>
                         </StackPanel>
                     </Grid>
-                    <Button Name="btnRegistrate" Style="{StaticResource estiloBtnFormularioUsuario}" Click="ClicRegistrar" Content="Regístrate" HorizontalAlignment="Right" Margin="0 20 100 20"/>
+                    <Button Name="btnRegistrate" Style="{StaticResource estiloBtnFormularioUsuario}" Visibility="Visible" Click="ClicRegistrar" Content="Regístrate" HorizontalAlignment="Right" Margin="0 20 100 20"/>
+                    <Button Name="btnModificar" Style="{StaticResource estiloBtnFormularioUsuario}" Visibility="Collapsed" Click="ClicModificar" Content="Modificar" HorizontalAlignment="Right" Margin="0 20 100 20"/>
                     <Button Name="btnActualizar" Style="{StaticResource estiloBtnFormularioUsuario}" Click="ClicActualizar" Content="Actualizar" Visibility="Collapsed" HorizontalAlignment="Right" Margin="0 20 100 20"/>
                 </StackPanel>
             </Viewbox>
-            <Viewbox Grid.Row="2" Grid.Column="2" VerticalAlignment="Top">
+            <Viewbox x:Name="vwBoxImagenPerfil" Visibility="Collapsed" Grid.Row="2" Grid.Column="2" VerticalAlignment="Top">
                 <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
                     <TextBlock Style="{StaticResource estiloTxtBlockFormularioUsuario}" Margin="20,20,20,0" TextWrapping="Wrap" HorizontalAlignment="Center">Vista previa de imagen</TextBlock>
                     <Border BorderBrush="Black" BorderThickness="1" Margin="20,0,20,0" CornerRadius="20" Width="350" Height="350">
@@ -164,7 +165,6 @@
 
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,20,0">
-                        <Image Name="imgBorrarImagen" Source="/Recursos/trash.png" Stretch="Fill" Width="30" MouseDown="ClicBorrarImagen" Cursor="Hand" Visibility="Collapsed" Height="30" Margin="0,0,140,0"/>
                         <Button Name="btnCambiarImagen" Style="{StaticResource estiloBtnSecundarioFormularioUsuario}" Visibility="Collapsed" Content="Cambiar imagen" Width="180" Click="ClicCambiarImagen"/>
                         <Button Name="btnSubirImagen" Style="{StaticResource estiloBtnSecundarioFormularioUsuario}" Content="Subir imagen" Width="180" Click="ClicSubirImagen"/>
                     </StackPanel>
