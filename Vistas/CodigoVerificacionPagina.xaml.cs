@@ -60,7 +60,7 @@ namespace UVemyCliente.Vistas
         {
             var json = JsonSerializer.Serialize(_usuario);
             var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "autenticacion/registro", contenido);
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "perfil/registro", contenido);
             if (respuestaHttp.IsSuccessStatusCode)
             {
                 ExitoMensaje exitoMensaje = new();

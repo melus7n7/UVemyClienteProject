@@ -80,7 +80,7 @@ namespace UVemyCliente.Vistas
         {
             var json = JsonSerializer.Serialize(_usuario);
             var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestSinAutenticacionAsync(HttpMethod.Post, "autenticacion/verificacion", contenido);
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestSinAutenticacionAsync(HttpMethod.Post, "perfil/verificacion", contenido);
             if (respuestaHttp.IsSuccessStatusCode)
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
