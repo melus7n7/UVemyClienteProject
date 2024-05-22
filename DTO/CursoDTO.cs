@@ -20,9 +20,13 @@ namespace UVemyCliente.DTO
         public string Objetivos { get; set; }
         [JsonPropertyName("requisitos")]
         public string Requisitos { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("idUsuario")]
-        public int IdUsuario { get; set; }
+        public int? IdUsuario { get; set; }
         [JsonPropertyName("etiquetas")]
         public List<int> Etiquetas { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("idDocumento")]
+        public int? idDocumento { get; set; }
     }
 }

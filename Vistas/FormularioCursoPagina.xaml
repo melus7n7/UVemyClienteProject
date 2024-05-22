@@ -236,7 +236,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1"/>
+                        <RowDefinition Height="340"/>
                         <RowDefinition Height="340"/>
                         <RowDefinition Height="80"/>
                     </Grid.RowDefinitions>

@@ -34,36 +34,69 @@ namespace UVemyCliente.Vistas
         private byte[] _arrayImagen = Array.Empty<byte>();
         private string _rutaImagen;
         private CursoDTO _curso;
-        /*
+        
         public FormularioCursoPagina()
         {
             InitializeComponent();
-            List<int> ejemplo = [1, 2, 3];
-            List<string> ejemploN = ["Etiqueta 1", "Etiqueta 2", "Etiqueta 3"];
             btnGuardarCurso.Visibility = Visibility.Visible;
             btnEliminarCurso.Visibility = Visibility.Hidden;
             btnModificarCurso.Visibility = Visibility.Hidden;
-            CargarTemasInteres(ejemplo, ejemploN);
         }
-        */
-
-        public FormularioCursoPagina() //CursoDTO curso)
+        
+        public FormularioCursoPagina(CursoDTO curso, List<EtiquetaDTO> etiquetas)
         {
-            _curso = new CursoDTO() { };
-            _curso.IdCurso = 172; //curso.idCurso To do TODO
-            //curso.desc, etc. TODO To do
+            
+            foreach (EtiquetaDTO etiqueta in etiquetas)
+            {
+                _listNombreEtiquetas.Add(etiqueta.Nombre);
+                _listIdEtiquetas.Add(etiqueta.IdEtiqueta);
+            }
+            
+            _curso = new CursoDTO()
+            {
+                IdCurso = curso.IdCurso,
+                Descripcion = curso.Descripcion,
+                Objetivos = curso.Objetivos,
+                Requisitos = curso.Requisitos,
+                Titulo = curso.Titulo
+            };
             InitializeComponent();
-            List<int> ejemplo = [1, 2, 3];
-            List<string> ejemploN = ["Etiqueta 1", "Etiqueta 2", "Etiqueta 3"];
+            CargarCurso();
             btnEliminarCurso.Visibility = Visibility.Visible;
             btnModificarCurso.Visibility = Visibility.Visible;
             btnGuardarCurso.Visibility = Visibility.Hidden;
-            CargarTemasInteres(ejemplo, ejemploN);
+        }
+
+        private void CargarCurso()
+        {
+            txtBoxTitulo.Text = _curso.Titulo;
+            txtBoxDescripcion.Text = _curso.Descripcion;
+            txtBoxObjetivos.Text = _curso.Objetivos;
+            txtBoxRequisitos.Text = _curso.Requisitos;
+            //CargarImagen(imageBytes);  //Cargar documento todo to do
+            CargarTemasInteres(_listIdEtiquetas, _listNombreEtiquetas);
+        }
+
+        private void CargarImagen(byte[] arrayImagen)
+        {
+            _arrayImagen = arrayImagen;
+
+            BitmapImage imagen = new BitmapImage();
+            using (MemoryStream memoryStream = new MemoryStream(_arrayImagen))
+            {
+                memoryStream.Position = 0;
+                imagen.BeginInit();
+                imagen.CacheOption = BitmapCacheOption.OnLoad;
+                imagen.StreamSource = memoryStream;
+                imagen.EndInit();
+            }
+            imgMiniatura.Source = imagen;
         }
 
         private void ClicEliminarMiniatura(object sender, RoutedEventArgs e)
         {
-           
+            imgMiniatura.Source = null;
+            _arrayImagen = null;
         }
 
         private void ClicGuardarCurso(object sender, RoutedEventArgs e)
@@ -166,7 +199,6 @@ namespace UVemyCliente.Vistas
             string descripcionCurso = txtBoxDescripcion.Text;
             string requisitosCurso = txtBoxRequisitos.Text;
             string objetivosCurso = txtBoxObjetivos.Text;
-
             CursoDTO curso = new CursoDTO
             {
                 IdCurso = null,
@@ -177,7 +209,6 @@ namespace UVemyCliente.Vistas
                 Etiquetas = _listIdEtiquetas,
                 IdUsuario = 1//To DO TODO SingletonUsuario.IdUsuario
             };
-            Debug.WriteLine(curso.IdCurso);
             var json = JsonSerializer.Serialize(curso);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -187,8 +218,6 @@ namespace UVemyCliente.Vistas
             if (codigoRespuesta >= 400)
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
-                Debug.WriteLine(codigoRespuesta);
-                Debug.WriteLine(jsonString);
                 ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar el curso, inténtelo más tarde");
                 error.Show();
             }
@@ -222,7 +251,23 @@ namespace UVemyCliente.Vistas
 
         private void ClicAñadirTemas(object sender, RoutedEventArgs e)
         {
-
+            //SI ES MODIFICAR ENTONCES CURSO TIENE IDCURSO SINO ENTONCES NO LA PASO
+            //string tituloCurso = txtBoxTitulo.Text;
+            //string descripcionCurso = txtBoxDescripcion.Text;
+            //string requisitosCurso = txtBoxRequisitos.Text;
+            //string objetivosCurso = txtBoxObjetivos.Text;
+            //CursoDTO curso = new CursoDTO
+            //{
+            //    IdCurso = _curso.IdCurso,
+            //    Titulo = tituloCurso,
+            //    Descripcion = descripcionCurso,
+            //    Requisitos = requisitosCurso,
+            //    Objetivos = objetivosCurso,
+            //    Etiquetas = _listIdEtiquetas,
+            //    IdUsuario = 1   //To DO TODO SingletonUsuario.IdUsuario
+            //};
+            //SeleccionEtiquetasPagina pagina = new SeleccionEtiquetasPagina(_listIdEtiquetas, _listNombreEtiquetas, curso);
+            //this.NavigationService.Navigate(pagina);
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
@@ -283,19 +328,7 @@ namespace UVemyCliente.Vistas
 
                     if (archivoProvisional != null && ValidarTamaño(archivoProvisional, TamanioDocumentos.TAMANIO_MAXIMO_DOCUMENTOS_KB, nombre))
                     {
-                        _arrayImagen = archivoProvisional;
-
-                        BitmapImage imagen = new BitmapImage();
-                        using (MemoryStream memoryStream = new MemoryStream(_arrayImagen))
-                        {
-                            memoryStream.Position = 0;
-                            imagen.BeginInit();
-                            imagen.CacheOption = BitmapCacheOption.OnLoad;
-                            imagen.StreamSource = memoryStream;
-                            imagen.EndInit();
-                        }
-
-                        imgMiniatura.Source = imagen;
+                        CargarImagen(archivoProvisional);
                     }
 
                 }
@@ -349,7 +382,50 @@ namespace UVemyCliente.Vistas
 
         private void ClicModificarCurso(object sender, RoutedEventArgs e)
         {
+            bool sonCamposValidos = ValidarCampos();
+            if (sonCamposValidos)
+            {
+               _ = ModificarCursoAsync();
+            }
+        }
 
+        private async Task ModificarCursoAsync()
+        {
+            string tituloCurso = txtBoxTitulo.Text;
+            string descripcionCurso = txtBoxDescripcion.Text;
+            string requisitosCurso = txtBoxRequisitos.Text;
+            string objetivosCurso = txtBoxObjetivos.Text;
+            CursoDTO curso = new CursoDTO
+            {
+                IdCurso = _curso.IdCurso,
+                Titulo = tituloCurso,
+                Descripcion = descripcionCurso,
+                Requisitos = requisitosCurso,
+                Objetivos = objetivosCurso,
+                Etiquetas = _listIdEtiquetas,
+                idDocumento = 85
+            };
+            var json = JsonSerializer.Serialize(curso);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Put, "cursos/"+curso.IdCurso, content);
+            int codigoRespuesta = (int)respuestaHttp.StatusCode;
+
+            if (codigoRespuesta >= 400)
+            {
+                Debug.WriteLine(codigoRespuesta);
+                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar el curso, inténtelo más tarde");
+                error.Show();
+                Debug.WriteLine(jsonString);
+            }
+            else
+            {
+                Debug.WriteLine(codigoRespuesta);
+                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+                CursoDTO? cursoNuevo = JsonSerializer.Deserialize<CursoDTO>(jsonString);
+                Debug.WriteLine("correcto " + cursoNuevo.IdCurso + " " + cursoNuevo.Titulo + " " + cursoNuevo.Descripcion + " " + cursoNuevo.Objetivos);
+            }
         }
     }
 }
