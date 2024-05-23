@@ -19,18 +19,25 @@ namespace UVemyCliente.Vistas
         private UsuarioDTO _usuario;
         private bool _esFormularioCurso;
         private List<string> _listNombreEtiquetas = new List<string>() { };
+        private List<string> _listNombreEtiquetasAntiguas = new List<string>() { };
         private List<int> _listIdEtiquetas = new List<int>();
+        private List<int> _listIdEtiquetasAntiguas = new List<int>();
         private CursoDTO _curso;
+        private DocumentoDTO _documento;
         public SeleccionEtiquetasPagina(UsuarioDTO usuario)
         {
             InitializeComponent();
             _usuario = usuario;
         }
 
-        public SeleccionEtiquetasPagina(List<int> listIdEtiquetas, List<string> listNombreEtiquetas, CursoDTO curso)
+        public SeleccionEtiquetasPagina(List<int> listIdEtiquetas, List<string> listNombreEtiquetas, CursoDTO curso, DocumentoDTO documento)
         {
             InitializeComponent();
             _curso = curso;
+            _documento = documento;
+            _listIdEtiquetasAntiguas = new List<int>(listIdEtiquetas);
+            _listNombreEtiquetasAntiguas = new List<string>(listNombreEtiquetas);
+
             _listIdEtiquetas = listIdEtiquetas;
             _listNombreEtiquetas = listNombreEtiquetas;
             _ = CargarEtiquetasAsync();
@@ -102,14 +109,23 @@ namespace UVemyCliente.Vistas
 
         private void ClicConfirmar(object sender, RoutedEventArgs e)
         {
-            if (_usuario.IdsEtiqueta?.Count > 0)
+            if (_esFormularioCurso)
             {
-                _ = SolicitarCodigoVerificacion();
+                List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetas, _listIdEtiquetas);
+                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento);
+                this.NavigationService.Navigate(pagina);
             }
             else
             {
-                ErrorMensaje errorMensaje = new("Debes seleccionar al menos una etiqueta");
-                errorMensaje.Show();
+                if (_usuario.IdsEtiqueta?.Count > 0)
+                {
+                    _ = SolicitarCodigoVerificacion();
+                }
+                else
+                {
+                    ErrorMensaje errorMensaje = new("Debes seleccionar al menos una etiqueta");
+                    errorMensaje.Show();
+                }
             }
         }
 
@@ -144,8 +160,8 @@ namespace UVemyCliente.Vistas
         {
             if (_esFormularioCurso)
             {
-                List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetas, _listIdEtiquetas);
-                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas);
+                List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetasAntiguas, _listIdEtiquetasAntiguas);
+                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento);
                 this.NavigationService.Navigate(pagina);
             }
             else
@@ -172,18 +188,19 @@ namespace UVemyCliente.Vistas
         private List<EtiquetaDTO> CrearListaEtiquetas(List<string> nombres, List<int> ids)
         {
             List<EtiquetaDTO> etiquetas = new List<EtiquetaDTO>();
-
-            for (int i = 0; i < nombres.Count; i++)
+            if (ids.Count > 0)
             {
-                EtiquetaDTO etiqueta = new EtiquetaDTO
+                for (int i = 0; i < nombres.Count; i++)
                 {
-                    Nombre = nombres[i],
-                    IdEtiqueta = ids[i]
-                };
+                    EtiquetaDTO etiqueta = new EtiquetaDTO
+                    {
+                        Nombre = nombres[i],
+                        IdEtiqueta = ids[i]
+                    };
 
-                etiquetas.Add(etiqueta);
+                    etiquetas.Add(etiqueta);
+                }
             }
-
             return etiquetas;
         }
     }

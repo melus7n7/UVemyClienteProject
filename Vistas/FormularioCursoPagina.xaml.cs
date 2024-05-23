@@ -34,7 +34,8 @@ namespace UVemyCliente.Vistas
         private byte[] _arrayImagen = Array.Empty<byte>();
         private string _rutaImagen;
         private CursoDTO _curso;
-        
+        private DocumentoDTO _documento = new DocumentoDTO();
+
         public FormularioCursoPagina()
         {
             InitializeComponent();
@@ -43,7 +44,7 @@ namespace UVemyCliente.Vistas
             btnModificarCurso.Visibility = Visibility.Hidden;
         }
         
-        public FormularioCursoPagina(CursoDTO curso, List<EtiquetaDTO> etiquetas)
+        public FormularioCursoPagina(CursoDTO curso, List<EtiquetaDTO> etiquetas, DocumentoDTO documento)
         {
             
             foreach (EtiquetaDTO etiqueta in etiquetas)
@@ -51,15 +52,18 @@ namespace UVemyCliente.Vistas
                 _listNombreEtiquetas.Add(etiqueta.Nombre);
                 _listIdEtiquetas.Add(etiqueta.IdEtiqueta);
             }
-            
+            _documento = documento;
             _curso = new CursoDTO()
             {
-                IdCurso = curso.IdCurso,
                 Descripcion = curso.Descripcion,
                 Objetivos = curso.Objetivos,
                 Requisitos = curso.Requisitos,
                 Titulo = curso.Titulo
             };
+            if (curso.IdCurso != null)
+            {
+                _curso.IdCurso = curso.IdCurso;
+            }
             InitializeComponent();
             CargarCurso();
             btnEliminarCurso.Visibility = Visibility.Visible;
@@ -73,12 +77,16 @@ namespace UVemyCliente.Vistas
             txtBoxDescripcion.Text = _curso.Descripcion;
             txtBoxObjetivos.Text = _curso.Objetivos;
             txtBoxRequisitos.Text = _curso.Requisitos;
-            //CargarImagen(imageBytes);  //Cargar documento todo to do
+            if (_documento.Archivo != null)
+            {
+                CargarImagen(_documento.Archivo);
+            }
             CargarTemasInteres(_listIdEtiquetas, _listNombreEtiquetas);
         }
 
         private void CargarImagen(byte[] arrayImagen)
         {
+            _documento.Archivo = arrayImagen;
             _arrayImagen = arrayImagen;
 
             BitmapImage imagen = new BitmapImage();
@@ -207,8 +215,10 @@ namespace UVemyCliente.Vistas
                 Requisitos = requisitosCurso,
                 Objetivos = objetivosCurso,
                 Etiquetas = _listIdEtiquetas,
-                IdUsuario = 1//To DO TODO SingletonUsuario.IdUsuario
+                IdUsuario = 1//To DO TODO SingletonUsuario.IdUsuario 
+                
             };
+            // To do archivo todo
             var json = JsonSerializer.Serialize(curso);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -236,8 +246,6 @@ namespace UVemyCliente.Vistas
 
             if (codigoRespuesta >= 400)
             {
-                Debug.WriteLine("Incorrecto");
-                Debug.WriteLine(codigoRespuesta);
                 ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo eliminar el curso, inténtelo más tarde");
                 error.Show();
             }
@@ -251,28 +259,30 @@ namespace UVemyCliente.Vistas
 
         private void ClicAñadirTemas(object sender, RoutedEventArgs e)
         {
-            //SI ES MODIFICAR ENTONCES CURSO TIENE IDCURSO SINO ENTONCES NO LA PASO
-            //string tituloCurso = txtBoxTitulo.Text;
-            //string descripcionCurso = txtBoxDescripcion.Text;
-            //string requisitosCurso = txtBoxRequisitos.Text;
-            //string objetivosCurso = txtBoxObjetivos.Text;
-            //CursoDTO curso = new CursoDTO
-            //{
-            //    IdCurso = _curso.IdCurso,
-            //    Titulo = tituloCurso,
-            //    Descripcion = descripcionCurso,
-            //    Requisitos = requisitosCurso,
-            //    Objetivos = objetivosCurso,
-            //    Etiquetas = _listIdEtiquetas,
-            //    IdUsuario = 1   //To DO TODO SingletonUsuario.IdUsuario
-            //};
-            //SeleccionEtiquetasPagina pagina = new SeleccionEtiquetasPagina(_listIdEtiquetas, _listNombreEtiquetas, curso);
-            //this.NavigationService.Navigate(pagina);
+            string tituloCurso = txtBoxTitulo.Text;
+            string descripcionCurso = txtBoxDescripcion.Text;
+            string requisitosCurso = txtBoxRequisitos.Text;
+            string objetivosCurso = txtBoxObjetivos.Text;
+            CursoDTO curso = new CursoDTO
+            {
+                Titulo = tituloCurso,
+                Descripcion = descripcionCurso,
+                Requisitos = requisitosCurso,
+                Objetivos = objetivosCurso,
+                Etiquetas = _listIdEtiquetas,
+                IdUsuario = 1   //To DO TODO SingletonUsuario.IdUsuario
+            };
+            if (_curso != null)
+            {
+                curso.IdCurso = _curso.IdCurso;
+            };
+            SeleccionEtiquetasPagina pagina = new SeleccionEtiquetasPagina(_listIdEtiquetas, _listNombreEtiquetas, curso, _documento);
+            this.NavigationService.Navigate(pagina);
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-
+            this.NavigationService.GoBack();
         }
 
         private bool ValidarTamaño(byte[] archivo, float limiteMB, string nombre)
@@ -405,6 +415,7 @@ namespace UVemyCliente.Vistas
                 Etiquetas = _listIdEtiquetas,
                 idDocumento = 85
             };
+            //TO DO, enviar archivo todo
             var json = JsonSerializer.Serialize(curso);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
