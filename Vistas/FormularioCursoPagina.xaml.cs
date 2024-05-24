@@ -32,21 +32,20 @@ namespace UVemyCliente.Vistas
         private List<string> _listNombreEtiquetas = new List<string>() { };
         private List<int> _listIdEtiquetas = new List<int>();
         private byte[] _arrayImagen = Array.Empty<byte>();
-        private string _rutaImagen;
         private CursoDTO _curso;
+        private bool _esCrearCurso = false;
         private DocumentoDTO _documento = new DocumentoDTO();
 
         public FormularioCursoPagina()
         {
             InitializeComponent();
-            btnGuardarCurso.Visibility = Visibility.Visible;
-            btnEliminarCurso.Visibility = Visibility.Hidden;
-            btnModificarCurso.Visibility = Visibility.Hidden;
+            _esCrearCurso = true; 
+            MostrarBotones();
         }
-        
-        public FormularioCursoPagina(CursoDTO curso, List<EtiquetaDTO> etiquetas, DocumentoDTO documento)
+
+        public FormularioCursoPagina(CursoDTO curso, List<EtiquetaDTO> etiquetas, DocumentoDTO documento, bool esCrearCurso)
         {
-            
+            _esCrearCurso = esCrearCurso;
             foreach (EtiquetaDTO etiqueta in etiquetas)
             {
                 _listNombreEtiquetas.Add(etiqueta.Nombre);
@@ -66,9 +65,24 @@ namespace UVemyCliente.Vistas
             }
             InitializeComponent();
             CargarCurso();
-            btnEliminarCurso.Visibility = Visibility.Visible;
-            btnModificarCurso.Visibility = Visibility.Visible;
-            btnGuardarCurso.Visibility = Visibility.Hidden;
+            MostrarBotones();
+
+        }
+
+        private void MostrarBotones()
+        {
+            if (_esCrearCurso)
+            {
+                btnGuardarCurso.Visibility = Visibility.Visible;
+                btnEliminarCurso.Visibility = Visibility.Hidden;
+                btnModificarCurso.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                btnEliminarCurso.Visibility = Visibility.Visible;
+                btnModificarCurso.Visibility = Visibility.Visible;
+                btnGuardarCurso.Visibility = Visibility.Hidden;
+            }
         }
 
         private void CargarCurso()
@@ -104,7 +118,7 @@ namespace UVemyCliente.Vistas
         private void ClicEliminarMiniatura(object sender, RoutedEventArgs e)
         {
             imgMiniatura.Source = null;
-            _arrayImagen = null;
+            _arrayImagen = Array.Empty<byte>();
         }
 
         private void ClicGuardarCurso(object sender, RoutedEventArgs e)
@@ -207,43 +221,62 @@ namespace UVemyCliente.Vistas
             string descripcionCurso = txtBoxDescripcion.Text;
             string requisitosCurso = txtBoxRequisitos.Text;
             string objetivosCurso = txtBoxObjetivos.Text;
-            CursoDTO curso = new CursoDTO
-            {
-                IdCurso = null,
-                Titulo = tituloCurso,
-                Descripcion = descripcionCurso,
-                Requisitos = requisitosCurso,
-                Objetivos = objetivosCurso,
-                Etiquetas = _listIdEtiquetas,
-                IdUsuario = 1//To DO TODO SingletonUsuario.IdUsuario 
-                
-            };
-            // To do archivo todo
-            var json = JsonSerializer.Serialize(curso);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+            var content = new MultipartFormDataContent 
+            {
+                { new StringContent(tituloCurso), "titulo" },
+                { new StringContent(descripcionCurso), "descripcion" },
+                { new StringContent(requisitosCurso), "requisitos" },
+                { new StringContent(objetivosCurso), "objetivos" },
+                { new StringContent(SingletonUsuario.IdUsuario.ToString()), "idUsuario" } 
+            };
+            
+            for (int i = 0; i < _listIdEtiquetas.Count; i++)
+            {
+                content.Add(new StringContent(_listIdEtiquetas[i].ToString()), "etiquetas[" + i + "]"); 
+            }
+            var contenidoDocumento = new ByteArrayContent(_documento.Archivo);
+            contenidoDocumento.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            content.Add(contenidoDocumento,"file","fileNuevo.png");
+            LimpiarCampos();
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "cursos", content);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
-
+            Debug.WriteLine(codigoRespuesta);
             if (codigoRespuesta >= 400)
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+                Debug.WriteLine(jsonString);
                 ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo guardar el curso, inténtelo más tarde");
                 error.Show();
             }
             else
             {
-                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
-                CursoDTO? cursoNuevo = JsonSerializer.Deserialize<CursoDTO>(jsonString);
-                Debug.WriteLine("correcto "+ cursoNuevo.IdCurso+" "+ cursoNuevo.Titulo + " " + cursoNuevo.Descripcion + " " + cursoNuevo.Objetivos);
+                ExitoMensaje exito = new ExitoMensaje("Se creo el curso exitosamente");
+                exito.Show();
             }
+        }
+
+        private void LimpiarCampos()
+        {
+            txtBoxTitulo.Text = "";
+            txtBoxDescripcion.Text = "";
+            txtBoxRequisitos.Text = "";
+            txtBoxObjetivos.Text = "";
+            lstBoxEtiquetas.Items.Clear();
+            _listIdEtiquetas = new List<int>();
+            _listNombreEtiquetas = new List<string>();
+            imgMiniatura.Source = null;
+            _arrayImagen = Array.Empty<byte>();
+            _documento = new DocumentoDTO();
+            _curso = new CursoDTO();
         }
 
         private async Task EliminarCursoAsync()
         {
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Delete, "cursos/"+_curso.IdCurso);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
-
+            LimpiarCampos();
+            Debug.WriteLine(codigoRespuesta);
             if (codigoRespuesta >= 400)
             {
                 ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo eliminar el curso, inténtelo más tarde");
@@ -251,8 +284,8 @@ namespace UVemyCliente.Vistas
             }
             else
             {
-                Debug.WriteLine(codigoRespuesta);
-                Debug.WriteLine("Correcto");
+                ExitoMensaje exito = new ExitoMensaje("Se elimino el curso exitosamente");
+                exito.Show();
             }
         }
 
@@ -270,13 +303,13 @@ namespace UVemyCliente.Vistas
                 Requisitos = requisitosCurso,
                 Objetivos = objetivosCurso,
                 Etiquetas = _listIdEtiquetas,
-                IdUsuario = 1   //To DO TODO SingletonUsuario.IdUsuario
+                IdUsuario = SingletonUsuario.IdUsuario
             };
             if (_curso != null)
             {
                 curso.IdCurso = _curso.IdCurso;
             };
-            SeleccionEtiquetasPagina pagina = new SeleccionEtiquetasPagina(_listIdEtiquetas, _listNombreEtiquetas, curso, _documento);
+            SeleccionEtiquetasPagina pagina = new SeleccionEtiquetasPagina(_listIdEtiquetas, _listNombreEtiquetas, curso, _documento, _esCrearCurso);
             this.NavigationService.Navigate(pagina);
         }
 
@@ -401,27 +434,32 @@ namespace UVemyCliente.Vistas
 
         private async Task ModificarCursoAsync()
         {
+
             string tituloCurso = txtBoxTitulo.Text;
             string descripcionCurso = txtBoxDescripcion.Text;
             string requisitosCurso = txtBoxRequisitos.Text;
             string objetivosCurso = txtBoxObjetivos.Text;
-            CursoDTO curso = new CursoDTO
+            var content = new MultipartFormDataContent
             {
-                IdCurso = _curso.IdCurso,
-                Titulo = tituloCurso,
-                Descripcion = descripcionCurso,
-                Requisitos = requisitosCurso,
-                Objetivos = objetivosCurso,
-                Etiquetas = _listIdEtiquetas,
-                idDocumento = 85
+                { new StringContent(_curso.IdCurso.ToString()), "idCurso" },
+                { new StringContent(tituloCurso), "titulo" },
+                { new StringContent(descripcionCurso), "descripcion" },
+                { new StringContent(requisitosCurso), "requisitos" },
+                { new StringContent(objetivosCurso), "objetivos" },
+                { new StringContent(_curso.idDocumento.ToString()), "idDocumento" }
             };
-            //TO DO, enviar archivo todo
-            var json = JsonSerializer.Serialize(curso);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            for (int i = 0; i < _listIdEtiquetas.Count; i++)
+            {
+                content.Add(new StringContent(_listIdEtiquetas[i].ToString()), "etiquetas[" + i + "]");
+            }
+            var contenidoDocumento = new ByteArrayContent(_documento.Archivo);
+            contenidoDocumento.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            content.Add(contenidoDocumento, "file", "fileNuevo.png");
 
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Put, "cursos/"+curso.IdCurso, content);
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Put, "cursos/"+_curso.IdCurso, content);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
-
+            LimpiarCampos();
+            Debug.WriteLine(codigoRespuesta);
             if (codigoRespuesta >= 400)
             {
                 Debug.WriteLine(codigoRespuesta);
@@ -432,10 +470,8 @@ namespace UVemyCliente.Vistas
             }
             else
             {
-                Debug.WriteLine(codigoRespuesta);
-                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
-                CursoDTO? cursoNuevo = JsonSerializer.Deserialize<CursoDTO>(jsonString);
-                Debug.WriteLine("correcto " + cursoNuevo.IdCurso + " " + cursoNuevo.Titulo + " " + cursoNuevo.Descripcion + " " + cursoNuevo.Objetivos);
+                ExitoMensaje exito = new ExitoMensaje("Se actualizo el curso exitosamente");
+                exito.Show();
             }
         }
     }

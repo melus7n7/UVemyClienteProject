@@ -23,6 +23,7 @@ namespace UVemyCliente.Vistas
         private List<int> _listIdEtiquetas = new List<int>();
         private List<int> _listIdEtiquetasAntiguas = new List<int>();
         private CursoDTO _curso;
+        private bool _esCrearCurso;
         private DocumentoDTO _documento;
         public SeleccionEtiquetasPagina(UsuarioDTO usuario)
         {
@@ -30,10 +31,12 @@ namespace UVemyCliente.Vistas
             _usuario = usuario;
         }
 
-        public SeleccionEtiquetasPagina(List<int> listIdEtiquetas, List<string> listNombreEtiquetas, CursoDTO curso, DocumentoDTO documento)
+        public SeleccionEtiquetasPagina(List<int> listIdEtiquetas, List<string> listNombreEtiquetas, CursoDTO curso, DocumentoDTO documento, bool esCrearCurso)
         {
+            
             InitializeComponent();
             _curso = curso;
+            _esCrearCurso = esCrearCurso;
             _documento = documento;
             _listIdEtiquetasAntiguas = new List<int>(listIdEtiquetas);
             _listNombreEtiquetasAntiguas = new List<string>(listNombreEtiquetas);
@@ -112,7 +115,7 @@ namespace UVemyCliente.Vistas
             if (_esFormularioCurso)
             {
                 List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetas, _listIdEtiquetas);
-                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento);
+                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento, _esCrearCurso);
                 this.NavigationService.Navigate(pagina);
             }
             else
@@ -161,7 +164,7 @@ namespace UVemyCliente.Vistas
             if (_esFormularioCurso)
             {
                 List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetasAntiguas, _listIdEtiquetasAntiguas);
-                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento);
+                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento, _esCrearCurso);
                 this.NavigationService.Navigate(pagina);
             }
             else

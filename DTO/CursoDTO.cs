@@ -28,5 +28,7 @@ namespace UVemyCliente.DTO
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("idDocumento")]
         public int? idDocumento { get; set; }
+        [JsonPropertyName("file")]
+        public byte[] Archivo { get; set; }
     }
 }
