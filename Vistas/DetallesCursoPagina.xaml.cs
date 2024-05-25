@@ -67,7 +67,7 @@ namespace UVemyCliente.Vistas
             btnRegresar.IsEnabled = false;
             grdBackground.IsEnabled = false;
 
-            UsuarioCursoDTO usuario = new UsuarioCursoDTO { IdCurso = _idCurso, IdUsuario = 4 };
+            UsuarioCursoDTO usuario = new UsuarioCursoDTO { IdCurso = _idCurso};
             var json = JsonSerializer.Serialize(usuario);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 

@@ -43,7 +43,7 @@ namespace UVemyCliente.Vistas
         {
             grdBackground.IsEnabled = false;
 
-            string url = "cursos/calificacion/" + _curso.IdCurso + "/" + 3;
+            string url = "cursos/calificacion/" + _curso.IdCurso;
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, url);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
 
@@ -113,7 +113,7 @@ namespace UVemyCliente.Vistas
             grdBackground.IsEnabled = false;
 
             int calificacionNueva = Int32.Parse(txtBlockCalificacion.Text);
-            UsuarioCursoDTO usuario = new UsuarioCursoDTO { IdCurso = _curso.IdCurso, IdUsuario = 3, Calificacion = calificacionNueva };
+            UsuarioCursoDTO usuario = new UsuarioCursoDTO { IdCurso = _curso.IdCurso, Calificacion = calificacionNueva };
             var json = JsonSerializer.Serialize(usuario);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
