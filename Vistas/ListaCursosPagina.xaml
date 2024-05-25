@@ -186,7 +186,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="cmbBoxItemTagsPolitica" TargetType="{x:Type ComboBoxItem}">
+        <Style x:Key="cmbBoxItemTags" TargetType="{x:Type ComboBoxItem}">
             <Setter Property="SnapsToDevicePixels" Value="true"/>
             <Setter Property="Foreground" Value="#000000"/>
             <Setter Property="Background" Value="#D9E1E4"/>
@@ -210,7 +210,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="estiloCmbBoxSeleccionPolitica" TargetType="{x:Type ComboBox}">
+        <Style x:Key="estiloCmbBoxSeleccion" TargetType="{x:Type ComboBox}">
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
             <Setter Property="SnapsToDevicePixels" Value="true"/>
@@ -219,7 +219,7 @@
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
             <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
             <Setter Property="Foreground" Value="#000000"/>
-            <Setter Property="ItemContainerStyle" Value="{StaticResource cmbBoxItemTagsPolitica}"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource cmbBoxItemTags}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -280,7 +280,7 @@
                     <ColumnDefinition Width="250"/>
                     <ColumnDefinition  Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Width="220" Height="350" HorizontalAlignment="Center" BorderBrush="Black" BorderThickness="2" CornerRadius="10">
+                <Border Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Width="220" Height="350" HorizontalAlignment="Center" BorderBrush="Black" BorderThickness="2" CornerRadius="10" Background="#e0e7e9">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -307,7 +307,7 @@
                     </Grid>
                 </Border>
                 <Button Style="{StaticResource estiloBtnNegro}" Content="Crear curso" Width="200" Height="50" Grid.Column="0" Grid.Row="1" Click="ClicCrearCurso"/>
-                <Border Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Width="550" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="2" CornerRadius="10">
+                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="30" VerticalAlignment="Center" Width="550" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="2" CornerRadius="10">
                     <Grid>
                         <TextBox Width="450" HorizontalAlignment="Left" Style="{StaticResource estiloTxtBoxBusquedaCurso}" Name="txtBoxBarraBuscar" Grid.RowSpan="2" Margin="0,0,0,0" />
                         <Button Width="100"  Style="{StaticResource estiloBtnBuscarCurso}" Click="ClicBuscarCurso" HorizontalAlignment="Right" Margin="0,0,0,0"/>
@@ -315,12 +315,12 @@
                 </Border>
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="580"/>
+                        <ColumnDefinition Width="350"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Name="cmbBoxEtiquetaCurso" Grid.Column="1" Width="300" Height="70" Margin="25" Style="{StaticResource estiloCmbBoxSeleccionPolitica}"/>
-                    <ComboBox Name="cmbBoxTipoCurso" Grid.Column="2" Width="300" Height="70" Margin="25" Style="{StaticResource estiloCmbBoxSeleccionPolitica}"/>
+                    <ComboBox Name="cmbBoxEtiquetaCurso" Grid.Column="1" Width="470" Height="70" Margin="25" HorizontalAlignment="Right"  Style="{StaticResource estiloCmbBoxSeleccion}"/>
+                    <ComboBox Name="cmbBoxTipoCurso" Grid.Column="2"  Width="370" Height="70" HorizontalAlignment="Right" Style="{StaticResource estiloCmbBoxSeleccion}"/>
                 </Grid>
 
                 <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="4" CornerRadius="10">
