@@ -17,17 +17,20 @@ namespace UVemyCliente.Vistas
     {
         private ObservableCollection<EtiquetaDTO> _etiquetas = [];
         private UsuarioDTO _usuario;
-        private bool _esFormularioCurso;
         private List<string> _listNombreEtiquetas = new List<string>() { };
         private List<string> _listNombreEtiquetasAntiguas = new List<string>() { };
         private List<int> _listIdEtiquetas = new List<int>();
         private List<int> _listIdEtiquetasAntiguas = new List<int>();
         private CursoDTO _curso;
         private bool _esCrearCurso;
+        private bool _esActualizacionUsuario;
         private DocumentoDTO _documento;
-        public SeleccionEtiquetasPagina(UsuarioDTO usuario)
+
+        public SeleccionEtiquetasPagina(UsuarioDTO usuario, bool esActualizacionUsuario)
         {
             InitializeComponent();
+            _esCrearCurso = false;
+            _esActualizacionUsuario = esActualizacionUsuario;
             _usuario = usuario;
         }
 
@@ -48,7 +51,6 @@ namespace UVemyCliente.Vistas
 
         private void CargarPagina(object sender, RoutedEventArgs e)
         {
-            _esFormularioCurso = true;
             _ = CargarEtiquetasAsync();
         }
 
@@ -66,15 +68,18 @@ namespace UVemyCliente.Vistas
                 ErrorMensaje errorMensaje = new("Error. No se pudo conectar con el servidor. Inténtelo de nuevo o hágalo más tarde.");
                 errorMensaje.Show();
 
+                NavigationService.GoBack();
                 //TODO: Regresar a menú principal o a FormularioUsuarioPagina, yo tambien lo ocupo en formulario curso, entonces hay que ponernos de acuerdo
             }
         }
 
         private void SeleccionarEtiqueta(object sender, RoutedEventArgs e)
         {
+            _usuario.IdsEtiqueta ??= [];
+
             if (sender is ToggleButton toggleButton && toggleButton.DataContext is EtiquetaDTO etiqueta)
             {
-                if (_esFormularioCurso)
+                if (_esCrearCurso)
                 {
                     if (!_listIdEtiquetas.Contains(etiqueta.IdEtiqueta))
                     {
@@ -82,12 +87,10 @@ namespace UVemyCliente.Vistas
                         _listNombreEtiquetas.Add(etiqueta.Nombre);
                     }
                 }
-                else
+                else if (!_usuario.IdsEtiqueta.Contains(etiqueta.IdEtiqueta))
                 {
-                    _usuario.IdsEtiqueta ??= [];
                     _usuario.IdsEtiqueta.Add(etiqueta.IdEtiqueta);
                 }
-
             }
         }
 
@@ -95,7 +98,7 @@ namespace UVemyCliente.Vistas
         {
             if (sender is ToggleButton toggleButton && toggleButton.DataContext is EtiquetaDTO etiqueta)
             {
-                if (_esFormularioCurso)
+                if (_esCrearCurso)
                 {
                     if (_listIdEtiquetas.Contains(etiqueta.IdEtiqueta))
                     {
@@ -103,7 +106,7 @@ namespace UVemyCliente.Vistas
                         _listNombreEtiquetas.Remove(etiqueta.Nombre);
                     }
                 }
-                else
+                else if(_usuario.IdsEtiqueta != null && _usuario.IdsEtiqueta.Contains(etiqueta.IdEtiqueta))
                 {
                     _usuario.IdsEtiqueta?.Remove(etiqueta.IdEtiqueta);
                 }
@@ -112,29 +115,76 @@ namespace UVemyCliente.Vistas
 
         private void ClicConfirmar(object sender, RoutedEventArgs e)
         {
-            if (_esFormularioCurso)
+            if (_esCrearCurso)
             {
                 List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetas, _listIdEtiquetas);
                 FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento, _esCrearCurso);
                 this.NavigationService.Navigate(pagina);
             }
+            else if (_esActualizacionUsuario && _usuario.IdsEtiqueta?.Count > 0)
+            {
+                _ = ActualizarEtiquetasUsuario();
+            }
+            else if (!_esActualizacionUsuario && _usuario.IdsEtiqueta?.Count > 0)
+            {
+                _ = SolicitarCodigoVerificacion();
+            }
             else
             {
-                if (_usuario.IdsEtiqueta?.Count > 0)
+                ErrorMensaje errorMensaje = new("Debes seleccionar al menos una etiqueta");
+                errorMensaje.Show();
+            }
+        }
+
+        private async Task ActualizarEtiquetasUsuario()
+        {
+            var usuarioEtiquetas = new UsuarioEtiquetasDTO
+            {
+                IdUsuario = (int)_usuario.Id,
+                IdsEtiqueta = _usuario.IdsEtiqueta ?? []
+            };
+
+            var json = JsonSerializer.Serialize(usuarioEtiquetas);
+            var contenido = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Put, "perfil/usuarioetiquetas", contenido);
+            if (respuestaHttp.IsSuccessStatusCode)
+            {
+                NavigationService.GoBack();
+                ExitoMensaje exitoMensaje = new("¡Se han actualizado los intereses (etiquetas) exitosamente!");
+                exitoMensaje.Show();
+                SingletonUsuario.IdsEtiqueta = [.. _usuario.IdsEtiqueta];
+            }
+            else
+            {
+                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+
+                using JsonDocument document = JsonDocument.Parse(jsonString);
+                JsonElement root = document.RootElement;
+
+                if (root.TryGetProperty("detalles", out JsonElement detallesElement))
                 {
-                    _ = SolicitarCodigoVerificacion();
-                }
-                else
-                {
-                    ErrorMensaje errorMensaje = new("Debes seleccionar al menos una etiqueta");
-                    errorMensaje.Show();
+                    if (detallesElement.ValueKind == JsonValueKind.Array)
+                    {
+                        List<string> detallesList = [];
+                        foreach (JsonElement detalle in detallesElement.EnumerateArray())
+                        {
+                            detallesList.Add(detalle.GetString());
+                        }
+                        string detallesConcatenados = string.Join(", ", detallesList);
+                        ErrorMensaje errorMensaje = new(detallesConcatenados + ". Verifique la información e intentélo de nuevo más tarde");
+                        errorMensaje.Show();
+                    }
                 }
             }
         }
 
         private async Task SolicitarCodigoVerificacion()
         {
-            var json = JsonSerializer.Serialize(_usuario);
+            var correoNuevo = new
+            {
+                correoElectronico = _usuario.CorreoElectronico
+            };
+            var json = JsonSerializer.Serialize(correoNuevo);
             var contenido = new StringContent(json, Encoding.UTF8, "application/json");
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestSinAutenticacionAsync(HttpMethod.Post, "perfil/verificacion", contenido);
             if (respuestaHttp.IsSuccessStatusCode)
@@ -150,18 +200,30 @@ namespace UVemyCliente.Vistas
             else
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
-                UsuarioDTO? errorJson = JsonSerializer.Deserialize<UsuarioDTO>(jsonString);
 
-                string[] detalles = errorJson?.Detalles.ToArray() ?? ["Error desconocido"];
-                string detallesConcatenados = string.Join(", ", detalles);
-                ErrorMensaje errorMensaje = new(detallesConcatenados + ". Verifique la información e intentélo de nuevo más tarde");
-                errorMensaje.Show();
+                using JsonDocument document = JsonDocument.Parse(jsonString);
+                JsonElement root = document.RootElement;
+
+                if (root.TryGetProperty("detalles", out JsonElement detallesElement))
+                {
+                    if (detallesElement.ValueKind == JsonValueKind.Array)
+                    {
+                        List<string> detallesList = [];
+                        foreach (JsonElement detalle in detallesElement.EnumerateArray())
+                        {
+                            detallesList.Add(detalle.GetString());
+                        }
+                        string detallesConcatenados = string.Join(", ", detallesList);
+                        ErrorMensaje errorMensaje = new(detallesConcatenados + ". Verifique la información e intentélo de nuevo más tarde");
+                        errorMensaje.Show();
+                    }
+                }
             }
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            if (_esFormularioCurso)
+            if (_esCrearCurso)
             {
                 List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetasAntiguas, _listIdEtiquetasAntiguas);
                 FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento, _esCrearCurso);
@@ -175,14 +237,31 @@ namespace UVemyCliente.Vistas
 
         private void CargarEtiquetas(object sender, RoutedEventArgs e)
         {
-            if(_listIdEtiquetas != null && _listIdEtiquetas.Count > 0)
+            if (_esCrearCurso)
             {
-                ToggleButton toggleButton = sender as ToggleButton;
-                if (toggleButton != null && toggleButton.DataContext is EtiquetaDTO etiqueta)
+                if (_listIdEtiquetas != null && _listIdEtiquetas.Count > 0)
                 {
-                    if (_listIdEtiquetas.Contains(etiqueta.IdEtiqueta))
+                    ToggleButton toggleButton = sender as ToggleButton;
+                    if (toggleButton != null && toggleButton.DataContext is EtiquetaDTO etiqueta)
                     {
-                        toggleButton.IsChecked = true;
+                        if (_listIdEtiquetas.Contains(etiqueta.IdEtiqueta))
+                        {
+                            toggleButton.IsChecked = true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (_usuario.IdsEtiqueta != null && _usuario.IdsEtiqueta.Count > 0)
+                {
+                    ToggleButton toggleButton = sender as ToggleButton;
+                    if (toggleButton != null && toggleButton.DataContext is EtiquetaDTO etiqueta)
+                    {
+                        if (_usuario.IdsEtiqueta.Contains(etiqueta.IdEtiqueta))
+                        {
+                            toggleButton.IsChecked = true;
+                        }
                     }
                 }
             }

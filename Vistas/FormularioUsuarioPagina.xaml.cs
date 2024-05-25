@@ -151,6 +151,9 @@ namespace UVemyCliente.Vistas
                 errorMensaje.ShowDialog();
             }
 
+            pwdBoxContrasena.Password = string.Empty;
+            pwdBoxContrasenaRepetida.Password = string.Empty;
+
             return sonValidos;
         }
 
@@ -164,7 +167,7 @@ namespace UVemyCliente.Vistas
                 Contrasena = _contrasena,
             };
 
-            SeleccionEtiquetasPagina seleccionEtiquetasPagina = new(usuario);
+            SeleccionEtiquetasPagina seleccionEtiquetasPagina = new(usuario, false);
             this.NavigationService.Navigate(seleccionEtiquetasPagina);
         }
 
@@ -341,7 +344,13 @@ namespace UVemyCliente.Vistas
 
         private void ClicEtiquetas(object sender, RoutedEventArgs e)
         {
-            //TODO: Implementar
+            UsuarioDTO usuarioSingletonDTO = new UsuarioDTO()
+            {
+                Id = SingletonUsuario.IdUsuario,
+                IdsEtiqueta = [.. SingletonUsuario.IdsEtiqueta]
+            };
+
+            NavigationService.Navigate(new SeleccionEtiquetasPagina(usuarioSingletonDTO, true));
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
