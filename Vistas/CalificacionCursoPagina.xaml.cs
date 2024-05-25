@@ -113,7 +113,8 @@ namespace UVemyCliente.Vistas
             grdBackground.IsEnabled = false;
 
             int calificacionNueva = Int32.Parse(txtBlockCalificacion.Text);
-            UsuarioCursoDTO usuario = new UsuarioCursoDTO { IdCurso = _curso.IdCurso, Calificacion = calificacionNueva };
+            //UsuarioCursoDTO usuario = new UsuarioCursoDTO { IdCurso = _curso.IdCurso, Calificacion = calificacionNueva };
+            UsuarioCursoDTO usuario = new UsuarioCursoDTO { IdCurso = (int)_curso.IdCurso, IdUsuario = 3, Calificacion = calificacionNueva };
             var json = JsonSerializer.Serialize(usuario);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
