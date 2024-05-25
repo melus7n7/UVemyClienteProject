@@ -75,10 +75,10 @@ namespace UVemyCliente.Vistas
 
         private async Task IniciarSesionAsync()
         {
-            UsuarioDTO credenciales = new()
+            var credenciales = new
             {
-                CorreoElectronico = _correoElectronico,
-                Contrasena = _contrasena
+                correoElectronico = _correoElectronico,
+                contrasena = _contrasena
             };
 
             var json = JsonSerializer.Serialize(credenciales);
@@ -108,7 +108,15 @@ namespace UVemyCliente.Vistas
                 SingletonUsuario.CorreoElectronico = usuario.CorreoElectronico;
                 SingletonUsuario.JWT = usuario.Token;
 
-                ExitoMensaje exitoMensaje = new();
+                var idsEtiquetaJson = root.GetProperty("idsEtiqueta");
+                List<int> idsEtiqueta = [];
+                foreach (var idEtiquetaJson in idsEtiquetaJson.EnumerateArray())
+                {
+                    idsEtiqueta.Add(idEtiquetaJson.GetInt32());
+                }
+                SingletonUsuario.IdsEtiqueta = [.. idsEtiqueta];
+
+                ExitoMensaje exitoMensaje = new("Bienvenido " + SingletonUsuario.Nombres + " " + SingletonUsuario.Apellidos);
                 exitoMensaje.Show();
 
                 MenuPrincipalPagina menuPrincipalPagina = new();
