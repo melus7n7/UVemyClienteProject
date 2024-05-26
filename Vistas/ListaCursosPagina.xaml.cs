@@ -36,6 +36,7 @@ namespace UVemyCliente.Vistas
         private List<CheckBox> _checkBoxes;
         private ObservableCollection<EtiquetaDTO> _etiquetas = new ObservableCollection<EtiquetaDTO>();
         private ObservableCollection<TiposCursos> _tiposCursos = new ObservableCollection<TiposCursos>();
+        private List<CursoListBox> _cursos = new List<CursoListBox>();
 
         private int _paginaActual = 0;
         private int _paginaAnterior;
@@ -43,6 +44,7 @@ namespace UVemyCliente.Vistas
         private int _calificacionCurso;
         private int _idEtiqueta;
         private int _idTipoCurso;
+        
         public ListaCursosPagina()
         {
             _paginaActual = 0;
@@ -95,6 +97,7 @@ namespace UVemyCliente.Vistas
 
         private async Task CargarCursosPagina(int pagina, string titulo, int calificacion, int idTipoCurso, int idEtiqueta)
         {
+
             string urlBusqueda = "cursoslistas/" + pagina;
             if (titulo != string.Empty)
             {
@@ -119,14 +122,18 @@ namespace UVemyCliente.Vistas
             if (respuestaHttp.IsSuccessStatusCode)
             {
                 var json = await respuestaHttp.Content.ReadAsStringAsync();
-                List<CursoListBox> cursos = JsonConvert.DeserializeObject<List<CursoListBox>>(json);
-                CargarCursosListBox(cursos);
+                _cursos = JsonConvert.DeserializeObject<List<CursoListBox>>(json);
+                Debug.WriteLine(json);
+                CargarCursosListBox(_cursos);
             }
             else if (respuestaHttp.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 ErrorMensaje errorMensaje = new("Error. No existen mas cursos en el sistema.");
                 errorMensaje.Show();
-                _paginaActual = _paginaAnterior;
+                _cursos = new List<CursoListBox>();
+                CargarCursosListBox(_cursos);
+
+                //_paginaActual = _paginaAnterior;
             }
             else
             {
