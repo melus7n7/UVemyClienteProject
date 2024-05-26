@@ -18,5 +18,33 @@
 
     <FontFamily x:Key="NunitoFont">/UVemyCliente;component/Fonts/Nunito-VariableFont_wght.ttf#Nunito</FontFamily>
     <FontFamily x:Key="NunitoItalicFont">/UVemyCliente;component/Fonts/Nunito-Italic-VariableFont_wght.ttf#Nunito</FontFamily>
+
+
+    <ControlTemplate x:Key="cmbBoxBasePolitica" TargetType="{x:Type ToggleButton}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width=".25*" />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="MainBorder" Grid.ColumnSpan="2" CornerRadius="10" Background="#D9E1E4" BorderBrush="#5D737E" BorderThickness="3 3 0 3"/>
+            <Border x:Name="BordeBase" Grid.Column="1" CornerRadius="0,10,10,0"  Background="#D9E1E4"  BorderBrush="#5D737E" BorderThickness="3"/>
+            <Image Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" Source="/Recursos/arrow-down.png" Width="16" Height="16"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ToggleButton.IsMouseOver" Value="true">
+                <Setter TargetName="MainBorder" Property="Background" Value="#D9E1E4" />
+                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#5D737E" />
+                <Setter TargetName="BordeBase" Property="Background" Value="#5D737E"/>
+                <Setter TargetName="BordeBase" Property="BorderBrush" Value="#5D737E"/>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="true">
+                <Setter TargetName="MainBorder" Property="Background" Value="#D9E1E4"/>
+                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#5D737E" />
+                <Setter TargetName="BordeBase" Property="Background" Value="#5D737E"/>
+                <Setter TargetName="BordeBase" Property="BorderBrush" Value="#5D737E"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
     
 </ResourceDictionary>

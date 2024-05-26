@@ -5,14 +5,12 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace UVemyCliente.DTO
+namespace UVemyCliente.Utilidades
 {
-    public class EtiquetaDTO
+    public class TiposCursos
     {
-        [JsonPropertyName("idEtiqueta")]
-        public int IdEtiqueta { get; set; }
-        [JsonPropertyName("nombre")]
-        public required string Nombre { get; set; }
+        public int IdTipoCurso { get; set; }
+        public string Nombre { get; set; }
 
         public override string ToString()
         {

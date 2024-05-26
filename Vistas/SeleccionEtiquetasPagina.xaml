@@ -87,7 +87,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <ToggleButton Content="{Binding Nombre}" Style="{StaticResource estiloTglButtonEtiqueta}" Checked="SeleccionarEtiqueta" Unchecked="DeseleccionarEtiqueta"/>
+                        <ToggleButton Content="{Binding Nombre}" Style="{StaticResource estiloTglButtonEtiqueta}" Checked="SeleccionarEtiqueta" Unchecked="DeseleccionarEtiqueta" Loaded="CargarEtiquetas"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
