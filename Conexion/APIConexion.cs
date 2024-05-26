@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UVemyCliente.Utilidades;
 using System.Diagnostics;
 using System.Net.Sockets;
+using Newtonsoft.Json.Linq;
 
 namespace UVemyCliente.Conexion
 {
@@ -26,6 +27,7 @@ namespace UVemyCliente.Conexion
             }
 
             //To-DO
+            SingletonUsuario.JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlzaWQiOjQsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Imtpa2dhbWJvYUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJFbnJpcXVlIFBVVCIsImlzcyI6IlVWZW15U2Vydmlkb3JKV1QiLCJhdWQiOiJVc3Vhcmlvc1VWZW15SldUIiwiaWF0IjoxNzE2NjgzMjcxLCJleHAiOjE3MTY3MjY0NzF9.EowL6xG89Mhjr6L2Xk6xDt4mU7PNsO9W3JEEQ14_vig";
             _cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SingletonUsuario.JWT);
 
             return _cliente;
@@ -55,6 +57,22 @@ namespace UVemyCliente.Conexion
                 {
                     Content = content
                 });
+
+                if (respuesta.Headers.Contains("Set-Authorization"))
+                {
+                    var tokenNuevo = respuesta.Headers.GetValues("Set-Authorization").FirstOrDefault();
+                    if (!string.IsNullOrEmpty(tokenNuevo))
+                    {
+                        SingletonUsuario.JWT = tokenNuevo;
+                        _cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SingletonUsuario.JWT);
+                    }
+                }
+
+                if(respuesta.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    ErrorMensaje errorMensaje = new ("Por inactividad su sesión ha vencido. Por favor, vuelva a iniciar sesión");
+                    errorMensaje.Show();
+                }
             }
             catch (HttpRequestException ex)
             {
@@ -68,11 +86,9 @@ namespace UVemyCliente.Conexion
                     respuesta.StatusCode = System.Net.HttpStatusCode.InternalServerError; 
                 }
             }
-            //si la respuesta tiene un jwt token nuevo que se le asigne y que si es un 401 , que ponga el mensaje, error debe volver a iniciar sesión
             return respuesta;
         }
 
-        //Para el inicio de sesión
         public static async Task<HttpResponseMessage> EnviarRequestSinAutenticacionAsync(HttpMethod method, string relativeUri, HttpContent content = null)
         {
             HttpResponseMessage respuesta = new HttpResponseMessage();
