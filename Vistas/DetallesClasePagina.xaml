@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:UVemyCliente.Vistas"
+      xmlns:local="clr-namespace:UVemyCliente.Vistas" Unloaded="CerrarPagina"
       mc:Ignorable="d" d:DesignHeight="1336" d:DesignWidth="1336">
 
     <Page.Resources>
@@ -231,8 +231,8 @@
                     <Grid>
                         <Border Background="#5d5d5d" Margin="20 15" Name="brdVideoBackground" Visibility="Collapsed"/>
                         <MediaElement Margin="10" Name="mdElementVideo"/>
-                        <Button Name="btnReproducir" Visibility="Collapsed" Style="{StaticResource estiloBtnPlay}"></Button>
-                        <Button Name="btnPausar" Visibility="Collapsed" Style="{StaticResource estiloBtnPause}" VerticalAlignment="Bottom" HorizontalAlignment="Left"></Button>
+                        <Button Name="btnReproducir" Click="ClicReproducir" Visibility="Collapsed" Style="{StaticResource estiloBtnPlay}"></Button>
+                        <Button Name="btnPausar" Click="ClicPausar" Visibility="Collapsed" Style="{StaticResource estiloBtnPause}" VerticalAlignment="Bottom" HorizontalAlignment="Left"></Button>
 
                     </Grid>
                 </Border>
@@ -258,18 +258,17 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="100"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBox Margin="10" Style="{StaticResource estiloTxtBoxComentario}">modificador de acceso y sus métodos modificador de acceso y sus métodosmodificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acce f d8</TextBox>
-                                <Button Grid.Column="1" Style="{StaticResource estiloBtnEnviarW}"></Button>
+                                <TextBox MaxLength="350" Name="txtBoxComentario" Margin="10" Style="{StaticResource estiloTxtBoxComentario}"></TextBox>
+                                <Button Click="ClicEnviarComentario" Grid.Column="1" Style="{StaticResource estiloBtnEnviarW}"></Button>
                             </Grid>
                         </Border>
-                        <ListView Grid.Row="1" Margin="10 0 10 10" BorderThickness="0">
-                            <local:ComentarioPrincipalUserControl/>
+                        <ListView HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="lstViewComentarios" Grid.Row="1" Margin="10 0 10 10" BorderThickness="0" SelectionMode="Single">
                         </ListView>
                     </Grid>
                 </Border>
 
                 <Border Grid.Row="3" Grid.Column="1" BorderBrush="#000000" BorderThickness="3" Height="500" Margin="30 0 0 20" CornerRadius="30">
-                    <ListBox ItemContainerStyle="{StaticResource estiloLstBoxDocumento}" Margin="10" Background="Transparent" BorderThickness="0" Name="lstBoxDocumentos">
+                    <ListBox HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource estiloLstBoxDocumento}" Margin="10" Background="Transparent" BorderThickness="0" Name="lstBoxDocumentos">
                     </ListBox>
                 </Border>
             </Grid>

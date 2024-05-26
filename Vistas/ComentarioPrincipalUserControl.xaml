@@ -47,26 +47,6 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#000000"/>
         </Style>
-        
-        <Style x:Key="estiloLstBoxComentarioSecundario" TargetType="ListBoxItem">
-            <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="#000000"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Grid Margin="5 5 5 0" Width="660">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Pedro González López</TextBlock>
-                            <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Medium">modificador de acceso y sus métodos f d8</TextBlock>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
     
     <Border Background="#A6A4A4" Margin="5 10 5 5" CornerRadius="20">
@@ -78,15 +58,42 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <TextBlock FontSize="16" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"
+            <TextBlock x:Name="txtBlockNombreUsuarioPrincipal" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"
                        Style="{StaticResource estiloTxtBlockCampos}">Pedro González López</TextBlock>
-            <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Width="680" Style="{StaticResource estiloTxtBlockCampos}"
+            <TextBlock x:Name="txtBlockComentarioPrincipal" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Width="680" Style="{StaticResource estiloTxtBlockCampos}"
                    FontWeight="Medium">modificador de acceso y sus métododificador de acceso y sus métodos modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acce f d8</TextBlock>
-            <TextBlock Grid.Row="2" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Margin="0 5 0 0" Style="{StaticResource estiloTxtBlockCampos}"
+            <TextBlock x:Name="txtBlockRespuestasTitulo" Grid.Row="2" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Margin="0 5 0 0" Style="{StaticResource estiloTxtBlockCampos}"
                    HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Respuestas</TextBlock>
-            <ListBox Grid.Row="3" Height="100" ItemContainerStyle="{StaticResource estiloLstBoxComentarioSecundario}" Background="Transparent" BorderThickness="0">
-                <ListBoxItem></ListBoxItem>
-                <ListBoxItem></ListBoxItem>
+            <ListBox Name="lstBoxRespuestas" Grid.Row="3" Height="100" Background="Transparent" BorderThickness="0" d:ItemsSource="{d:SampleData ItemCount=5}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="Foreground" Value="#000000"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <Grid Margin="5 5 5 0" Width="660">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding NombreUsuario}"/>
+                                        <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Medium" Text="{Binding Descripcion}"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding NombreUsuario}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Descripcion}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
             <Button Visibility="Visible" Grid.Row="4" Background="#000000" Foreground="#ffffff" Margin="0 5 0 0" FontFamily="{StaticResource NunitoFont}" FontSize="14"
                     Click="ClicMostrarComentario" Name="btnResponder">Responder</Button>
@@ -96,7 +103,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Height="90" Margin="10" Style="{StaticResource estiloTxtBoxComentario}">modificador de acceso y sus métodos modificador de acceso y sus métodosmodificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acce f d8</TextBox>
+                    <TextBox MaxLength="350" Name="txtBoxComentarioRespuesta" Height="90" Margin="10" Style="{StaticResource estiloTxtBoxComentario}">modificador de acceso y sus métodos modificador de acceso y sus métodosmodificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acceso y sus métodos  modificador de acce f d8</TextBox>
                     <Button Grid.Column="1" Style="{StaticResource estiloBtnEnviarB}" VerticalAlignment="Bottom" Click="ClicEnviarComentario"></Button>
                 </Grid>
             </Border>

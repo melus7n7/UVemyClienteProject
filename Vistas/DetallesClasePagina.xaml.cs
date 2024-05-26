@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Grpc.Core;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +22,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UVemyCliente.Conexion;
 using UVemyCliente.DTO;
+using UVemyCliente.Servicios;
 using UVemyCliente.Utilidades;
 
 namespace UVemyCliente.Vistas
@@ -30,7 +33,21 @@ namespace UVemyCliente.Vistas
     public partial class DetallesClase : Page
     {
         private ClaseDTO _clase;
+        private int _idClase = 2; //QUITAR AL INTEGRAR
         private DetallesCurso _paginaDetallesCurso;
+        private string _tempArchivoPath = "";
+
+        public DetallesClase()
+        {
+            InitializeComponent();
+
+            SingletonUsuario.Nombres = "Enrique PUT";
+            SingletonUsuario.Apellidos = "Gamboa Hernández PUT"; //QUITAR AL INTEGRAR
+            SingletonUsuario.IdUsuario = 4;
+
+            _ = RecuperarDatosClaseAsync(_idClase);
+            _paginaDetallesCurso = new DetallesCurso();
+        }
 
         public DetallesClase(int idClase)
         {
@@ -84,8 +101,9 @@ namespace UVemyCliente.Vistas
                     txtBlockNombreClase.Text = _clase.Nombre;
                     txtBlockDescripcionClase.Text = _clase.Descripcion;
                     await RecuperarDocumentosAsync();
-                    
-                    //Recuperar video, asignar como DocumentoDTO a _clase.Video para formulario, comentarios
+                    await RecuperarComentariosAsync();
+
+                    await RecuperarVideoClaseAsync();
                 }
             }
             grdBackground.IsEnabled = true;
@@ -144,6 +162,64 @@ namespace UVemyCliente.Vistas
             _clase.Documentos = documentosRecuperados;
             lstBoxDocumentos.ItemsSource = documentosRecuperados;
             
+        }
+
+        private async Task RecuperarComentariosAsync()
+        {
+            string url = $"comentarios/{_idClase}";
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, url);
+            int codigoRespuesta = (int)respuestaHttp.StatusCode;
+
+            if (codigoRespuesta >= 400)
+            {
+                grdPrincipal.IsEnabled = false;
+                Debug.WriteLine(codigoRespuesta);
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudieron recuperar los comentarios, inténtelo más tarde");
+                error.Show();
+            }
+            else
+            {
+                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+                List<ComentarioDTO>? comentariosRecuperados = JsonSerializer.Deserialize<List<ComentarioDTO>>(jsonString);
+
+                if(comentariosRecuperados != null)
+                {
+                    foreach(var comentario in comentariosRecuperados)
+                    {
+                        ComentarioPrincipalUserControl comentarioPrincipal = new(comentario, _idClase);
+
+                        lstViewComentarios.Items.Add(comentarioPrincipal);
+                    }
+                }
+            }
+        }
+
+        private async Task RecuperarVideoClaseAsync()
+        {
+            _tempArchivoPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "temp_video_file.mp4");
+
+            try
+            {
+                MemoryStream streamVideo = await VideoGrpc.DescargarVideoStreamAsync(_clase.VideoId);
+                using (FileStream fileStream = new(_tempArchivoPath, FileMode.Create, FileAccess.Write))
+                {
+                    streamVideo.Position = 0;
+                    await streamVideo.CopyToAsync(fileStream);
+                }
+            }
+            catch (RpcException)
+            {
+                grdPrincipal.IsEnabled = false;
+                ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo recuperar el video de la clase, inténtelo más tarde");
+                error.Show();
+            }
+
+            mdElementVideo.Source = new Uri(_tempArchivoPath);
+            mdElementVideo.LoadedBehavior = MediaState.Manual;
+            mdElementVideo.UnloadedBehavior = MediaState.Manual;
+            mdElementVideo.Stop();
+
+            btnReproducir.Visibility = Visibility.Visible;
         }
 
         private string ObtenerNombreDesdeHeader(HttpContentHeaders headersHttp)
@@ -206,6 +282,87 @@ namespace UVemyCliente.Vistas
                     ErrorMensaje error = new ErrorMensaje("Ocurrió un error al guardar el documento");
                     error.Show();
                 }
+            }
+        }
+
+        private void ClicReproducir(object sender, RoutedEventArgs e)
+        {
+            mdElementVideo.Play();
+            btnReproducir.Visibility = Visibility.Collapsed;
+            btnPausar.Visibility = Visibility.Visible;
+        }
+
+        private void ClicPausar(object sender, RoutedEventArgs e)
+        {
+            mdElementVideo.Stop();
+            btnReproducir.Visibility = Visibility.Visible;
+            btnPausar.Visibility = Visibility.Collapsed;
+        }
+
+        private async void ClicEnviarComentario(object sender, RoutedEventArgs e)
+        {
+            string descripcionComentario = txtBoxComentario.Text;
+
+            if (string.IsNullOrEmpty(descripcionComentario))
+            {
+                ErrorMensaje errorMensaje = new("Escriba el contenido del comentario para poder enviarlo");
+                errorMensaje.Show();
+            }
+            else
+            {
+                _ = EnviarComentarioAsync(descripcionComentario);
+            }
+        }
+
+        private async Task EnviarComentarioAsync(string descripcionComentario)
+        {
+            var comentarioNuevo = new
+            {
+                idClase = _idClase,
+                idUsuario = SingletonUsuario.IdUsuario,
+                descripcion = descripcionComentario
+            };
+
+            string json = JsonSerializer.Serialize(comentarioNuevo);
+            HttpContent contenido = new StringContent(json, Encoding.UTF8, "application/json");
+            string url = "comentarios";
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, url, contenido);
+
+            int codigoRespuesta = (int)respuestaHttp.StatusCode;
+
+            if (codigoRespuesta >= 400)
+            {
+                Debug.WriteLine(codigoRespuesta);
+                ErrorMensaje errorMensaje = new("Ocurrió un error y no se pudo enviar el comentario, inténtelo más tarde");
+                errorMensaje.Show();
+            }
+            else
+            {
+                txtBoxComentario.Text = "";
+
+                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+                var respuesta = JsonSerializer.Deserialize<ComentarioDTO>(jsonString);
+                int idComentario = respuesta.IdComentario;
+
+                ComentarioPrincipalUserControl comentarioUserControl = new(new ComentarioDTO
+                {
+                    IdComentario = idComentario,
+                    IdClase = _idClase,
+                    NombreUsuario = SingletonUsuario.Nombres + " " + SingletonUsuario.Apellidos,
+                    Descripcion = descripcionComentario,
+                    Respuestas = []
+                },
+                _idClase);
+
+                lstViewComentarios.Items.Add(comentarioUserControl);
+            }
+        }
+
+        private void CerrarPagina(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(_tempArchivoPath))
+            {
+                File.Delete(_tempArchivoPath);
             }
         }
     }
