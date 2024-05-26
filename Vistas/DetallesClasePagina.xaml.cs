@@ -33,30 +33,22 @@ namespace UVemyCliente.Vistas
     public partial class DetallesClase : Page
     {
         private ClaseDTO _clase;
-        private int _idClase = 2; //QUITAR AL INTEGRAR
+        private int _idClase;
         private DetallesCurso _paginaDetallesCurso;
         private string _tempArchivoPath = "";
 
-        public DetallesClase()
-        {
-            InitializeComponent();
-
-            SingletonUsuario.Nombres = "Enrique PUT";
-            SingletonUsuario.Apellidos = "Gamboa Hernández PUT"; //QUITAR AL INTEGRAR
-            SingletonUsuario.IdUsuario = 4;
-
-            _ = RecuperarDatosClaseAsync(_idClase);
-        }
 
         public DetallesClase(int idClase)
         {
             InitializeComponent();
+            _idClase = idClase;
             _ = RecuperarDatosClaseAsync(idClase);
         }
 
         public DetallesClase(int idClase, DetallesCurso paginaDetallesCurso)
         {
             InitializeComponent();
+            _idClase = idClase;
             _ = RecuperarDatosClaseAsync(idClase);
             _paginaDetallesCurso = paginaDetallesCurso;
         }
@@ -205,12 +197,18 @@ namespace UVemyCliente.Vistas
 
             try
             {
-                MemoryStream streamVideo = await VideoGrpc.DescargarVideoStreamAsync(_clase.VideoId);
+                MemoryStream streamVideo = await VideoGrpc.DescargarVideoStreamAsync((int)_clase.VideoId);
                 using (FileStream fileStream = new(_tempArchivoPath, FileMode.Create, FileAccess.Write))
                 {
                     streamVideo.Position = 0;
                     await streamVideo.CopyToAsync(fileStream);
                 }
+
+                //Para poder modificar en el formulario
+                _clase.Video = new DocumentoDTO 
+                { 
+                    IdDocumento = (int)_clase.VideoId, Archivo = streamVideo.ToArray(), Nombre = "TempUvemy"
+                };
             }
             catch (RpcException)
             {

@@ -34,9 +34,11 @@ namespace UVemyCliente.Vistas
         private ClaseDTO _claseActual;
         private List<DocumentoDTO> _documentosClase;
         private DocumentoDTO _videoDocumento;
-        public FormularioClase()
+        private int _idCurso;
+        public FormularioClase(int idCurso)
         {
             InitializeComponent();
+            _idCurso = idCurso;
             PrepararMediaElement();
             _documentosClase = new List<DocumentoDTO>();
             _videoDocumento = null;
@@ -46,11 +48,12 @@ namespace UVemyCliente.Vistas
         {
             InitializeComponent();
             PrepararMediaElement();
-            MostrarClaseActual(clase);
+            _ = MostrarClaseActualAsync(clase);
         }
 
-        private void MostrarClaseActual(ClaseDTO clase)
+        private async Task MostrarClaseActualAsync(ClaseDTO clase)
         {
+            _idCurso = (int)clase.IdCurso;
             _claseActual = clase;
             _documentosClase = clase.Documentos;
             _videoDocumento = clase.Video;
@@ -75,7 +78,7 @@ namespace UVemyCliente.Vistas
             }
             else
             {
-                //Mostrar el video guardado
+                await MostrarVideoAsync(_videoDocumento.Archivo, _videoDocumento.Nombre);
             }
 
             btnEliminarClase.Visibility = Visibility.Visible;
@@ -163,7 +166,7 @@ namespace UVemyCliente.Vistas
             {
                 Nombre = txtBlockNombreClase.Text,
                 Descripcion = txtBlockDescripcion.Text,
-                IdCurso = 1 //To-Do
+                IdCurso = _idCurso
             };
 
             var json = JsonSerializer.Serialize(clase);
@@ -184,7 +187,7 @@ namespace UVemyCliente.Vistas
                 ClaseDTO? claseNueva = JsonSerializer.Deserialize<ClaseDTO>(jsonString);
                 if (claseNueva != null)
                 {
-                    await GuardarDocumentosAsync(claseNueva.Id);
+                    await GuardarDocumentosAsync((int)claseNueva.Id);
                 }
             }
 
@@ -249,8 +252,10 @@ namespace UVemyCliente.Vistas
 
         private void RedirigirListaClases()
         {
-            DetallesCurso curso = new DetallesCurso(new CursoDTO { IdCurso = _claseActual.IdCurso});
+            EliminarVideo();
+            DetallesCurso curso = new DetallesCurso(new CursoDTO { IdCurso = _idCurso });
             NavigationService.Navigate(curso);
+            
         }
 
         private void ClicAgregarDocumento(object sender, RoutedEventArgs e)
@@ -532,7 +537,7 @@ namespace UVemyCliente.Vistas
                 Id = _claseActual.Id,
                 Nombre = txtBlockNombreClase.Text,
                 Descripcion = txtBlockDescripcion.Text,
-                IdCurso = 1 //To-Do
+                IdCurso = _idCurso
             };
 
             string url = "clases/" + _claseActual.Id;
@@ -629,7 +634,7 @@ namespace UVemyCliente.Vistas
                 IdDocumento = _videoDocumento.IdDocumento,
                 Archivo = _videoDocumento.Archivo,
                 Nombre = _videoDocumento.Nombre,
-                IdClase = _claseActual.Id
+                IdClase = (int)_claseActual.Id
             };
             int respuesta = await VideoGrpc.EnviarVideoDeClaseAsync(videoNuevo);
 
@@ -649,7 +654,7 @@ namespace UVemyCliente.Vistas
 
         private void RedirigirDetallesClase()
         {
-            DetallesClase clase = new DetallesClase(_claseActual.Id);
+            DetallesClase clase = new DetallesClase((int)_claseActual.Id);
             NavigationService.Navigate(clase);
             EliminarVideo();
         }
