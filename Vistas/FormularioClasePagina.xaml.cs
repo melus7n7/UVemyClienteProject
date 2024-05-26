@@ -249,7 +249,7 @@ namespace UVemyCliente.Vistas
 
         private void RedirigirListaClases()
         {
-            DetallesCurso curso = new DetallesCurso();
+            DetallesCurso curso = new DetallesCurso(new CursoDTO { IdCurso = _claseActual.IdCurso});
             NavigationService.Navigate(curso);
         }
 
@@ -504,7 +504,7 @@ namespace UVemyCliente.Vistas
                 ExitoMensaje mensaje = new ExitoMensaje("Se ha eliminado la clase exitosamente");
                 mensaje.Show();
 
-                DetallesCurso curso = new DetallesCurso();
+                DetallesCurso curso = new DetallesCurso(new CursoDTO { IdCurso = _claseActual.IdCurso});
                 NavigationService.Navigate(curso);
                 EliminarVideo();
             }

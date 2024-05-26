@@ -36,7 +36,6 @@ namespace UVemyCliente.Vistas
         {
             InitializeComponent();
             _ = RecuperarDatosClaseAsync(idClase);
-            _paginaDetallesCurso = new DetallesCurso();
         }
 
         public DetallesClase(int idClase, DetallesCurso paginaDetallesCurso)
@@ -48,7 +47,14 @@ namespace UVemyCliente.Vistas
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(_paginaDetallesCurso);
+            if (_paginaDetallesCurso != null)
+            {
+                NavigationService.Navigate(_paginaDetallesCurso);
+            }
+            else
+            {
+                NavigationService.Navigate(new DetallesCurso(new CursoDTO { IdCurso = _clase.IdCurso}));
+            }
         }
 
         private async Task RecuperarDatosClaseAsync(int idClase)
