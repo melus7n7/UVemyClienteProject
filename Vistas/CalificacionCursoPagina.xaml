@@ -8,7 +8,7 @@
 
     <Page.Resources>
         <Style x:Key="estiloBtnCalificacion" TargetType="Button">
-            <Setter Property="Background" Value="#000000"/>
+            <Setter Property="Background" Value="#479E85"/>
             <Setter Property="Foreground" Value="#ffffff"/>
             <Setter Property="FontSize" Value="80"/>
             <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
@@ -39,7 +39,7 @@
         </Style>
 
         <Style x:Key="estiloBtnBackground" TargetType="Button">
-            <Setter Property="Background" Value="#000000"/>
+            <Setter Property="Background" Value="#0A122A"/>
             <Setter Property="Foreground" Value="#ffffff"/>
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
@@ -74,7 +74,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Background="#000000" Orientation="Horizontal">
+        <StackPanel Background="#0A122A" Orientation="Horizontal">
             <Button Style="{StaticResource estiloBtnRegresar}" Click="ClicRegresar"></Button>
             <Border Background="#ffffff" CornerRadius="20" Width="350" Margin="15">
                 <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Calificación curso</TextBlock>
@@ -87,7 +87,7 @@
                 <RowDefinition/>
                 <RowDefinition Height=".6*"/>
             </Grid.RowDefinitions>
-            <Border Background="#000000" CornerRadius="20" Margin="0 20 0 20">
+            <Border Background="#0A122A" CornerRadius="20" Margin="0 20 0 20">
                 <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="32" TextAlignment="Center"
                            TextWrapping="Wrap" Margin="20 15">Curso de C# .NET desde cero hasta lo mas avanzado full stack lo mas avanzado full stac</TextBlock>
             </Border>
