@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -74,10 +75,10 @@ namespace UVemyCliente.Vistas
 
         private async Task IniciarSesionAsync()
         {
-            UsuarioDTO credenciales = new()
+            var credenciales = new
             {
-                CorreoElectronico = _correoElectronico,
-                Contrasena = _contrasena
+                correoElectronico = _correoElectronico,
+                contrasena = _contrasena
             };
 
             var json = JsonSerializer.Serialize(credenciales);
@@ -85,27 +86,48 @@ namespace UVemyCliente.Vistas
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestSinAutenticacionAsync(HttpMethod.Post, "autenticacion", contenido);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
 
-            if (codigoRespuesta == (int) HttpStatusCode.OK)
+            if (codigoRespuesta == (int)HttpStatusCode.OK)
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
-                if (JsonSerializer.Deserialize<UsuarioDTO>(jsonString) != null)
-                {
-                    SingletonUsuario.IdUsuario = (int)JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Id;
-                    SingletonUsuario.Nombres = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Nombres;
-                    SingletonUsuario.Apellidos = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Apellidos;
-                    SingletonUsuario.CorreoElectronico = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).CorreoElectronico;
-                    SingletonUsuario.JWT = JsonSerializer.Deserialize<UsuarioDTO>(jsonString).Token;
 
-                    ExitoMensaje exitoMensaje = new();
-                    exitoMensaje.Show();
+                using JsonDocument document = JsonDocument.Parse(jsonString);
+                var root = document.RootElement;
+
+                UsuarioDTO usuario = new()
+                {
+                    Id = root.GetProperty("idUsuario").GetInt32(),
+                    Nombres = root.GetProperty("nombres").GetString(),
+                    Apellidos = root.GetProperty("apellidos").GetString(),
+                    CorreoElectronico = root.GetProperty("correoElectronico").GetString(),
+                    Token = root.GetProperty("jwt").GetString()
+                };
+
+                SingletonUsuario.IdUsuario = usuario.Id ?? 0;
+                SingletonUsuario.Nombres = usuario.Nombres;
+                SingletonUsuario.Apellidos = usuario.Apellidos;
+                SingletonUsuario.CorreoElectronico = usuario.CorreoElectronico;
+                SingletonUsuario.JWT = usuario.Token;
+
+                var idsEtiquetaJson = root.GetProperty("idsEtiqueta");
+                List<int> idsEtiqueta = [];
+                foreach (var idEtiquetaJson in idsEtiquetaJson.EnumerateArray())
+                {
+                    idsEtiqueta.Add(idEtiquetaJson.GetInt32());
                 }
+                SingletonUsuario.IdsEtiqueta = [.. idsEtiqueta];
+
+                ExitoMensaje exitoMensaje = new("Bienvenido " + SingletonUsuario.Nombres + " " + SingletonUsuario.Apellidos);
+                exitoMensaje.Show();
+
+                MenuPrincipalPagina menuPrincipalPagina = new();
+                this.NavigationService.Navigate(menuPrincipalPagina);
             }
             else
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
-                UsuarioDTO? errorJson = JsonSerializer.Deserialize<UsuarioDTO>(jsonString);
+                var errorJson = JsonSerializer.Deserialize<UsuarioDTO>(jsonString);
 
-                string[] detalles = errorJson?.Detalles.ToArray() ?? ["Error desconocido"];
+                string[] detalles = errorJson?.Detalles?.ToArray() ?? ["Error desconocido"];
                 string detallesConcatenados = string.Join(", ", detalles);
                 txtBlockMensajeError.Text = detallesConcatenados;
             }

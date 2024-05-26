@@ -63,7 +63,7 @@ namespace UVemyCliente.Vistas
 
         private async Task CargarClasesAsync()
         {
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "clases/" + _idCurso);
+            /*HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "clases/" + _idCurso);
             if (respuestaHttp.IsSuccessStatusCode)
             {
                 var json = await respuestaHttp.Content.ReadAsStringAsync();
@@ -76,7 +76,7 @@ namespace UVemyCliente.Vistas
             {
                 ErrorMensaje errorMensaje = new("Error. No se pudo conectar con el servidor. Inténtelo de nuevo o hágalo más tarde.");
                 errorMensaje.Show();
-            }
+            }*/
         }
 
         private void CargarCurso()
@@ -241,6 +241,12 @@ namespace UVemyCliente.Vistas
             public string Rol { get; set; }
             [JsonProperty("profesor")]
             public string Profesor { get; set; }
+        }
+
+        private void ClicRegresar(object sender, RoutedEventArgs e)
+        {
+            ListaCursosPagina lista = new ListaCursosPagina();
+            NavigationService.Navigate(lista);
         }
     }
 }

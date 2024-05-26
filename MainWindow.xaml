@@ -7,6 +7,6 @@
         mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="1336">
     <Grid>
 
-        <Frame NavigationUIVisibility="Hidden" Source="Vistas/ListaCursosPagina.xaml"/>
+        <Frame NavigationUIVisibility="Hidden" Source="Vistas/InicioSesionPagina.xaml"/>
     </Grid>
 </Window>

@@ -58,9 +58,19 @@ namespace UVemyCliente.Vistas
 
         private async Task VerificarCodigoAsync()
         {
-            var json = JsonSerializer.Serialize(_usuario);
+            var usuarioNuevo = new
+            {
+                nombres = _usuario.Nombres,
+                apellidos = _usuario.Apellidos,
+                correoElectronico = _usuario.CorreoElectronico,
+                contrasena = _usuario.Contrasena,
+                idsEtiqueta = _usuario.IdsEtiqueta,
+                codigoVerificacion = _usuario.CodigoVerificacion
+            };
+
+            var json = JsonSerializer.Serialize(usuarioNuevo);
             var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "autenticacion/registro", contenido);
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Post, "perfil/registro", contenido);
             if (respuestaHttp.IsSuccessStatusCode)
             {
                 ExitoMensaje exitoMensaje = new();

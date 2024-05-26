@@ -16,6 +16,18 @@ namespace UVemyCliente.Utilidades
 
         public static string CorreoElectronico { get; set; }
 
+        public static int[] IdsEtiqueta { get; set; }
+
         public static string JWT { get; set; }
+
+        public static void Limpiar()
+        {
+            IdUsuario = 0;
+            Nombres = string.Empty;
+            Apellidos = string.Empty;
+            CorreoElectronico = string.Empty;
+            IdsEtiqueta = [];
+            JWT = string.Empty;
+        }
     }
 }

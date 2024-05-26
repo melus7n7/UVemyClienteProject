@@ -84,5 +84,29 @@ namespace UVemyCliente.Servicios
 
             return respuesta;
         }
+
+        public static async Task<MemoryStream> DescargarVideoStreamAsync(int idVideo)
+        {
+            VideoService.VideoServiceClient stub = ObtenerStub();
+
+            using var call = stub.RecibirVideoClase(new DocumentoVideo
+            {
+                 IdVideo = idVideo,
+                 Jwt = SingletonUsuario.JWT
+            });
+
+            var streamEscritura = new MemoryStream();
+
+            await foreach (var mensaje in call.ResponseStream.ReadAllAsync())
+            {
+                if (mensaje.EnvioCase == VideoPartesEnvio.EnvioOneofCase.Chunks)
+                {
+                    var bytes = mensaje.Chunks.ToByteArray();
+                    await streamEscritura.WriteAsync(bytes);
+                }
+            }
+
+            return streamEscritura;
+        }
     }
 }

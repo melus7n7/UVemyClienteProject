@@ -105,7 +105,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Background="#000000" Orientation="Horizontal">
-            <Button Style="{StaticResource estiloBtnRegresar}" Name="btnRegresar"></Button>
+            <Button Style="{StaticResource estiloBtnRegresar}" Name="btnRegresar" Click="ClicRegresar"></Button>
             <Border Background="#ffffff" CornerRadius="20" Width="200" Margin="15">
                 <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Curso</TextBlock>
             </Border>

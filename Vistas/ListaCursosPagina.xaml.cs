@@ -178,7 +178,8 @@ namespace UVemyCliente.Vistas
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-
+            MenuPrincipalPagina menu = new MenuPrincipalPagina();
+            NavigationService.Navigate(menu);
         }
 
         private void ClicBuscarCurso(object sender, RoutedEventArgs e)
