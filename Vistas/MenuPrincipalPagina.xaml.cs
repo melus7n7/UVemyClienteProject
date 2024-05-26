@@ -51,7 +51,8 @@ namespace UVemyCliente.Vistas
 
         private void ClicCursos(object sender, RoutedEventArgs e)
         {
-
+            ListaCursosPagina listaCursosPagina = new();
+            NavigationService.Navigate(listaCursosPagina);
         }
     }
 }
