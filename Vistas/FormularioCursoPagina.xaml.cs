@@ -315,7 +315,8 @@ namespace UVemyCliente.Vistas
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.GoBack();
+            ListaCursosPagina listaCursos = new ListaCursosPagina();
+            this.NavigationService.Navigate(listaCursos);
         }
 
         private bool ValidarTamaño(byte[] archivo, float limiteMB, string nombre)

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -27,9 +30,126 @@ namespace UVemyCliente.Vistas
     public partial class DetallesCurso : Page
     {
         int _idCurso = 4;
-        public DetallesCurso()
+        CursoDTO _curso = new CursoDTO();
+        CursoDetalle _cursoDetalle = new CursoDetalle();
+        public DetallesCurso(CursoDTO curso)
         {
+            _curso = curso;
+            _idCurso = (int)_curso.IdCurso;
             InitializeComponent();
+            _ = CargarCursoAsync();
+            _ = CargarClasesAsync();
+            //Cargar clases
+            //Botones dependiendo del rol
+        }
+
+        private async Task CargarCursoAsync()
+        {
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "cursos/"+ _idCurso);
+            if (respuestaHttp.IsSuccessStatusCode)
+            {
+                var json = await respuestaHttp.Content.ReadAsStringAsync();
+                _cursoDetalle = JsonConvert.DeserializeObject<CursoDetalle>(json);
+                CargarCurso();
+                CargarBotones();
+
+            }
+            else
+            {
+                ErrorMensaje errorMensaje = new("Error. No se pudo conectar con el servidor. Inténtelo de nuevo o hágalo más tarde.");
+                errorMensaje.Show();
+            }
+        }
+
+        private async Task CargarClasesAsync()
+        {
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "clases/" + _idCurso);
+            if (respuestaHttp.IsSuccessStatusCode)
+            {
+                var json = await respuestaHttp.Content.ReadAsStringAsync();
+                _cursoDetalle = JsonConvert.DeserializeObject<CursoDetalle>(json);
+                CargarCurso();
+                CargarBotones();
+
+            }
+            else
+            {
+                ErrorMensaje errorMensaje = new("Error. No se pudo conectar con el servidor. Inténtelo de nuevo o hágalo más tarde.");
+                errorMensaje.Show();
+            }
+        }
+
+        private void CargarCurso()
+        {
+            txtBlockTitulo.Text = _curso.Titulo;
+
+            _curso.Objetivos = _cursoDetalle.Objetivos;
+            txtBoxObjetivos.Text = _curso.Objetivos;
+            _curso.Etiquetas = new List<int>();
+            foreach (EtiquetaDTO etiqueta in _cursoDetalle.Etiquetas)
+            {
+                _curso.Etiquetas.Add(etiqueta.IdEtiqueta);
+                txtBoxEtiquetas.Text += etiqueta.Nombre;
+            }
+
+            _curso.Descripcion = _cursoDetalle.Descripcion;
+            txtBoxDescripcion.Text = _curso.Descripcion;
+
+            if (_cursoDetalle.Calificacion != null)
+            {
+                txtBoxCalificacion.Text = _cursoDetalle.Calificacion;
+            } 
+            else
+            {
+                txtBoxCalificacion.Text += "S/C";
+            }
+            txtBoxTProfesor.Text = _cursoDetalle.Profesor;
+
+            _curso.Requisitos = _cursoDetalle.Requisitos;
+            txtBoxRequisitos.Text = _curso.Requisitos;
+
+            if (_curso.Archivo != null)
+            {
+                byte[] imageData = _curso.Archivo;
+                BitmapImage bitmap = new BitmapImage();
+                using (MemoryStream stream = new MemoryStream(imageData))
+                {
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = stream;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                }
+                mgMiniatura.Source = bitmap;
+            }
+        }
+
+        private void CargarBotones()
+        {
+            btnAgregarClase.Visibility = Visibility.Hidden;
+            btnModificarCurso.Visibility = Visibility.Hidden;
+            btnVerEstadisticas.Visibility = Visibility.Hidden;
+            btnCalificarCurso.Visibility = Visibility.Hidden;
+            btnInscribirse.Visibility = Visibility.Hidden;
+            //btnVerClase.Visibility = Visibility.Visible;
+
+            switch (_cursoDetalle.Rol)
+            {
+                case "Profesor":
+                    btnAgregarClase.Visibility = Visibility.Visible;
+                    btnModificarCurso.Visibility = Visibility.Visible;
+                    btnVerEstadisticas.Visibility = Visibility.Visible;
+                    break;
+                case "Estudiante":
+                    btnCalificarCurso.Visibility = Visibility.Visible;
+                    break;
+                case "Usuario":
+                    btnInscribirse.Visibility = Visibility.Visible;
+                    //btnVerClase.Visibility = Visibility.Hidden;
+                    break;
+                default:
+                    break;
+            }
+
         }
 
         private void ClicAgregarClase(object sender, RoutedEventArgs e)
@@ -68,7 +188,7 @@ namespace UVemyCliente.Vistas
             grdBackground.IsEnabled = false;
 
             UsuarioCursoDTO usuario = new UsuarioCursoDTO { IdCurso = _idCurso, IdUsuario = 4 };
-            var json = JsonSerializer.Serialize(usuario);
+            var json = System.Text.Json.JsonSerializer.Serialize(usuario);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             string url = "cursos/inscripcion/" + _idCurso;
@@ -95,6 +215,32 @@ namespace UVemyCliente.Vistas
         {
             CalificacionCurso pagina = new CalificacionCurso(new CursoDTO { IdCurso = 1, Titulo = "si"});
             NavigationService.Navigate(pagina);
+        }
+
+        public class CursoDetalle
+        {
+            [JsonProperty("descripcion")]
+            public string Descripcion { get; set; }
+
+            [JsonProperty("objetivos")]
+            public string Objetivos { get; set; }
+
+            [JsonProperty("requisitos")]
+            public string Requisitos { get; set; }
+
+            [JsonProperty("idUsuario")]
+            public int IdUsuario { get; set; }
+
+            [JsonProperty("etiquetas")]
+            public List<EtiquetaDTO> Etiquetas { get; set; }
+
+            [JsonProperty("calificacion")]
+            public string Calificacion { get; set; }
+
+            [JsonProperty("rol")]
+            public string Rol { get; set; }
+            [JsonProperty("profesor")]
+            public string Profesor { get; set; }
         }
     }
 }

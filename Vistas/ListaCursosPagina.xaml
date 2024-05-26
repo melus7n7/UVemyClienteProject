@@ -42,7 +42,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Border Background="#D9E1E4" BorderThickness="2" BorderBrush="#000000" CornerRadius="20">
+                        <Border Background="#D9E1E4"  CornerRadius="0">
                             <ScrollViewer Focusable="false" >
                                 <StackPanel IsItemsHost="True" />
                             </ScrollViewer>
@@ -59,10 +59,11 @@
         </Style>
 
         <Style x:Key="estiloLstBoxItemCurso" TargetType="ListBoxItem">
+            <EventSetter Event="ListBoxItem.Selected" Handler="SeleccionarCurso"/>
             <Setter Property="Template">
-                <Setter.Value>
+                    <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
-                        <UniformGrid Grid.Row="0" Columns="3" Width="1186" Height="358">
+                        <UniformGrid  Width="400" Height="358">
                             <Border BorderBrush="#000000" BorderThickness="2" CornerRadius="15" Margin="5" >
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -72,34 +73,10 @@
                                         <RowDefinition Height="240"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                     <Image Source="{Binding Path=Archivo}" Grid.Row="0" Grid.Column="0" />
+                                    <Border  Background="Black" Grid.Row="0" Grid.Column="0" CornerRadius="10">
+                                        <Image Source="{Binding Path=Archivo}" Grid.Row="0" Grid.Column="0" />
+                                    </Border>
                                     <TextBlock Style="{StaticResource estiloTxtBlockTitulo}" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0 3" Text="{Binding Path=Titulo}"/>
-                                </Grid>
-                            </Border>
-                            <Border BorderBrush="#000000" BorderThickness="2" CornerRadius="15" Margin="5" >
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="240"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <Image Source="{Binding Path=Archivo2}" Grid.Row="0" Grid.Column="0" />
-                                    <TextBlock Style="{StaticResource estiloTxtBlockTitulo}" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0 3" Text="{Binding Path=Titulo2}"/>
-                                </Grid>
-                            </Border>
-                            <Border BorderBrush="#000000" BorderThickness="2" CornerRadius="15" Margin="5" >
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="240"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <Image Source="{Binding Path=Archivo3}" Grid.Row="0" Grid.Column="0" />
-                                    <TextBlock Style="{StaticResource estiloTxtBlockTitulo}" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0 3" Text="{Binding Path=Titulo3}"/>
                                 </Grid>
                             </Border>
                         </UniformGrid>
@@ -293,10 +270,10 @@
                             <ColumnDefinition Width="55"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox Name="checkBox1" Grid.Row="1" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
-                        <CheckBox Name="checkBox2" Grid.Row="2" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
-                        <CheckBox Name="checkBox3" Grid.Row="3" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
-                        <CheckBox Name="checkBox4" Grid.Row="4" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                        <CheckBox Name="chckBox1" Tag="8" Grid.Row="1" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                        <CheckBox Name="chckBox2" Tag="6" Grid.Row="2" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                        <CheckBox Name="chckBox3" Tag="4" Grid.Row="3" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                        <CheckBox Name="chckBox4" Tag="2" Grid.Row="4" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
 
                         <TextBlock Text="Promedio valoración" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="23" HorizontalAlignment="Center" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" />
                         <TextBlock Text="8 ★ o mas" Grid.Row="1" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" />
@@ -319,27 +296,34 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Name="cmbBoxEtiquetaCurso" Grid.Column="1" Width="470" Height="70" Margin="25" HorizontalAlignment="Right"  Style="{StaticResource estiloCmbBoxSeleccion}"/>
-                    <ComboBox Name="cmbBoxTipoCurso" Grid.Column="2"  Width="370" Height="70" HorizontalAlignment="Right" Style="{StaticResource estiloCmbBoxSeleccion}"/>
+                    <ComboBox Name="cmbBoxEtiquetaCurso" Grid.Column="1" Width="470" Height="70" Margin="25" HorizontalAlignment="Right"  Style="{StaticResource estiloCmbBoxSeleccion}" SelectionChanged="SeleccionarEtiquetas"/>
+                    <ComboBox Name="cmbBoxTipoCurso" Grid.Column="2"  Width="370" Height="70" HorizontalAlignment="Right" Style="{StaticResource estiloCmbBoxSeleccion}" SelectionChanged="SeleccionarTipoCurso"/>
                 </Grid>
-
+                <TextBlock Name="txtBlockPagina" FontWeight="Bold" Foreground="DarkGray" Grid.Row="0" Grid.Column="1" FontSize="35" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource estiloTxtBlockTitulo}"/>
                 <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="4" CornerRadius="10">
                     <Grid Margin="15 10">
+
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition/>
                         </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <ListBox Name="lstBoxCreditos" Height="751" Visibility="Visible" Style="{StaticResource estiloLstBoxCursos}" ItemContainerStyle="{StaticResource estiloLstBoxItemCurso}">
-                            <ListBoxItem/>
-                            <ListBoxItem/>
-                        </ListBox>
+                        <ListBox Name="lstBoxCreditos1" Grid.Column="0" Height="751" Visibility="Visible" Style="{StaticResource estiloLstBoxCursos}" ItemContainerStyle="{StaticResource estiloLstBoxItemCurso}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
+
+                        <ListBox Name="lstBoxCreditos2" Grid.Column="1" Height="751" Visibility="Visible" Style="{StaticResource estiloLstBoxCursos}" ItemContainerStyle="{StaticResource estiloLstBoxItemCurso}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
+
+                        <ListBox Name="lstBoxCreditos3" Grid.Column="2" Height="751" Visibility="Visible" Style="{StaticResource estiloLstBoxCursos}" ItemContainerStyle="{StaticResource estiloLstBoxItemCurso}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
+                        <Border Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="4" CornerRadius="10" Margin="-5"/>
 
                     </Grid>
                 </Border>
-                    <StackPanel  Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Style="{StaticResource estiloBtnNegro}" Content="« Anterior" Width="200" Height="50"/>
-                    <Button Style="{StaticResource estiloBtnNegro}" Content="Siguiente »" Width="200" Height="50"/>
+                <StackPanel  Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource estiloBtnNegro}" Content="« Anterior" Width="200" Height="50" Click="ClicAnteriorPagina"/>
+                    <Button Style="{StaticResource estiloBtnNegro}" Content="Siguiente »" Width="200" Height="50" Click="ClicSiguientePagina"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

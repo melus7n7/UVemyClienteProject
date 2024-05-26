@@ -89,7 +89,7 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Style="{StaticResource estiloTxtBlockInfo}">1</TextBlock>
                                 <TextBlock Grid.Column="1" Style="{StaticResource estiloTxtBlockInfo}" TextWrapping="Wrap" Width="1050">Aplicaciones que se pueden crear con el lenguaje de programacion de C# </TextBlock>
-                                <Button Grid.Column="2" Style="{StaticResource estiloBtnBackground}" FontSize="15" Width="100" Click="ClicVerClase">Ver más</Button>
+                                <Button x:Name="btnVerClase" Grid.Column="2" Style="{StaticResource estiloBtnBackground}" FontSize="15" Width="100" Click="ClicVerClase">Ver más</Button>
 
                             </Grid>
                         </Border>
@@ -127,7 +127,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Border Background="#000000" CornerRadius="20" Margin="0 15 0 25" Height="120">
-                    <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="24" TextWrapping="Wrap" Margin="20 15">Curso de C# .NET desde cero hasta lo mas avanzado full stack lo mas avanzado full stac</TextBlock>
+                    <TextBlock x:Name="txtBlockTitulo" FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="24" TextWrapping="Wrap" Margin="20 15"/> 
                 </Border>
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
@@ -142,7 +142,7 @@
                 </Grid>
 
                 <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Height="320" Margin="30 0 0 0" BorderThickness="3" BorderBrush="#000000" CornerRadius="30">
-                    <Image Source="/Recursos/success.png"></Image>
+                    <Image x:Name="mgMiniatura"></Image>
                 </Border>
 
                 <Border Grid.Row="3" Grid.Column="1" Background="Black" CornerRadius="30" Width="350" Margin="0 10">
@@ -153,7 +153,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Calificación:</TextBlock>
                         <Border Grid.Column="1" Background="#ffffff" Margin="5" CornerRadius="0 30 30 0">
-                            <TextBlock Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center">10</TextBlock>
+                            <TextBlock  Name="txtBoxCalificacion"  Style="{StaticResource estiloTxtBlockInfo}" HorizontalAlignment="Center"></TextBlock>
                         </Border>
                     </Grid>
                 </Border>
@@ -166,7 +166,7 @@
                     <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
                         <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Profesor</TextBlock>
                     </Border>
-                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="80">du shuifhsr usfh es Juan Manuel Casas Ramírez Juan Manuel Casas Ramírez Juan Manuel Casas Ramírez</TextBox>
+                    <TextBox Name="txtBoxTProfesor" Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="80"/> 
                 </Grid>
 
                 <Grid Grid.Row="2">
@@ -177,11 +177,7 @@
                     <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
                         <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Objetivos</TextBlock>
                     </Border>
-                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="220">Aprender desde 0 hasta lo más avanzado con C#
-                        Aprender a programar en C# con POO
-                        Crear aplicaciones con lo aprendido en el transcurso del curso
-                        Realizar conexiones de datos a servidores MySQL y SQL Server
-                        Aprender conocimientos básicos sobre el lenguaje de programacion de C# para desarrollar tu aplicaciones</TextBox>
+                    <TextBox  Name="txtBoxObjetivos" Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="220"></TextBox>
                 </Grid>
 
                 <Grid Grid.Row="3">
@@ -192,7 +188,7 @@
                     <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
                         <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Etiquetas</TextBlock>
                     </Border>
-                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="50">Programación, POO</TextBox>
+                    <TextBox Name="txtBoxEtiquetas"  Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="50"></TextBox>
                 </Grid>
 
                 <Grid Grid.Row="4" Grid.ColumnSpan="2">
@@ -203,8 +199,8 @@
                     <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
                         <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Descripción</TextBlock>
                     </Border>
-                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="140">Te invito a que seas parte de este curso donde aprenderemos sobre el lenguaje de programación de .net core con C# , lenguaje que nos permitirá crear diversas aplicaciones multiplataforma ,como aplicaciones de escritorio, aplicaciones web, y aplicaciones móviles y muchas mas aplicaciones , y te garantizo que al final de este curso tendrás los conocimientos básicos para crear tus aplicaciones usando este grandioso lenguaje de programación de C# , y espero que este curso sea de su agrado, y gracias por ser parte de este gran curso donde aprenderemos sobre el leng parte de este gran curso y también que Dios derrame muchas bendiciones en tu vidab usifh yuik</TextBox>
-                </Grid>
+                    <TextBox  Name="txtBoxDescripcion" Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="140"/> 
+               </Grid>
 
                 <Grid Grid.Row="5" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
@@ -214,9 +210,9 @@
                     <Border Background="#000000" CornerRadius="20" Height="45" Width="200" Margin="0 0 10 0" VerticalAlignment="Top">
                         <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Requisitos</TextBlock>
                     </Border>
-                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="90"></TextBox>
+                    <TextBox  Name="txtBoxRequisitos"  Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="90"></TextBox>
                 </Grid>
-                <Button Grid.Row="6" Grid.Column="1" Width="250" Style="{StaticResource estiloBtnBackground}" Click="ClicAgregarClase">Agregar clase</Button>
+                <Button x:Name="btnAgregarClase" Grid.Row="6" Grid.Column="1" Width="250" Style="{StaticResource estiloBtnBackground}" Click="ClicAgregarClase">Agregar clase</Button>
                 <Grid Grid.Row="7" Grid.ColumnSpan="2" Margin="0 15">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
