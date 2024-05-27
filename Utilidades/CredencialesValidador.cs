@@ -36,7 +36,7 @@ namespace UVemyCliente.Utilidades
         public static bool EsContraseñaSegura(string contraseña)
         {
             bool esContraseñaSegura;
-            string patron = @"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$";
+            string patron = @"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$";
 
             TimeSpan tiempoLimite = TimeSpan.FromMilliseconds(500);
 
