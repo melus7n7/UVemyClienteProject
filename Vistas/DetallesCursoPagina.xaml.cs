@@ -21,6 +21,7 @@ using System.Windows.Shapes;
 using UVemyCliente.Conexion;
 using UVemyCliente.DTO;
 using UVemyCliente.Utilidades;
+using static UVemyCliente.Vistas.ListaCursosPagina;
 
 namespace UVemyCliente.Vistas
 {
@@ -29,18 +30,17 @@ namespace UVemyCliente.Vistas
     /// </summary>
     public partial class DetallesCurso : Page
     {
-        int _idCurso = 4;
-        CursoDTO _curso = new CursoDTO();
-        CursoDetalle _cursoDetalle = new CursoDetalle();
+        private int _idCurso = 4;
+        private CursoDTO _curso = new CursoDTO();
+        private CursoDetalle _cursoDetalle = new CursoDetalle();
+        ObservableCollection<ClaseListBox> _listaClases = new ObservableCollection<ClaseListBox>();
+        Visibility _visibilidadBoton = Visibility.Visible;
         public DetallesCurso(CursoDTO curso)
         {
             _curso = curso;
             _idCurso = (int)_curso.IdCurso;
             InitializeComponent();
             _ = CargarCursoAsync();
-            _ = CargarClasesAsync();
-            //Cargar clases
-            //Botones dependiendo del rol
         }
 
         private async Task CargarCursoAsync()
@@ -52,7 +52,6 @@ namespace UVemyCliente.Vistas
                 _cursoDetalle = JsonConvert.DeserializeObject<CursoDetalle>(json);
                 CargarCurso();
                 CargarBotones();
-
             }
             else
             {
@@ -63,20 +62,34 @@ namespace UVemyCliente.Vistas
 
         private async Task CargarClasesAsync()
         {
-            /*HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "clases/" + _idCurso);
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "clases/curso/" + _idCurso);
+            Debug.WriteLine(respuestaHttp.StatusCode + "Estatus code");
+            Debug.WriteLine(_idCurso);
+            Debug.WriteLine("clases/curso/" + _idCurso);
             if (respuestaHttp.IsSuccessStatusCode)
             {
                 var json = await respuestaHttp.Content.ReadAsStringAsync();
-                _cursoDetalle = JsonConvert.DeserializeObject<CursoDetalle>(json);
-                CargarCurso();
-                CargarBotones();
-
+                _listaClases = JsonConvert.DeserializeObject<ObservableCollection<ClaseListBox>>(json);
+                if(_listaClases.Count > 0)
+                {
+                    CargarClases();
+                }
             }
             else
             {
                 ErrorMensaje errorMensaje = new("Error. No se pudo conectar con el servidor. Inténtelo de nuevo o hágalo más tarde.");
                 errorMensaje.Show();
-            }*/
+            }
+        }
+
+        private void CargarClases()
+        {
+            for (int i = 0; i < _listaClases.Count; i++)
+            {
+                _listaClases[i].NumeroClase = i + 1;
+                _listaClases[i].Visibilidad = _visibilidadBoton;
+            }
+            lstBoxClases.ItemsSource = _listaClases;
         }
 
         private void CargarCurso()
@@ -89,7 +102,7 @@ namespace UVemyCliente.Vistas
             foreach (EtiquetaDTO etiqueta in _cursoDetalle.Etiquetas)
             {
                 _curso.Etiquetas.Add(etiqueta.IdEtiqueta);
-                txtBoxEtiquetas.Text += etiqueta.Nombre;
+                txtBoxEtiquetas.Text += etiqueta.Nombre+" ";
             }
 
             _curso.Descripcion = _cursoDetalle.Descripcion;
@@ -130,8 +143,7 @@ namespace UVemyCliente.Vistas
             btnVerEstadisticas.Visibility = Visibility.Hidden;
             btnCalificarCurso.Visibility = Visibility.Hidden;
             btnInscribirse.Visibility = Visibility.Hidden;
-            //btnVerClase.Visibility = Visibility.Visible;
-
+            _visibilidadBoton = Visibility.Visible;
             switch (_cursoDetalle.Rol)
             {
                 case "Profesor":
@@ -144,12 +156,13 @@ namespace UVemyCliente.Vistas
                     break;
                 case "Usuario":
                     btnInscribirse.Visibility = Visibility.Visible;
-                    //btnVerClase.Visibility = Visibility.Hidden;
+                    _visibilidadBoton = Visibility.Hidden;
                     break;
                 default:
                     break;
             }
 
+            _ = CargarClasesAsync();
         }
 
         private void ClicAgregarClase(object sender, RoutedEventArgs e)
@@ -247,6 +260,29 @@ namespace UVemyCliente.Vistas
         {
             ListaCursosPagina lista = new ListaCursosPagina();
             NavigationService.Navigate(lista);
+        }
+
+        private void ClicModificarCurso(object sender, RoutedEventArgs e)
+        {
+            bool esCrearCurso = false;
+            DocumentoDTO documento = new DocumentoDTO() 
+            {
+                IdDocumento = (int)_curso.idDocumento,
+                Archivo = _curso.Archivo
+            };
+            List<EtiquetaDTO> etiquetas = new List<EtiquetaDTO>(_cursoDetalle.Etiquetas);
+            FormularioCursoPagina formulario = new FormularioCursoPagina(_curso, etiquetas, documento, false);
+            this.NavigationService.Navigate(formulario);
+        }
+
+        public class ClaseListBox
+        {
+            [JsonProperty("idClase")]
+            public int IdClase { get; set; }
+            public int NumeroClase { get; set; }
+            [JsonProperty("nombre")]
+            public string TituloClase { get; set; }
+            public Visibility Visibilidad { get; set; }
         }
     }
 }

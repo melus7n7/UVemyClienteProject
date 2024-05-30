@@ -52,6 +52,7 @@ namespace UVemyCliente.Vistas
                 _listIdEtiquetas.Add(etiqueta.IdEtiqueta);
             }
             _documento = documento;
+            Debug.WriteLine(_documento.IdDocumento);
             _curso = new CursoDTO()
             {
                 Descripcion = curso.Descripcion,
@@ -126,6 +127,7 @@ namespace UVemyCliente.Vistas
             bool sonCamposValidos = ValidarCampos();
             if (sonCamposValidos)
             {
+                btnGuardarCurso.IsEnabled = false;
                 _ = GuardarCursoAsync();
             }
         }
@@ -138,43 +140,49 @@ namespace UVemyCliente.Vistas
             string descripcionCurso = txtBoxDescripcion.Text;
             string requisitosCurso = txtBoxRequisitos.Text;
             string objetivosCurso = txtBoxObjetivos.Text;
+            string problema = "";
             string razones = "";
 
-            if (String.IsNullOrWhiteSpace(tituloCurso))
+            if (String.IsNullOrWhiteSpace(tituloCurso) || tituloCurso.Length >= 150)
             {
                 sonCamposValidos = false;
                 txtBoxTitulo.Style = (Style)FindResource("estiloTxtBoxFormularioCursoCampoErroneos");
-                razones += "Nombre checklist";
+                razones += "El titulo es obligatorio y debe ser menor a 150 caracteres";
+
             }
             else
             {
                 txtBoxTitulo.Style = (Style)FindResource("estiloTxtBoxFormularioCursoCampo");
             }
-            if (String.IsNullOrWhiteSpace(descripcionCurso))
+            if (String.IsNullOrWhiteSpace(descripcionCurso) || descripcionCurso.Length >= 660)
             {
                 sonCamposValidos = false;
                 txtBoxDescripcion.Style = (Style)FindResource("estiloTxtBoxFormularioCursoCampoErroneos");
-                razones = (razones.Length > 0) ? razones + ", descripción" : "Descripción";
+                problema = "La descripcion es obligatoria y debe ser menor a 660 caracteres";
+                razones = (razones.Length > 0) ? razones + "; " + problema : problema;
             }
             else
             {
                 txtBoxDescripcion.Style = (Style)FindResource("estiloTxtBoxFormularioCursoCampo");
             }
-            if (String.IsNullOrWhiteSpace(requisitosCurso))
+            if (String.IsNullOrWhiteSpace(requisitosCurso) || requisitosCurso.Length >= 300)
             {
                 sonCamposValidos = false;
                 txtBoxRequisitos.Style = (Style)FindResource("estiloTxtBoxFormularioCursoCampoErroneos");
-                razones = (razones.Length > 0) ? razones + ", requisitos curso" : "Requisitos curso";
+                problema = "Los requisitos son obligatorios y deben ser menor a 300 caracteres";
+                razones = (razones.Length > 0) ? razones + "; " + problema : problema;
             }
             else
             {
                 txtBoxRequisitos.Style = (Style)FindResource("estiloTxtBoxFormularioCursoCampo");
             }
-            if (String.IsNullOrWhiteSpace(objetivosCurso))
+            if (String.IsNullOrWhiteSpace(objetivosCurso) || objetivosCurso.Length >= 600)
             {
                 sonCamposValidos = false;
                 txtBoxObjetivos.Style = (Style)FindResource("estiloTxtBoxFormularioCursoCampoErroneos");
-                razones = (razones.Length > 0) ? razones + ", objetivos curso" : "Objetivos curso";
+                problema = "Los objetivos son obligatorios y deben ser menor a 600 caracteres";
+                razones = (razones.Length > 0) ? razones + "; " + problema : problema;
+
             }
             else
             {
@@ -185,7 +193,8 @@ namespace UVemyCliente.Vistas
                 sonCamposValidos = false;
                 sonEtiquetasValidas = false;
                 lstBoxEtiquetas.Style = (Style)FindResource("estiloLstBoxTemasInteresErroneo");
-                razones = (razones.Length > 0) ? razones + ", etiquetas" : "Etiquetas";
+                problema = "Las etiquetas son obligatoras";
+                razones = (razones.Length > 0) ? razones + "; " + problema : problema;
             }
             else
             {
@@ -195,7 +204,8 @@ namespace UVemyCliente.Vistas
             {
                 sonCamposValidos = false;
                 brdMiniatura.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F19090"));
-                razones = (razones.Length > 0) ? razones + ", imagen curso" : "Imagen curso";
+                problema = "La minuatura del curso es obligatoria";
+                razones = (razones.Length > 0) ? razones + "; " + problema : problema;
             }
             else
             {
@@ -228,7 +238,6 @@ namespace UVemyCliente.Vistas
                 { new StringContent(descripcionCurso), "descripcion" },
                 { new StringContent(requisitosCurso), "requisitos" },
                 { new StringContent(objetivosCurso), "objetivos" },
-                { new StringContent(SingletonUsuario.IdUsuario.ToString()), "idUsuario" } 
             };
             
             for (int i = 0; i < _listIdEtiquetas.Count; i++)
@@ -254,6 +263,7 @@ namespace UVemyCliente.Vistas
                 ExitoMensaje exito = new ExitoMensaje("Se creo el curso exitosamente");
                 exito.Show();
             }
+            btnGuardarCurso.IsEnabled = true;
         }
 
         private void LimpiarCampos()
@@ -286,7 +296,10 @@ namespace UVemyCliente.Vistas
             {
                 ExitoMensaje exito = new ExitoMensaje("Se elimino el curso exitosamente");
                 exito.Show();
+                ListaCursosPagina lista = new ListaCursosPagina();
+                this.NavigationService.Navigate(lista);
             }
+            btnEliminarCurso.IsEnabled = true;
         }
 
 
@@ -303,7 +316,6 @@ namespace UVemyCliente.Vistas
                 Requisitos = requisitosCurso,
                 Objetivos = objetivosCurso,
                 Etiquetas = _listIdEtiquetas,
-                IdUsuario = SingletonUsuario.IdUsuario
             };
             if (_curso != null)
             {
@@ -421,6 +433,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicEliminarCurso(object sender, RoutedEventArgs e)
         {
+            btnEliminarCurso.IsEnabled = false;
             _ = EliminarCursoAsync();
         }
 
@@ -429,7 +442,8 @@ namespace UVemyCliente.Vistas
             bool sonCamposValidos = ValidarCampos();
             if (sonCamposValidos)
             {
-               _ = ModificarCursoAsync();
+                btnModificarCurso.IsEnabled = false;
+                _ = ModificarCursoAsync();
             }
         }
 
@@ -447,7 +461,7 @@ namespace UVemyCliente.Vistas
                 { new StringContent(descripcionCurso), "descripcion" },
                 { new StringContent(requisitosCurso), "requisitos" },
                 { new StringContent(objetivosCurso), "objetivos" },
-                { new StringContent(_curso.idDocumento.ToString()), "idDocumento" }
+                { new StringContent(_documento.IdDocumento.ToString()), "idDocumento" }
             };
             for (int i = 0; i < _listIdEtiquetas.Count; i++)
             {
@@ -459,7 +473,6 @@ namespace UVemyCliente.Vistas
 
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Put, "cursos/"+_curso.IdCurso, content);
             int codigoRespuesta = (int)respuestaHttp.StatusCode;
-            LimpiarCampos();
             Debug.WriteLine(codigoRespuesta);
             if (codigoRespuesta >= 400)
             {
@@ -474,6 +487,7 @@ namespace UVemyCliente.Vistas
                 ExitoMensaje exito = new ExitoMensaje("Se actualizo el curso exitosamente");
                 exito.Show();
             }
+            btnModificarCurso.IsEnabled = true;
         }
     }
 }

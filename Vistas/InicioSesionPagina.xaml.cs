@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -84,9 +85,9 @@ namespace UVemyCliente.Vistas
             var json = JsonSerializer.Serialize(credenciales);
             var contenido = new StringContent(json, Encoding.UTF8, "application/json");
             HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestSinAutenticacionAsync(HttpMethod.Post, "autenticacion", contenido);
-            int codigoRespuesta = (int)respuestaHttp.StatusCode;
-
-            if (codigoRespuesta == (int)HttpStatusCode.OK)
+            Debug.Write(respuestaHttp);
+            Debug.Write(respuestaHttp.IsSuccessStatusCode);
+            if (respuestaHttp.IsSuccessStatusCode)
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
 
@@ -121,6 +122,12 @@ namespace UVemyCliente.Vistas
 
                 MenuPrincipalPagina menuPrincipalPagina = new();
                 this.NavigationService.Navigate(menuPrincipalPagina);
+            }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new ErrorMensaje("Error al conectar al servidor");
+                error.Show();
+                
             }
             else
             {

@@ -76,6 +76,7 @@
             </Setter>
         </Style>
 
+        
         <Style x:Key="estiloLstBoxClase" TargetType="ListBoxItem">
             <Setter Property="Template">
                 <Setter.Value>
@@ -87,9 +88,9 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}">1</TextBlock>
-                                <TextBlock Grid.Column="1" Style="{StaticResource estiloTxtBlockInfo}" TextWrapping="Wrap" Width="1050">Aplicaciones que se pueden crear con el lenguaje de programacion de C# </TextBlock>
-                                <Button x:Name="btnVerClase" Grid.Column="2" Style="{StaticResource estiloBtnBackground}" FontSize="15" Width="100" Click="ClicVerClase">Ver más</Button>
+                                <TextBlock Style="{StaticResource estiloTxtBlockInfo}" Text="{Binding NumeroClase}"/>
+                                <TextBlock Grid.Column="1" Style="{StaticResource estiloTxtBlockInfo}" TextWrapping="Wrap" Width="1050" Text="{Binding TituloClase}"/>
+                                <Button x:Name="btnVerClase" Grid.Column="2" Style="{StaticResource estiloBtnBackground}" FontSize="15" Width="100" Click="ClicVerClase" Visibility="{Binding Visibilidad}">Ver más</Button>
 
                             </Grid>
                         </Border>
@@ -134,7 +135,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 5" Name="btnModificarCurso" Visibility="Collapsed">Modificar curso</Button>
+                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 5" Name="btnModificarCurso" Click="ClicModificarCurso" Visibility="Collapsed">Modificar curso</Button>
                     <Button Grid.Row="1" Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 5 0 10" Click="ClicVerEstadisticasCurso" Name="btnVerEstadisticas" Visibility="Collapsed">Ver estadísticas del curso</Button>
                     <Button Grid.RowSpan="2" Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 5 0 10" Click="ClicInscribirseAlCurso" Name="btnInscribirse" Height="80" Visibility="Collapsed">Inscribirse al curso</Button>
                     <Button Grid.RowSpan="2" Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 5 0 10" Click="ClicCalificarCurso" Name="btnCalificarCurso" Height="80" Visibility="Visible">Calificar curso</Button>
@@ -221,8 +222,7 @@
                     <Border Background="#000000" CornerRadius="20 20 0 0">
                         <TextBlock Margin="20 5" Foreground="#ffffff" FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Left">Clases</TextBlock>
                     </Border>
-                    <ListBox Grid.Row="1" Height="400" ItemContainerStyle="{StaticResource estiloLstBoxClase}" BorderBrush="#000000" BorderThickness="3">
-                        <ListBoxItem>Hola</ListBoxItem>
+                    <ListBox x:Name="lstBoxClases" Grid.Row="1" Height="400" ItemContainerStyle="{StaticResource estiloLstBoxClase}" BorderBrush="#000000" BorderThickness="3" >
                     </ListBox>
                 </Grid>
             </Grid>

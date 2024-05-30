@@ -23,13 +23,14 @@ namespace UVemyCliente.Vistas
         private List<int> _listIdEtiquetasAntiguas = new List<int>();
         private CursoDTO _curso;
         private bool _esCrearCurso;
+        private bool _esFormularioCurso;
         private bool _esActualizacionUsuario;
         private DocumentoDTO _documento;
 
         public SeleccionEtiquetasPagina(UsuarioDTO usuario, bool esActualizacionUsuario)
         {
             InitializeComponent();
-            _esCrearCurso = false;
+            _esFormularioCurso = false;
             _esActualizacionUsuario = esActualizacionUsuario;
             _usuario = usuario;
         }
@@ -40,6 +41,7 @@ namespace UVemyCliente.Vistas
             InitializeComponent();
             _curso = curso;
             _esCrearCurso = esCrearCurso;
+            _esFormularioCurso = true;
             _documento = documento;
             _listIdEtiquetasAntiguas = new List<int>(listIdEtiquetas);
             _listNombreEtiquetasAntiguas = new List<string>(listNombreEtiquetas);
@@ -75,19 +77,20 @@ namespace UVemyCliente.Vistas
 
         private void SeleccionarEtiqueta(object sender, RoutedEventArgs e)
         {
-            _usuario.IdsEtiqueta ??= [];
 
             if (sender is ToggleButton toggleButton && toggleButton.DataContext is EtiquetaDTO etiqueta)
             {
-                if (_esCrearCurso)
+                if (_esFormularioCurso)
                 {
                     if (!_listIdEtiquetas.Contains(etiqueta.IdEtiqueta))
                     {
                         _listIdEtiquetas.Add(etiqueta.IdEtiqueta);
                         _listNombreEtiquetas.Add(etiqueta.Nombre);
                     }
+                    return;
                 }
-                else if (!_usuario.IdsEtiqueta.Contains(etiqueta.IdEtiqueta))
+                _usuario.IdsEtiqueta ??= [];
+                if (!_usuario.IdsEtiqueta.Contains(etiqueta.IdEtiqueta))
                 {
                     _usuario.IdsEtiqueta.Add(etiqueta.IdEtiqueta);
                 }
@@ -98,7 +101,7 @@ namespace UVemyCliente.Vistas
         {
             if (sender is ToggleButton toggleButton && toggleButton.DataContext is EtiquetaDTO etiqueta)
             {
-                if (_esCrearCurso)
+                if (_esFormularioCurso)
                 {
                     if (_listIdEtiquetas.Contains(etiqueta.IdEtiqueta))
                     {
@@ -115,7 +118,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicConfirmar(object sender, RoutedEventArgs e)
         {
-            if (_esCrearCurso)
+            if (_esFormularioCurso)
             {
                 List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetas, _listIdEtiquetas);
                 FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento, _esCrearCurso);
@@ -223,10 +226,10 @@ namespace UVemyCliente.Vistas
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            if (_esCrearCurso)
+            if (_esFormularioCurso)
             {
                 List<EtiquetaDTO> etiquetas = CrearListaEtiquetas(_listNombreEtiquetasAntiguas, _listIdEtiquetasAntiguas);
-                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento, _esCrearCurso);
+                FormularioCursoPagina pagina = new FormularioCursoPagina(_curso, etiquetas, _documento, _esFormularioCurso);
                 this.NavigationService.Navigate(pagina);
             }
             else
@@ -237,7 +240,7 @@ namespace UVemyCliente.Vistas
 
         private void CargarEtiquetas(object sender, RoutedEventArgs e)
         {
-            if (_esCrearCurso)
+            if (_esFormularioCurso)
             {
                 if (_listIdEtiquetas != null && _listIdEtiquetas.Count > 0)
                 {
