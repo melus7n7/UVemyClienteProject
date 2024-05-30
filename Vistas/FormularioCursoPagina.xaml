@@ -262,7 +262,7 @@
                     <StackPanel VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"  Width="700" HorizontalAlignment="Left" Grid.ColumnSpan="2">
                         <TextBlock Style="{StaticResource estiloTxtBlockFormularioCursosInfo}" Text="Temas de interes" />
                         <ListBox x:Name="lstBoxEtiquetas" Style="{StaticResource estiloLstBoxTemasInteres}" Height="300" >
-                            <StackPanel Name="stcPanelTemasInteres">
+                            <StackPanel Name="stcPanelTemasInteres" >
                                 
                             </StackPanel>
                         </ListBox>

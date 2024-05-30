@@ -62,17 +62,17 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="5" CornerRadius="40" Height="170">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="5" CornerRadius="40"  Height="500">
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0">
                                     <TextBlock Margin="50 0 0 10" Style="{StaticResource estilotxtBlockTituloBotonMenuPrincipal}" Text="{Binding Path=CommandParameter, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"></TextBlock>
                                     <TextBlock Margin="50 0 10 0" Style="{StaticResource estilotxtBlockTextoBotonMenuPrincipal}" Text="{Binding}"></TextBlock>
                                 </StackPanel>
-                                <ContentPresenter Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="130" Height="130" Margin="0 0 20 0">
+                                <ContentPresenter Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="230" Height="230" Margin="0 0 20 50" Grid.Row="1">
                                 </ContentPresenter>
                             </Grid>
                         </Border>
@@ -137,23 +137,18 @@
         </Border>
         <Grid VerticalAlignment="Center" Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width=".8*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Viewbox>
-                <Grid VerticalAlignment="Center" Width="740" Height="600">
+                <Grid VerticalAlignment="Center" Width="595" Height="600">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition />
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Button Click="ClicConsultarPerfil" Background="#82C3C5" Style="{StaticResource estiloBtnMenuPrincipalPequenioDos}" Margin="60 20 30 20" DataContext="Consulta tu perfil" CommandParameter="Perfil">
+                    <Button Click="ClicConsultarPerfil"  Background="#82C3C5"  Style="{StaticResource estiloBtnMenuPrincipalPequenioDos}" Margin="0 10 50 20" DataContext="Consulta la configuración de tu perfil y tu información personal" CommandParameter="Perfil">
                         <Image Source="/Recursos/profile.png" HorizontalAlignment="Center"></Image>
-                    </Button>
-                    <Button Click="ClicBuscar" Grid.Row="2" Style="{StaticResource estiloBtnMenuPrincipalPequenioDos}" Margin="60 0 30 0" DataContext="Busque un curso" CommandParameter="Buscar"
-                        Background="#EBEBEB" BorderBrush="#000000">
-                        <Image Source="/Recursos/buscar.png" HorizontalAlignment="Center"></Image>
                     </Button>
                 </Grid>
             </Viewbox>

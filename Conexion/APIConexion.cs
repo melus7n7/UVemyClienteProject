@@ -77,10 +77,12 @@ namespace UVemyCliente.Conexion
                 Debug.WriteLine(ex);
                 if (ex.InnerException is SocketException socketEx && socketEx.SocketErrorCode == SocketError.ConnectionRefused)
                 {
+                    Debug.WriteLine("InnerException");
                     respuesta.StatusCode = System.Net.HttpStatusCode.ServiceUnavailable;
                 }
                 else
                 {
+                    Debug.WriteLine("NoInnerException");
                     respuesta.StatusCode = System.Net.HttpStatusCode.InternalServerError; 
                 }
             }
@@ -99,8 +101,15 @@ namespace UVemyCliente.Conexion
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine(ex);
-                respuesta.StatusCode = System.Net.HttpStatusCode.InternalServerError;
+                Debug.WriteLine(ex);
+                if (ex.InnerException is SocketException socketEx && socketEx.SocketErrorCode == SocketError.ConnectionRefused)
+                {
+                    respuesta.StatusCode = System.Net.HttpStatusCode.ServiceUnavailable;
+                }
+                else
+                {
+                    respuesta.StatusCode = System.Net.HttpStatusCode.InternalServerError;
+                }
             }
             return respuesta;
         }

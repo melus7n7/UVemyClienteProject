@@ -92,6 +92,8 @@ namespace UVemyCliente.Vistas
             {
                 ErrorMensaje errorMensaje = new("Error. No se pudo conectar con el servidor. Inténtelo de nuevo o hágalo más tarde.");
                 errorMensaje.Show();
+                MenuPrincipalPagina menu = new MenuPrincipalPagina();
+                this.NavigationService.Navigate(menu);
             }
         }
 
@@ -132,15 +134,21 @@ namespace UVemyCliente.Vistas
                 errorMensaje.Show();
                 _cursos = new List<CursoListBox>();
                 CargarCursosListBox(_cursos);
-
-                //_paginaActual = _paginaAnterior;
             }
             else
             {
                 ErrorMensaje errorMensaje = new("Error. No se pudo conectar con el servidor. Inténtelo de nuevo o hágalo más tarde.");
                 errorMensaje.Show();
+                MenuPrincipalPagina menu = new MenuPrincipalPagina();
+                this.NavigationService.Navigate(menu);
             }
             txtBlockPagina.Text = "Pagina "+_paginaActual;
+            grdCheckBox.IsEnabled = true;
+            cmbBoxTipoCurso.IsEnabled = true;
+            cmbBoxEtiquetaCurso.IsEnabled = true;
+            btnBuscarCurso.IsEnabled = true;
+            btnSiguiente.IsEnabled = true;
+            btnAnterior.IsEnabled = true;
         }
 
         private void CargarCursosListBox(List<CursoListBox> cursos)
@@ -184,6 +192,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicBuscarCurso(object sender, RoutedEventArgs e)
         {
+            btnBuscarCurso.IsEnabled = false;
             _tituloCurso = string.Empty;
             if(txtBoxBarraBuscar.Text == string.Empty)
             {
@@ -195,7 +204,6 @@ namespace UVemyCliente.Vistas
             _idTipoCurso = 0;
             _idEtiqueta = 0;
             _ = CargarCursosPagina(_paginaActual, _tituloCurso, _calificacionCurso, _idTipoCurso, _idEtiqueta);
-
         }
 
         private void LimpiarCampos()
@@ -211,6 +219,7 @@ namespace UVemyCliente.Vistas
 
         private void SeleccionarCurso(object sender, RoutedEventArgs e)
         {
+            grdListBox.IsEnabled = false;
             ListBoxItem listBoxItem = sender as ListBoxItem;
             if (listBoxItem != null)
             {
@@ -231,10 +240,12 @@ namespace UVemyCliente.Vistas
                     this.NavigationService.Navigate(detalles);
                 }
             }
+            grdListBox.IsEnabled = true;
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        { 
+        {
+            grdCheckBox.IsEnabled = false;
             _calificacionCurso = 0;
             _tituloCurso = string.Empty;
             txtBoxBarraBuscar.Text = string.Empty;
@@ -266,11 +277,6 @@ namespace UVemyCliente.Vistas
             }
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void ClicCrearCurso(object sender, RoutedEventArgs e)
         {
             FormularioCursoPagina curso = new FormularioCursoPagina();
@@ -285,6 +291,7 @@ namespace UVemyCliente.Vistas
             }
             else
             {
+                btnAnterior.IsEnabled = false;
                 _paginaActual = _paginaActual - 1;
                 _ = CargarCursosPagina(_paginaActual, _tituloCurso, _calificacionCurso, _idTipoCurso, _idEtiqueta);
             }
@@ -292,6 +299,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicSiguientePagina(object sender, RoutedEventArgs e)
         {
+            btnSiguiente.IsEnabled = false;
             _paginaAnterior = _paginaActual;
             _paginaActual = _paginaActual + 1;
             _ = CargarCursosPagina(_paginaActual, _tituloCurso, _calificacionCurso, _idTipoCurso, _idEtiqueta);
@@ -299,6 +307,7 @@ namespace UVemyCliente.Vistas
 
         private void SeleccionarTipoCurso(object sender, SelectionChangedEventArgs e)
         {
+            cmbBoxTipoCurso.IsEnabled = false;
             ComboBox comboBox = sender as ComboBox;
             if (comboBox.SelectedItem != null)
             {
@@ -319,6 +328,7 @@ namespace UVemyCliente.Vistas
 
         private void SeleccionarEtiquetas(object sender, SelectionChangedEventArgs e)
         {
+            cmbBoxEtiquetaCurso.IsEnabled = false;
             ComboBox comboBox = sender as ComboBox;
             if (comboBox.SelectedItem != null)
             {
