@@ -173,8 +173,14 @@ namespace UVemyCliente.Vistas
 
         private void ClicVerClase(object sender, RoutedEventArgs e)
         {
-            DetallesClase detalles = new DetallesClase(53, this);
-            NavigationService.Navigate(detalles);
+            Button btn = sender as Button;
+            if (btn != null)
+            {
+                ClaseListBox clase = (ClaseListBox)btn.DataContext;
+                DetallesClase detalles = new DetallesClase(clase.IdClase);
+                NavigationService.Navigate(detalles);
+            }
+            
         }
 
         private void ClicVerEstadisticasCurso(object sender, RoutedEventArgs e)
