@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Windows.Controls.Primitives;
 using System.Text;
 using System.Diagnostics;
+using System.Net;
 
 namespace UVemyCliente.Vistas
 {
@@ -71,7 +72,6 @@ namespace UVemyCliente.Vistas
                 errorMensaje.Show();
 
                 NavigationService.GoBack();
-                //TODO: Regresar a menú principal o a FormularioUsuarioPagina, yo tambien lo ocupo en formulario curso, entonces hay que ponernos de acuerdo
             }
         }
 
@@ -157,6 +157,11 @@ namespace UVemyCliente.Vistas
                 exitoMensaje.Show();
                 SingletonUsuario.IdsEtiqueta = [.. _usuario.IdsEtiqueta];
             }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
+            }
             else
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
@@ -199,6 +204,11 @@ namespace UVemyCliente.Vistas
                     CodigoVerificacionPagina codigoVerificacionPagina = new(_usuario);
                     this.NavigationService.Navigate(codigoVerificacionPagina);
                 }
+            }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
             }
             else
             {

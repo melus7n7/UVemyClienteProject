@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -93,6 +94,11 @@ namespace UVemyCliente.Vistas
                 Debug.WriteLine(codigoRespuesta);
                 ErrorMensaje errorMensaje = new("Ocurrió un error y no se pudo enviar el comentario, inténtelo más tarde");
                 errorMensaje.Show();
+            }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
             }
             else
             {

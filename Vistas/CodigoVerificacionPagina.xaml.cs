@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -81,10 +82,16 @@ namespace UVemyCliente.Vistas
                 this.NavigationService?.RemoveBackEntry();
                 SingletonUsuario.JWT = string.Empty;
             }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
+
+            }
             else
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
-                UsuarioDTO? errorJson = JsonSerializer.Deserialize<UsuarioDTO>(jsonString);
+                var errorJson = JsonSerializer.Deserialize<UsuarioDTO>(jsonString);
 
                 string[] detalles = errorJson?.Detalles.ToArray() ?? ["Error desconocido"];
                 string detallesConcatenados = string.Join(", ", detalles);

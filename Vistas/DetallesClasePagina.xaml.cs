@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -174,6 +175,11 @@ namespace UVemyCliente.Vistas
                 ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudieron recuperar los comentarios, inténtelo más tarde");
                 error.Show();
             }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
+            }
             else
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
@@ -338,6 +344,11 @@ namespace UVemyCliente.Vistas
                 Debug.WriteLine(codigoRespuesta);
                 ErrorMensaje errorMensaje = new("Ocurrió un error y no se pudo enviar el comentario, inténtelo más tarde");
                 errorMensaje.Show();
+            }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
             }
             else
             {
