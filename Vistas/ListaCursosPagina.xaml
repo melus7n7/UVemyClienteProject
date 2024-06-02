@@ -55,6 +55,7 @@
         <Style x:Key="estiloTxtBlockTitulo" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
             <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
@@ -275,11 +276,11 @@
                         <CheckBox Name="chckBox3" Tag="4" Grid.Row="3" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" />
                         <CheckBox Name="chckBox4" Tag="2" Grid.Row="4" Margin="15" HorizontalAlignment="Left" Width="25" Height="25" Style="{StaticResource estiloChcBoxCalificacion}" Checked="CheckBox_Checked" />
 
-                        <TextBlock Text="Promedio valoración" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="23" HorizontalAlignment="Center" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" />
-                        <TextBlock Text="8 ★ o mas" Grid.Row="1" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" />
-                        <TextBlock Text="6 ★ o mas" Grid.Row="2" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" />
-                        <TextBlock Text="4 ★ o mas" Grid.Row="3" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" />
-                        <TextBlock Text="2 ★ o mas" Grid.Row="4" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" />
+                        <TextBlock Text="Promedio valoración" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="23" HorizontalAlignment="Center" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" Foreground="Black" />
+                        <TextBlock Text="8 ★ o mas" Grid.Row="1" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" Foreground="Black" />
+                        <TextBlock Text="6 ★ o mas" Grid.Row="2" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" Foreground="Black" />
+                        <TextBlock Text="4 ★ o mas" Grid.Row="3" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" Foreground="Black" />
+                        <TextBlock Text="2 ★ o mas" Grid.Row="4" Grid.Column="1" Margin="15" HorizontalAlignment="Left" Height="35" Style="{StaticResource estiloTxtBlockTitulo}" Foreground="Black" />
 
                     </Grid>
                 </Border>

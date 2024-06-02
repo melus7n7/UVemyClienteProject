@@ -9,6 +9,8 @@ using UVemyCliente.Utilidades;
 using System.Diagnostics;
 using System.Net.Sockets;
 using Newtonsoft.Json.Linq;
+using System.Configuration;
+using System.IO;
 
 namespace UVemyCliente.Conexion
 {
@@ -17,13 +19,15 @@ namespace UVemyCliente.Conexion
         private static HttpClient _cliente;
         public static HttpClient ObtenerClient()
         {
+            string apiUrl = ConfigurationManager.AppSettings["ApiBaseUrl"];
+
             if (_cliente == null)
             {
                 _cliente = new HttpClient();
                 _cliente.DefaultRequestHeaders.Accept.Clear();
                 _cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 _cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/pdf"));
-                _cliente.BaseAddress = new Uri("http://localhost:3000/api/");
+                _cliente.BaseAddress = new Uri(apiUrl);
             }
 
             _cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SingletonUsuario.JWT);
@@ -33,12 +37,14 @@ namespace UVemyCliente.Conexion
 
         public static HttpClient ObtenerClientSinAutenticacion()
         {
+            string apiUrl = ConfigurationManager.AppSettings["ApiBaseUrl"];
+
             if (_cliente == null)
             {
                 _cliente = new HttpClient();
                 _cliente.DefaultRequestHeaders.Accept.Clear();
                 _cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                _cliente.BaseAddress = new Uri("http://localhost:3000/api/");
+                _cliente.BaseAddress = new Uri(apiUrl);
             }
 
             _cliente.DefaultRequestHeaders.Authorization = null;
