@@ -221,7 +221,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 0" Click="ClicModificarClase">Modificar clase</Button>
+                    <Button Style="{StaticResource estiloBtnBackground}" Width="350" Margin="0 10 0 0" Click="ClicModificarClase" Visibility="Hidden" Name="btnModificarClase">Modificar clase</Button>
                     <Border Grid.Row="1" Background="#0A122A" CornerRadius="20" Height="45" Width="180" VerticalAlignment="Bottom">
                         <TextBlock Style="{StaticResource estiloTxtBoxCampos}">Descripción</TextBlock>
                     </Border>

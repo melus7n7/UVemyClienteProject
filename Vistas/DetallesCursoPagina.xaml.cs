@@ -176,8 +176,10 @@ namespace UVemyCliente.Vistas
             Button btn = sender as Button;
             if (btn != null)
             {
+                bool esProfesor = _cursoDetalle.Rol.Equals("Profesor");
+
                 ClaseListBox clase = (ClaseListBox)btn.DataContext;
-                DetallesClase detalles = new DetallesClase(clase.IdClase);
+                DetallesClase detalles = new DetallesClase(clase.IdClase, esProfesor);
                 NavigationService.Navigate(detalles);
             }
             
@@ -232,7 +234,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicCalificarCurso(object sender, RoutedEventArgs e)
         {
-            CalificacionCurso pagina = new CalificacionCurso(new CursoDTO { IdCurso = 1, Titulo = "si"});
+            CalificacionCurso pagina = new CalificacionCurso(_curso);
             NavigationService.Navigate(pagina);
         }
 

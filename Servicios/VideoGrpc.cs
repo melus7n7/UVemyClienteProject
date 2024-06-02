@@ -3,6 +3,7 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,13 +16,15 @@ namespace UVemyCliente.Servicios
 {
     public class VideoGrpc
     {
+        
         private static int _tamanioChunks = 18 * 1024;
         private static VideoService.VideoServiceClient _stubCliente;
         private static VideoService.VideoServiceClient ObtenerStub()
         {
             if(_stubCliente == null)
             {
-                var channel = GrpcChannel.ForAddress("http://localhost:3001");
+                string apiUrl = ConfigurationManager.AppSettings["ApiBaseUrlGrpc"];
+                var channel = GrpcChannel.ForAddress(apiUrl);
                 _stubCliente = new VideoService.VideoServiceClient(channel);
             }
             return _stubCliente;

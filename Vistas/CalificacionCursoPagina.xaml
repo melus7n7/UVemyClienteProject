@@ -88,8 +88,8 @@
                 <RowDefinition Height=".6*"/>
             </Grid.RowDefinitions>
             <Border Background="#0A122A" CornerRadius="20" Margin="0 20 0 20">
-                <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="32" TextAlignment="Center"
-                           TextWrapping="Wrap" Margin="20 15">Curso de C# .NET desde cero hasta lo mas avanzado full stack lo mas avanzado full stac</TextBlock>
+                <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="32" TextAlignment="Center" Name="txtBlockTitulo"
+                           TextWrapping="Wrap" Margin="20 15"></TextBlock>
             </Border>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
