@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -62,9 +63,13 @@ namespace UVemyCliente.Vistas
 
         private async Task CargarClasesAsync()
         {
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "clases/curso/" + _idCurso);
+            string urlBusqueda = "clases/curso/" + _idCurso;
+            urlBusqueda += $"?rol={HttpUtility.UrlEncode(_cursoDetalle.Rol)}";
+            Debug.WriteLine("url "+urlBusqueda);
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, urlBusqueda);
             Debug.WriteLine(respuestaHttp.StatusCode + "Estatus code");
             Debug.WriteLine(_idCurso);
+            Debug.WriteLine(respuestaHttp);
             Debug.WriteLine("clases/curso/" + _idCurso);
             if (respuestaHttp.IsSuccessStatusCode)
             {
@@ -74,6 +79,11 @@ namespace UVemyCliente.Vistas
                 {
                     CargarClases();
                 }
+            }
+            else if (respuestaHttp.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                ErrorMensaje errorMensaje = new("Error. No existen clases para este curso.");
+                errorMensaje.Show();
             }
             else
             {
@@ -87,6 +97,7 @@ namespace UVemyCliente.Vistas
             for (int i = 0; i < _listaClases.Count; i++)
             {
                 _listaClases[i].NumeroClase = i + 1;
+                Debug.WriteLine("_visibilidadBoton" + _visibilidadBoton);
                 _listaClases[i].Visibilidad = _visibilidadBoton;
             }
             lstBoxClases.ItemsSource = _listaClases;
@@ -144,15 +155,18 @@ namespace UVemyCliente.Vistas
             btnCalificarCurso.Visibility = Visibility.Hidden;
             btnInscribirse.Visibility = Visibility.Hidden;
             _visibilidadBoton = Visibility.Visible;
+            Debug.WriteLine(_cursoDetalle.Rol);
             switch (_cursoDetalle.Rol)
             {
                 case "Profesor":
                     btnAgregarClase.Visibility = Visibility.Visible;
                     btnModificarCurso.Visibility = Visibility.Visible;
                     btnVerEstadisticas.Visibility = Visibility.Visible;
+                    _visibilidadBoton = Visibility.Visible;
                     break;
                 case "Estudiante":
                     btnCalificarCurso.Visibility = Visibility.Visible;
+                    _visibilidadBoton = Visibility.Visible;
                     break;
                 case "Usuario":
                     btnInscribirse.Visibility = Visibility.Visible;
@@ -226,6 +240,8 @@ namespace UVemyCliente.Vistas
             {
                 ExitoMensaje mensaje = new ExitoMensaje("Se ha inscribido al curso exitosamente");
                 mensaje.Show();
+                DetallesCurso curso = new DetallesCurso(_curso);
+                this.NavigationService.Navigate(curso);
             }
 
             btnRegresar.IsEnabled = true;
