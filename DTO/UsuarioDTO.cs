@@ -29,5 +29,7 @@ namespace UVemyCliente.DTO
         public string? Token { get; set; }
         [JsonPropertyName("detalles")]
         public List<string>? Detalles { get; set; }
+        [JsonPropertyName("esAdministrador")]
+        public int? EsAdministrador { get; set; }
     }
 }
