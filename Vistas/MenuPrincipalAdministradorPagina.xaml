@@ -100,7 +100,7 @@
                                     </ContentPresenter.ContentTemplate>
                                 </ContentPresenter>
                                 <TextBlock Style="{StaticResource estilotxtBlockTextoBotonMenuPrincipal}">Consulte los usuarios que se encuentran registrados.</TextBlock>
-                                <Image Margin="0 5 20 0" Grid.Column="1" Width="230" Height="230" Source="/Recursos/profile.png" HorizontalAlignment="Center"></Image>
+                                <Image Margin="0 5 20 0" Grid.Column="1" Width="230" Height="230" Source="/Recursos/users.png" HorizontalAlignment="Center"></Image>
                             </StackPanel>
                         </Border>
                     </ControlTemplate>
@@ -148,7 +148,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Button Click="ClicConsultarEtiquetas"  Background="#82C3C5"  Style="{StaticResource estiloBtnMenuPrincipalPequenioDos}" Margin="0 10 50 20" DataContext="Consulta las etiquetas existentes." CommandParameter="Etiquetas">
-                        <Image Source="/Recursos/profile.png" HorizontalAlignment="Center"></Image>
+                        <Image Source="/Recursos/tags.png" Height="200" HorizontalAlignment="Center"></Image>
                     </Button>
                 </Grid>
             </Viewbox>

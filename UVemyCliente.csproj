@@ -24,6 +24,8 @@
     <None Remove="Recursos\sendB.png" />
     <None Remove="Recursos\sendW.png" />
     <None Remove="Recursos\success.png" />
+    <None Remove="Recursos\tags.png" />
+    <None Remove="Recursos\users.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,6 +83,12 @@
 	  </Resource>
 	  <Resource Include="Recursos\success.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Recursos\tags.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Recursos\users.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
 	</ItemGroup>
 
