@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,7 +30,7 @@ namespace UVemyCliente.Vistas
     /// </summary>
     public partial class DetallesUsuariosPagina : Page
     {
-        private ObservableCollection<UsuarioDTO> _usuarios = new ObservableCollection<UsuarioDTO>();
+        private ObservableCollection<UsuarioDetalles> _usuarios = new ObservableCollection<UsuarioDetalles>();
 
         public DetallesUsuariosPagina()
         {
@@ -44,20 +45,26 @@ namespace UVemyCliente.Vistas
             if (respuestaHttp.IsSuccessStatusCode)
             {
                 var json = await respuestaHttp.Content.ReadAsStringAsync();
-                var usuarios = JsonConvert.DeserializeObject<List<UsuarioDTO>>(json);
+                var usuarios = JsonConvert.DeserializeObject<List<UsuarioDetalles>>(json);
 
                 if (usuarios != null)
                 {
                     foreach (var usuario in usuarios)
-                    {
-                        //Problema al deserializar imagenes
-                        /*
-                        if (!string.IsNullOrEmpty(usuario.Imagen))
+                    {                        
+                        if (usuario.Imagen != null)
                         {
-                            byte[] imagenBytes = Convert.FromBase64String(usuario.Imagen);
-                            usuario.ImagenBitmap = ConvertirImagen(imagenBytes);
+                            byte[] imageData = usuario.Imagen.Data;
+                            BitmapImage bitmap = new BitmapImage();
+                            using (MemoryStream stream = new MemoryStream(imageData))
+                            {
+                                bitmap.BeginInit();
+                                bitmap.StreamSource = stream;
+                                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                                bitmap.EndInit();
+                            }
+                            usuario.ImagenUsuario = bitmap;
                         }
-                        */
+                        
                         _usuarios.Add(usuario);
                     }
                 }
@@ -96,6 +103,30 @@ namespace UVemyCliente.Vistas
         private void ClicDescargar(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public class UsuarioDetalles
+        {
+            [JsonPropertyName("idUsuario")]
+            public int? Id { get; set; }
+            [JsonPropertyName("nombres")]
+            public string? Nombres { get; set; }
+            [JsonPropertyName("apellidos")]
+            public string? Apellidos { get; set; }
+            [JsonPropertyName("imagen")]
+            [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public ImagenUsuario Imagen { get; set; }
+            [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public BitmapImage ImagenUsuario { get; set; }
+        }
+
+        public class ImagenUsuario
+        {
+            [JsonProperty("type")]
+            public string Type { get; set; }
+
+            [JsonProperty("data")]
+            public byte[] Data { get; set; }
         }
     }
 }

@@ -86,7 +86,7 @@
 
         <DataTemplate x:Key="usuarioTemplate">
             <StackPanel Orientation="Horizontal" Margin="5">
-                <Image Width="50" Height="50" Source="{Binding ImagenBitmap}" Margin="5"/>
+                <Image Width="50" Height="50" Source="{Binding ImagenUsuario}" Margin="5"/>
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="{Binding Nombres}" FontWeight="Bold"/>
                     <TextBlock Text="{Binding Apellidos}"/>
