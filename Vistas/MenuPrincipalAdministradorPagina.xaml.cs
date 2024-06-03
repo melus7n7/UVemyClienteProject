@@ -28,7 +28,7 @@ namespace UVemyCliente.Vistas
 
         private void CargarPagina(object sender, RoutedEventArgs e)
         {
-            txtBlockNombre.Text = "Bienvenido " + SingletonUsuario.Nombres + " " + SingletonUsuario.Apellidos;
+            txtBlockNombre.Text = "Bienvenido(a) " + SingletonUsuario.Nombres + " " + SingletonUsuario.Apellidos;
         }
 
         private void ClicConsultarEtiquetas(object sender, RoutedEventArgs e)
@@ -39,6 +39,8 @@ namespace UVemyCliente.Vistas
 
         private void ClicConsultarUsuarios(object sender, RoutedEventArgs e)
         {
+            DetallesUsuariosPagina detallesUsuariosPagina = new();
+            this.NavigationService.Navigate(detallesUsuariosPagina);
 
         }
 

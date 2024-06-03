@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:UVemyCliente.Vistas"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="MenuPrincipalAdministradorPagina">
+      Title="MenuPrincipalAdministradorPagina" Loaded="CargarPagina">
 
     <Page.Resources>
         <Style x:Key="estiloBtnSalirMenuPrincipal" TargetType="Button">

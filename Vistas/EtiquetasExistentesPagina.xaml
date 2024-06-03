@@ -28,6 +28,13 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="estiloBtnEliminarEtiqueta" TargetType="Button">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Background" Value="#D9534F"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
     </Page.Resources>
 
     <Grid Background="#FFFFFF">
@@ -54,7 +61,10 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Background="#5D737E" CornerRadius="10" Padding="10" Margin="5">
-                            <TextBlock Text="{Binding Nombre}" FontFamily="{StaticResource NunitoFont}" FontSize="16" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Nombre}" FontFamily="{StaticResource NunitoFont}" FontSize="16" VerticalAlignment="Center"/>
+                                <Button x:Name="btnEliminarEtiqueta" Content="X" Style="{StaticResource estiloBtnEliminarEtiqueta}" Click="ClicEliminarEtiqueta" Tag="{Binding IdEtiqueta}" />
+                            </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
