@@ -27,16 +27,27 @@ namespace UVemyCliente.Vistas
     public partial class CalificacionCurso : Page
     {
         private CursoDTO _curso;
+        private bool _haModificadoCalificacion;
         public CalificacionCurso(CursoDTO curso)
         {
             InitializeComponent();
             _curso = curso;
+            _haModificadoCalificacion = false;
+            txtBlockTitulo.Text = _curso.Titulo;
            _ = ObtenerCalificacionPreviaUsuarioAsync();
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            if (_haModificadoCalificacion)
+            {
+                DetallesCurso detalles = new DetallesCurso(_curso);
+                NavigationService.Navigate(detalles);
+            }
+            else
+            {
+                NavigationService.GoBack();
+            }
         }
 
         private async Task ObtenerCalificacionPreviaUsuarioAsync()
@@ -129,6 +140,7 @@ namespace UVemyCliente.Vistas
             }
             else
             {
+                _haModificadoCalificacion = true;
                 txtBlockCalificacionPrevia.Visibility = Visibility.Collapsed;
 
                 BrushConverter brush = new BrushConverter();

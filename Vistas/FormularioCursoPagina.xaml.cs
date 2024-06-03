@@ -260,7 +260,9 @@ namespace UVemyCliente.Vistas
             }
             else
             {
-                ExitoMensaje exito = new ExitoMensaje("Se creo el curso exitosamente");
+                var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
+                Debug.WriteLine(jsonString);
+                ExitoMensaje exito = new ExitoMensaje("Se ha creado el curso exitosamente");
                 exito.Show();
             }
             btnGuardarCurso.IsEnabled = true;

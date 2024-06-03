@@ -654,8 +654,8 @@ namespace UVemyCliente.Vistas
 
         private void RedirigirDetallesClase()
         {
-            DetallesClase clase = new DetallesClase((int)_claseActual.Id);
-            NavigationService.Navigate(clase);
+            //DetallesClase clase = new DetallesClase((int)_claseActual.Id,);
+            //NavigationService.Navigate(clase);
             EliminarVideo();
         }
     }

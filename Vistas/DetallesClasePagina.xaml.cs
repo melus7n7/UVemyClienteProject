@@ -35,35 +35,22 @@ namespace UVemyCliente.Vistas
     {
         private ClaseDTO _clase;
         private int _idClase;
-        private DetallesCurso _paginaDetallesCurso;
+        private bool _esProfesor;
         private string _tempArchivoPath = "";
+        private CursoDTO _curso = new CursoDTO() { };
 
-
-        public DetallesClase(int idClase)
+        public DetallesClase(CursoDTO curso, int idClase, bool esProfesor = true)
         {
             InitializeComponent();
             _idClase = idClase;
+            _curso = curso;
+            _esProfesor = esProfesor;
             _ = RecuperarDatosClaseAsync(idClase);
-        }
-
-        public DetallesClase(int idClase, DetallesCurso paginaDetallesCurso)
-        {
-            InitializeComponent();
-            _idClase = idClase;
-            _ = RecuperarDatosClaseAsync(idClase);
-            _paginaDetallesCurso = paginaDetallesCurso;
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            if (_paginaDetallesCurso != null)
-            {
-                NavigationService.Navigate(_paginaDetallesCurso);
-            }
-            else
-            {
-                NavigationService.Navigate(new DetallesCurso(new CursoDTO { IdCurso = _clase.IdCurso}));
-            }
+            NavigationService.Navigate(new DetallesCurso(_curso));
         }
 
         private async Task RecuperarDatosClaseAsync(int idClase)
@@ -95,6 +82,11 @@ namespace UVemyCliente.Vistas
 
                 if (claseRecuperada != null)
                 {
+                    if (_esProfesor)
+                    {
+                        btnModificarClase.Visibility = Visibility.Visible;
+                    }
+
                     _clase = claseRecuperada;
                     txtBlockNombreClase.Text = _clase.Nombre;
                     txtBlockDescripcionClase.Text = _clase.Descripcion;
@@ -102,6 +94,8 @@ namespace UVemyCliente.Vistas
                     await RecuperarComentariosAsync();
 
                     await RecuperarVideoClaseAsync();
+
+                    
                 }
             }
             grdBackground.IsEnabled = true;
@@ -199,6 +193,13 @@ namespace UVemyCliente.Vistas
 
         private async Task RecuperarVideoClaseAsync()
         {
+            if (_clase.VideoId == null)
+            {
+                ErrorMensaje error = new ErrorMensaje("La clase no tiene un video, agregue una para que se muestre a otros la clase");
+                error.Show();
+                return;
+            }
+
             _tempArchivoPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "temp_video_file.mp4");
 
             try
@@ -216,8 +217,10 @@ namespace UVemyCliente.Vistas
                     IdDocumento = (int)_clase.VideoId, Archivo = streamVideo.ToArray(), Nombre = "TempUvemy"
                 };
             }
-            catch (RpcException)
+            catch (RpcException ex)
             {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
                 grdPrincipal.IsEnabled = false;
                 ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudo recuperar el video de la clase, inténtelo más tarde");
                 error.Show();

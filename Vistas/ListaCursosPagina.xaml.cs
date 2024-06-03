@@ -125,7 +125,6 @@ namespace UVemyCliente.Vistas
             {
                 var json = await respuestaHttp.Content.ReadAsStringAsync();
                 _cursos = JsonConvert.DeserializeObject<List<CursoListBox>>(json);
-                Debug.WriteLine(json);
                 CargarCursosListBox(_cursos);
             }
             else if (respuestaHttp.StatusCode == System.Net.HttpStatusCode.NotFound)
