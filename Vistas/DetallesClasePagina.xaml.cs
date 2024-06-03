@@ -381,6 +381,7 @@ namespace UVemyCliente.Vistas
             {
                 File.Delete(_tempArchivoPath);
             }
+            mdElementVideo.Stop();
         }
     }
 }
