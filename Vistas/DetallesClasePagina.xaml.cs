@@ -42,10 +42,18 @@ namespace UVemyCliente.Vistas
         public DetallesClase(CursoDTO curso, int idClase, bool esProfesor = true)
         {
             InitializeComponent();
+            PrepararMediaElement();
             _idClase = idClase;
             _curso = curso;
             _esProfesor = esProfesor;
             _ = RecuperarDatosClaseAsync(idClase);
+        }
+
+        private void PrepararMediaElement()
+        {
+            mdElementVideo.LoadedBehavior = MediaState.Manual;
+            mdElementVideo.UnloadedBehavior = MediaState.Manual;
+            mdElementVideo.Stretch = Stretch.Uniform;
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)

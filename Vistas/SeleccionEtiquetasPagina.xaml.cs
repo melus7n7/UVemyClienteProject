@@ -59,7 +59,7 @@ namespace UVemyCliente.Vistas
 
         private async Task CargarEtiquetasAsync()
         {
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "etiquetas");
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestSinAutenticacionAsync(HttpMethod.Get, "etiquetas");
             if (respuestaHttp.IsSuccessStatusCode)
             {
                 var json = await respuestaHttp.Content.ReadAsStringAsync();

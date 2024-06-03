@@ -632,9 +632,10 @@ namespace UVemyCliente.Vistas
 
         private async Task ActualizarVideoAsync()
         {
+            int idDocumento = (_claseActual.VideoId == null) ? 0 : (int) _claseActual.VideoId;
             DocumentoDTO videoNuevo = new DocumentoDTO
             {
-                IdDocumento = _videoDocumento.IdDocumento,
+                IdDocumento = idDocumento,
                 Archivo = _videoDocumento.Archivo,
                 Nombre = _videoDocumento.Nombre,
                 IdClase = (int)_claseActual.Id
