@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -235,6 +236,11 @@ namespace UVemyCliente.Vistas
                 btnCambiarImagen.Visibility = Visibility.Collapsed;
                 btnSubirImagen.Visibility = Visibility.Collapsed;
             }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
+            }
             else
             {
                 var jsonString = await respuestaHttp.Content.ReadAsStringAsync();
@@ -316,6 +322,11 @@ namespace UVemyCliente.Vistas
 
                 ExitoMensaje exitoMensaje = new("Imagen de perfil actualizada");
                 exitoMensaje.Show();
+            }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
             }
             else
             {

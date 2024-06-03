@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -166,6 +167,11 @@ namespace UVemyCliente.Vistas
                 grdPrincipal.IsEnabled = false;
                 Debug.WriteLine(codigoRespuesta);
                 ErrorMensaje error = new ErrorMensaje("Ocurrió un error y no se pudieron recuperar los comentarios, inténtelo más tarde");
+                error.Show();
+            }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
                 error.Show();
             }
             else
@@ -342,6 +348,11 @@ namespace UVemyCliente.Vistas
                 ErrorMensaje errorMensaje = new("Ocurrió un error y no se pudo enviar el comentario, inténtelo más tarde");
                 errorMensaje.Show();
             }
+            else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                ErrorMensaje error = new("Error al conectar al servidor");
+                error.Show();
+            }
             else
             {
                 txtBoxComentario.Text = "";
@@ -370,6 +381,7 @@ namespace UVemyCliente.Vistas
             {
                 File.Delete(_tempArchivoPath);
             }
+            mdElementVideo.Stop();
         }
     }
 }
