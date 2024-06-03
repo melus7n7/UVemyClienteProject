@@ -31,16 +31,20 @@ namespace UVemyCliente.Vistas
     public partial class DetallesUsuariosPagina : Page
     {
         private ObservableCollection<UsuarioDetalles> _usuarios = new ObservableCollection<UsuarioDetalles>();
+        private int _paginaActual = 1;
 
         public DetallesUsuariosPagina()
         {
             InitializeComponent();
-            _ = CargarUsuariosAsync();
+            txtBlockTitulo.Text = "Usuarios registrados dentro del sistema UVemy";
+            _ = CargarUsuariosAsync(_paginaActual);
         }
 
-        private async Task CargarUsuariosAsync()
+        private async Task CargarUsuariosAsync(int pagina)
         {
-            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, "usuarios/1");
+            DeshabilitarBotones();
+
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, $"usuarios/{pagina}");
 
             if (respuestaHttp.IsSuccessStatusCode)
             {
@@ -49,7 +53,8 @@ namespace UVemyCliente.Vistas
 
                 if (usuarios != null)
                 {
-                    foreach (var usuario in usuarios)
+                    _usuarios.Clear();
+                    foreach (var usuario in usuarios.Where(u => u.EsAdministrador == 0))
                     {                        
                         if (usuario.Imagen != null)
                         {
@@ -69,40 +74,21 @@ namespace UVemyCliente.Vistas
                     }
                 }
                 lstBoxUsuarios.ItemsSource = _usuarios;
+                BtnPrevia.IsEnabled = _paginaActual > 1; 
+                BtnSiguiente.IsEnabled = usuarios.Count == 6;
+                HabilitarBotones();
             }
             else
             {
                 ErrorMensaje errorMensaje = new ErrorMensaje("Error. No se pudo conectar con el servidor. Inténtelo de nuevo o hágalo más tarde.");
                 errorMensaje.Show();
-            }
-        }
-
-        private BitmapImage ConvertirImagen(byte[] imagenBytes)
-        {
-            using (var stream = new MemoryStream(imagenBytes))
-            {
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = stream;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.EndInit();
-                return image;
+                NavigationService.GoBack();
             }
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
-        }
-
-        private void ClicGenerarDocumento(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ClicDescargar(object sender, RoutedEventArgs e)
-        {
-
         }
 
         public class UsuarioDetalles
@@ -118,6 +104,10 @@ namespace UVemyCliente.Vistas
             public ImagenUsuario Imagen { get; set; }
             [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public BitmapImage ImagenUsuario { get; set; }
+            [JsonPropertyName("correoElectronico")]
+            public string? CorreoElectronico { get; set; }
+            [JsonPropertyName("esAdministrador")]
+            public int? EsAdministrador { get; set; }
         }
 
         public class ImagenUsuario
@@ -128,5 +118,130 @@ namespace UVemyCliente.Vistas
             [JsonProperty("data")]
             public byte[] Data { get; set; }
         }
+
+        private async void ClicPrevia(object sender, RoutedEventArgs e)
+        {
+            if (_paginaActual > 1)
+            {
+                _paginaActual--;
+                string textoBusqueda = txtBlockNombres.Text.ToLower();
+                if (string.IsNullOrEmpty(textoBusqueda))
+                {
+                    await CargarUsuariosAsync(_paginaActual);
+                }
+                else
+                {
+                    await CargarUsuariosBusquedaAsync(_paginaActual);
+                }
+            }
+        }
+
+        private async void ClicSiguiente(object sender, RoutedEventArgs e)
+        {
+            _paginaActual++;
+            string textoBusqueda = txtBlockNombres.Text.ToLower();
+            if (string.IsNullOrEmpty(textoBusqueda))
+            {
+                await CargarUsuariosAsync(_paginaActual);
+            }
+            else
+            {
+                await CargarUsuariosBusquedaAsync(_paginaActual);
+            }
+        }
+
+        private async void ClicBuscar(object sender, RoutedEventArgs e)
+        {
+            string textoBusqueda = txtBlockNombres.Text.ToLower();
+            if (string.IsNullOrEmpty(textoBusqueda))
+            {
+                await CargarUsuariosAsync(_paginaActual);
+            }
+            else
+            {
+                await CargarUsuariosBusquedaAsync(_paginaActual);
+            }
+        }
+
+        private async Task CargarUsuariosBusquedaAsync(int pagina)
+        {
+            DeshabilitarBotones();
+
+            string textoBusqueda = txtBlockNombres.Text.ToLower();
+            HttpResponseMessage respuestaHttp = await APIConexion.EnviarRequestAsync(HttpMethod.Get, $"usuarios/buscar/{pagina}?busqueda={textoBusqueda}");
+
+            if (respuestaHttp.IsSuccessStatusCode)
+            {
+                var json = await respuestaHttp.Content.ReadAsStringAsync();
+                var responseData = JsonConvert.DeserializeObject<ResponseData>(json);
+
+                if (responseData != null)
+                {
+                    _usuarios.Clear();
+
+                    foreach (var usuario in responseData.Data.Where(u => u.EsAdministrador == 0))
+                    {
+                        if (usuario.Imagen != null)
+                        {
+                            byte[] imageData = usuario.Imagen.Data;
+                            BitmapImage bitmap = new BitmapImage();
+                            using (MemoryStream stream = new MemoryStream(imageData))
+                            {
+                                bitmap.BeginInit();
+                                bitmap.StreamSource = stream;
+                                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                                bitmap.EndInit();
+                            }
+                            usuario.ImagenUsuario = bitmap;
+                        }
+
+                        _usuarios.Add(usuario);
+                    }
+                }
+                lstBoxUsuarios.ItemsSource = _usuarios;
+                BtnPrevia.IsEnabled = responseData.CurrentPage > 1;
+                BtnSiguiente.IsEnabled = responseData.CurrentPage < responseData.TotalPages;
+                HabilitarBotones();
+            }
+            else
+            {
+                var errorContent = await respuestaHttp.Content.ReadAsStringAsync();
+                ErrorMensaje errorMensaje = new ErrorMensaje($"Error. No se pudo conectar con el servidor. Detalles: {errorContent}");
+                errorMensaje.Show();
+                NavigationService.GoBack();
+            }
+        }
+
+        public class ResponseData
+        {
+            [JsonProperty("data")]
+            public List<UsuarioDetalles> Data { get; set; }
+
+            [JsonProperty("total")]
+            public int Total { get; set; }
+
+            [JsonProperty("totalPages")]
+            public int TotalPages { get; set; }
+
+            [JsonProperty("currentPage")]
+            public int CurrentPage { get; set; }
+        }
+
+        private void DeshabilitarBotones()
+        {
+            BtnPrevia.IsEnabled = false;
+            BtnSiguiente.IsEnabled = false;
+            BtnRegresar.IsEnabled = false;
+            BtnBuscar.IsEnabled = false;
+        }
+
+        private void HabilitarBotones()
+        {
+            BtnPrevia.IsEnabled = true;
+            BtnSiguiente.IsEnabled = true;
+            BtnRegresar.IsEnabled = true;
+            BtnBuscar.IsEnabled = true;
+        }
+
     }
 }

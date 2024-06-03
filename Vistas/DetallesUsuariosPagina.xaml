@@ -33,8 +33,8 @@
             <Setter Property="FontWeight" Value="Regular"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
-            <Setter Property="IsReadOnly" Value="True"/>
-            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="IsReadOnly" Value="False"/>
+            <Setter Property="IsHitTestVisible" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
@@ -86,10 +86,11 @@
 
         <DataTemplate x:Key="usuarioTemplate">
             <StackPanel Orientation="Horizontal" Margin="5">
-                <Image Width="50" Height="50" Source="{Binding ImagenUsuario}" Margin="5"/>
+                <Image Width="70" Height="70" Source="{Binding ImagenUsuario}" Margin="5"/>
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Nombres}" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Apellidos}"/>
+                    <TextBlock Text="{Binding Nombres}" FontWeight="Bold" FontSize="18"/>
+                    <TextBlock Text="{Binding Apellidos}" FontSize="18"/>
+                    <TextBlock Text="{Binding CorreoElectronico}" FontSize="14" Foreground="Gray"/>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
@@ -101,9 +102,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Background="#0A122A" Orientation="Horizontal">
-            <Button Style="{StaticResource estiloBtnRegresar}" Click="ClicRegresar"></Button>
+            <Button x:Name="BtnRegresar" Style="{StaticResource estiloBtnRegresar}" Click="ClicRegresar"></Button>
             <Border Background="#ffffff" CornerRadius="20" Width="380" Margin="15">
-                <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Usuarios del sistema</TextBlock>
+                <TextBlock FontFamily="{StaticResource NunitoItalicFont}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Center">Usuarios</TextBlock>
             </Border>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
@@ -113,29 +114,18 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+
                 </Grid.RowDefinitions>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width=".3*"/>
                     </Grid.ColumnDefinitions>
-                    <Border Background="#0A122A" CornerRadius="20" Margin="0 15 50 15" Height="120">
+                    <Border Background="#0A122A" CornerRadius="20" Margin="0 15 50 15" Height="100">
                         <TextBlock FontFamily="{StaticResource NunitoFont}" Foreground="#ffffff" FontSize="23" TextWrapping="Wrap" Margin="20 15" Name="txtBlockTitulo"></TextBlock>
                     </Border>
-                    <Button Grid.Column="1" Style="{StaticResource estiloBtnBackground}" Margin="20 10" Height="100" Click="ClicGenerarDocumento" Name="btnGenerarDocumento">Generar un documento con las estadísticas</Button>
-                    <Border Background="#0A122A"  CornerRadius="20" Grid.Column="1" Height="100" Name="brdDescargaDocumento" Visibility="Collapsed">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="190"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource NunitoFont}" FontSize="18"
-                                   Margin="5 0" Foreground="#ffffff" Name="txtBlockNombreReporte"></TextBlock>
-                            <Border Grid.Column="1" Background="#ffffff" Margin="20 20 20 20" CornerRadius="30" Width="60">
-                                <Button Style="{StaticResource estiloBtnDescargar}" Width="35" Height="35" Margin="0" Click="ClicDescargar"></Button>
-                            </Border>
-                        </Grid>
-                    </Border>
+                    
                 </Grid>
 
                 <Grid Grid.Row="1" >
@@ -151,17 +141,15 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Border Background="#479E85" CornerRadius="20" Width="200" Margin="0 10 10 5" >
+                    <Border Background="#0A122A" CornerRadius="20" Width="200" Margin="0 10 10 5" >
                         <TextBlock TextWrapping="Wrap" Style="{StaticResource estiloTxtBoxCampos}" Margin="10" TextAlignment="Center">Nombres que coinciden:</TextBlock>
                     </Border>
-                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="55" Name="txtBlockEtiquetas"></TextBox>
+                    <TextBox Grid.Column="1" Style="{StaticResource estiloTxtBoxInfo}" Height="55" x:Name="txtBlockNombres"></TextBox>
+                    <Button x:Name="BtnBuscar" Grid.Column="2" Style="{StaticResource estiloBtnBackground}" Width="150" Height="55" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0" Click="ClicBuscar">Buscar</Button>
                 </Grid>
 
-                <Grid Grid.Row="3" Margin="0 15 0 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width=".0*"/>
-                    </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="3" Margin="220 15 220 0">
                     <Grid Margin="0 0 15 20">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -169,10 +157,6 @@
                         </Grid.RowDefinitions>
                         <Border Background="#000000" CornerRadius="20 20 0 0">
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width=".3*"/>
-                                </Grid.ColumnDefinitions>
                                 <TextBlock Margin="20 5" Foreground="#ffffff" FontFamily="{StaticResource NunitoItalicFont}" FontSize="26" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Left">Usuarios</TextBlock>
                             </Grid>
 
@@ -184,7 +168,17 @@
                         </Border>
                     </Grid>
                 </Grid>
+                <Grid Grid.Row="4" Margin="0 15 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="BtnPrevia" Grid.Column="0" Style="{StaticResource estiloBtnBackground}" Width="150" Height="50" HorizontalAlignment="Right" Click="ClicPrevia">Previa</Button>
+                    <Button x:Name="BtnSiguiente" Grid.Column="1" Style="{StaticResource estiloBtnBackground}" Width="150" Height="50" HorizontalAlignment="Left" Margin="10,0,0,0" Click="ClicSiguiente">Siguiente</Button>
+                </Grid>
             </Grid>
+            
         </ScrollViewer>
     </Grid>
+    
 </Page>
