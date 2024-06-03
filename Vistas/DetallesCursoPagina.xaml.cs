@@ -181,7 +181,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicAgregarClase(object sender, RoutedEventArgs e)
         {
-            FormularioClase formulario = new FormularioClase((int)_curso.IdCurso);
+            FormularioClase formulario = new FormularioClase(_curso);
             NavigationService.Navigate(formulario);
         }
 

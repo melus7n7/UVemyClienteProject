@@ -35,18 +35,21 @@ namespace UVemyCliente.Vistas
         private List<DocumentoDTO> _documentosClase;
         private DocumentoDTO _videoDocumento;
         private int _idCurso;
-        public FormularioClase(int idCurso)
+        private CursoDTO _curso;
+        public FormularioClase(CursoDTO curso)
         {
             InitializeComponent();
-            _idCurso = idCurso;
+            _curso = curso;
+            _idCurso = (int)_curso.IdCurso;
             PrepararMediaElement();
             _documentosClase = new List<DocumentoDTO>();
             _videoDocumento = null;
 
         }
-        public FormularioClase(ClaseDTO clase)
+        public FormularioClase(CursoDTO curso, ClaseDTO clase)
         {
             InitializeComponent();
+            _curso = curso;
             PrepararMediaElement();
             _ = MostrarClaseActualAsync(clase);
         }
@@ -73,7 +76,7 @@ namespace UVemyCliente.Vistas
 
             if (_videoDocumento == null)
             {
-                ErrorMensaje error = new ErrorMensaje("No se pudo recuperar el video de la clase");
+                ErrorMensaje error = new ErrorMensaje("No tiene video la clase");
                 error.Show();
             }
             else
@@ -253,7 +256,7 @@ namespace UVemyCliente.Vistas
         private void RedirigirListaClases()
         {
             EliminarVideo();
-            DetallesCurso curso = new DetallesCurso(new CursoDTO { IdCurso = _idCurso });
+            DetallesCurso curso = new DetallesCurso(_curso);
             NavigationService.Navigate(curso);
             
         }
@@ -509,7 +512,7 @@ namespace UVemyCliente.Vistas
                 ExitoMensaje mensaje = new ExitoMensaje("Se ha eliminado la clase exitosamente");
                 mensaje.Show();
 
-                DetallesCurso curso = new DetallesCurso(new CursoDTO { IdCurso = _claseActual.IdCurso});
+                DetallesCurso curso = new DetallesCurso(_curso);
                 NavigationService.Navigate(curso);
                 EliminarVideo();
             }
@@ -654,8 +657,8 @@ namespace UVemyCliente.Vistas
 
         private void RedirigirDetallesClase()
         {
-            //DetallesClase clase = new DetallesClase((int)_claseActual.Id,);
-            //NavigationService.Navigate(clase);
+            DetallesClase clase = new DetallesClase(_curso, (int)_claseActual.Id);
+            NavigationService.Navigate(clase);
             EliminarVideo();
         }
     }

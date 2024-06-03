@@ -254,7 +254,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicModificarClase(object sender, RoutedEventArgs e)
         {
-            FormularioClase formulario = new FormularioClase(_clase);
+            FormularioClase formulario = new FormularioClase(_curso, _clase);
             NavigationService.Navigate(formulario);
         }
 
