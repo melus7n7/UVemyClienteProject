@@ -20,6 +20,8 @@ namespace UVemyCliente.Utilidades
 
         public static string JWT { get; set; }
 
+        public static int EsAdministrador {get; set;}
+
         public static void Limpiar()
         {
             IdUsuario = 0;
@@ -28,6 +30,7 @@ namespace UVemyCliente.Utilidades
             CorreoElectronico = string.Empty;
             IdsEtiqueta = [];
             JWT = string.Empty;
+            EsAdministrador = 0;
         }
     }
 }

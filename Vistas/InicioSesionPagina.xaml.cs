@@ -100,7 +100,8 @@ namespace UVemyCliente.Vistas
                     Nombres = root.GetProperty("nombres").GetString(),
                     Apellidos = root.GetProperty("apellidos").GetString(),
                     CorreoElectronico = root.GetProperty("correoElectronico").GetString(),
-                    Token = root.GetProperty("jwt").GetString()
+                    Token = root.GetProperty("jwt").GetString(),
+                    EsAdministrador = root.GetProperty("esAdministrador").GetInt32()
                 };
 
                 SingletonUsuario.IdUsuario = usuario.Id ?? 0;
@@ -108,6 +109,7 @@ namespace UVemyCliente.Vistas
                 SingletonUsuario.Apellidos = usuario.Apellidos;
                 SingletonUsuario.CorreoElectronico = usuario.CorreoElectronico;
                 SingletonUsuario.JWT = usuario.Token;
+                SingletonUsuario.EsAdministrador = usuario.EsAdministrador ?? 0;
 
                 var idsEtiquetaJson = root.GetProperty("idsEtiqueta");
                 List<int> idsEtiqueta = [];
@@ -120,8 +122,16 @@ namespace UVemyCliente.Vistas
                 ExitoMensaje exitoMensaje = new("Bienvenido " + SingletonUsuario.Nombres + " " + SingletonUsuario.Apellidos);
                 exitoMensaje.Show();
 
-                MenuPrincipalPagina menuPrincipalPagina = new();
-                this.NavigationService.Navigate(menuPrincipalPagina);
+                if(SingletonUsuario.EsAdministrador == 1)
+                {
+                    MenuPrincipalAdministradorPagina menuPrincipalAdministradorPagina = new();
+                    this.NavigationService.Navigate(menuPrincipalAdministradorPagina);
+                }
+                else
+                {
+                    MenuPrincipalPagina menuPrincipalPagina = new();
+                    this.NavigationService.Navigate(menuPrincipalPagina);
+                }
             }
             else if (respuestaHttp.StatusCode == HttpStatusCode.ServiceUnavailable)
             {
