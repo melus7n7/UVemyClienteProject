@@ -105,6 +105,7 @@ namespace UVemyCliente.Vistas
 
         private void CargarCurso()
         {
+            Debug.WriteLine("_curso.Titulo " + _curso.Titulo);
             txtBlockTitulo.Text = _curso.Titulo;
 
             _curso.Objetivos = _cursoDetalle.Objetivos;
@@ -155,7 +156,6 @@ namespace UVemyCliente.Vistas
             btnCalificarCurso.Visibility = Visibility.Hidden;
             btnInscribirse.Visibility = Visibility.Hidden;
             _visibilidadBoton = Visibility.Visible;
-            Debug.WriteLine(_cursoDetalle.Rol);
             switch (_cursoDetalle.Rol)
             {
                 case "Profesor":
@@ -181,7 +181,7 @@ namespace UVemyCliente.Vistas
 
         private void ClicAgregarClase(object sender, RoutedEventArgs e)
         {
-            FormularioClase formulario = new FormularioClase(_idCurso);
+            FormularioClase formulario = new FormularioClase((int)_curso.IdCurso);
             NavigationService.Navigate(formulario);
         }
 
@@ -193,7 +193,7 @@ namespace UVemyCliente.Vistas
                 bool esProfesor = _cursoDetalle.Rol.Equals("Profesor");
 
                 ClaseListBox clase = (ClaseListBox)btn.DataContext;
-                DetallesClase detalles = new DetallesClase(clase.IdClase, esProfesor);
+                DetallesClase detalles = new DetallesClase(_curso, clase.IdClase, esProfesor);
                 NavigationService.Navigate(detalles);
             }
             

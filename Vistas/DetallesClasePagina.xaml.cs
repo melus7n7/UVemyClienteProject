@@ -36,19 +36,20 @@ namespace UVemyCliente.Vistas
         private int _idClase;
         private bool _esProfesor;
         private string _tempArchivoPath = "";
+        private CursoDTO _curso = new CursoDTO() { };
 
-
-        public DetallesClase(int idClase, bool esProfesor = true)
+        public DetallesClase(CursoDTO curso, int idClase, bool esProfesor = true)
         {
             InitializeComponent();
             _idClase = idClase;
+            _curso = curso;
             _esProfesor = esProfesor;
             _ = RecuperarDatosClaseAsync(idClase);
         }
 
         private void ClicRegresar(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new DetallesCurso(new CursoDTO { IdCurso = _clase.IdCurso }));
+            NavigationService.Navigate(new DetallesCurso(_curso));
         }
 
         private async Task RecuperarDatosClaseAsync(int idClase)
